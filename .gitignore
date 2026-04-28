@@ -1,0 +1,35 @@
+# Dependencies
+**/node_modules/
+/.pnp
+.pnp.*
+
+# Testing
+/coverage
+
+# Next.js
+**/.next/
+**/out/
+
+# Production
+**/build
+
+# Environment files
+.env*
+**/.env*
+
+# Misc
+.DS_Store
+*.pem
+*.log
+
+# Workspace specific temp files
+all_messages.txt
+all_messages_utf8.txt
+chat-export-*.json
+prd_context.txt
+prd_context_utf8.txt
+prd_window.txt
+
+# Typescript
+*.tsbuildinfo
+**/next-env.d.ts
