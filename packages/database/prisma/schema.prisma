@@ -1,0 +1,95 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["multiSchema"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  schemas  = ["identity", "catalog", "orders", "payments", "evidence", "fraud", "disputes"]
+}
+
+// Identity Schema
+model User {
+  id             String           @id @default(uuid())
+  phone          String           @unique
+  name           String?
+  role           Role             @default(CUSTOMER)
+  isVerified     Boolean          @default(false)
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  profile        ProviderProfile?
+  kycSubmissions KycSubmission[]
+
+  @@schema("identity")
+}
+
+enum Role {
+  CUSTOMER
+  PROVIDER
+  ADMIN
+
+  @@schema("identity")
+}
+
+model ProviderProfile {
+  id            String   @id @default(uuid())
+  userId        String   @unique
+  user          User     @relation(fields: [userId], references: [id])
+  cpfCnpj       String   @unique
+  rating        Float    @default(5.0)
+  isOnline      Boolean  @default(false)
+  availableDays Int[] // 0 = Sunday, 1 = Monday, etc.
+  startHour     String // e.g., "08:00"
+  endHour       String // e.g., "18:00"
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@schema("identity")
+}
+
+model KycSubmission {
+  id          String    @id @default(uuid())
+  userId      String
+  user        User      @relation(fields: [userId], references: [id])
+  documentUrl String
+  selfieUrl   String
+  status      KycStatus @default(PENDING)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@schema("identity")
+}
+
+enum KycStatus {
+  PENDING
+  APPROVED
+  REJECTED
+
+  @@schema("identity")
+}
+
+// Order Schema
+model Order {
+  id          String      @id @default(uuid())
+  userId      String
+  providerId  String?
+  status      OrderStatus @default(PENDING)
+  totalAmount Decimal     @default(0.0)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  @@schema("orders")
+}
+
+enum OrderStatus {
+  PENDING
+  MATCHED
+  EN_ROUTE
+  ARRIVED
+  IN_PROGRESS
+  DONE
+  CANCELED
+
+  @@schema("orders")
+}

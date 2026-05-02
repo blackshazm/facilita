@@ -1,0 +1,12 @@
+{
+  "name": "@facilita/database",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "generate": "prisma generate"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.0.0",
+    "prisma": "^5.0.0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "project_name": "Facilita",
+  "version": "1.0.0",
+  "workflow": "GSD",
+  "stack": {
+    "backend": "NestJS",
+    "frontend_client": "Next.js 15 PWA",
+    "frontend_provider": "React Native Expo",
+    "database": "PostgreSQL (Prisma)",
+    "payments": "Pagar.me",
+    "chat": "Stream.io"
+  },
+  "directories": {
+    "backend": "apps/api",
+    "client": "apps/web-client",
+    "provider": "apps/mobile-provider",
+    "backoffice": "apps/backoffice",
+    "shared": "packages/shared"
+  }
+}
