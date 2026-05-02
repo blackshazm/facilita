@@ -1,22 +1,22 @@
 # Roadmap — FACILITA
 
-## Phase 0: Foundation & Infrastructure (Current)
-- [ ] Monorepo setup (Turborepo) with Bounded Context scaffolding (Identity, Catalog, Matching, Orders, Payments, Evidence, Fraud)
-- [ ] Database Schema (Prisma/PostgreSQL + PostGIS + GIST Indices) mapped to isolated schemas per module
-- [ ] Redis Geo & BullMQ infrastructure setup (Event Bus)
-- [ ] Support Tier definition & SLA Bot setup
-- [ ] Design System "Emerald 2.0" definition
-- [ ] CI/CD Pipelines (GitHub Actions)
+## Phase 0: Foundation & Infrastructure (Completed)
+- [x] Monorepo setup (Turborepo) with Bounded Context scaffolding (Identity, Catalog, Matching, Orders, Payments, Evidence, Fraud)
+- [x] Database Schema (Prisma/PostgreSQL + PostGIS + GIST Indices) mapped to isolated schemas per module
+- [x] Redis Geo & BullMQ infrastructure setup (Event Bus)
+- [x] Support Tier definition & SLA Bot setup
+- [x] Design System "Emerald 2.0" definition
+- [x] CI/CD Pipelines (GitHub Actions)
 
-## Phase 1: Authentication & Onboarding
-- [ ] SMS OTP Service integration
-- [ ] KYC Flow for Providers
-- [ ] User/Provider profile management
+## Phase 1: Authentication & Onboarding (Completed)
+- [x] SMS OTP Service integration
+- [x] KYC Flow for Providers
+- [x] User/Provider profile management
 
-## Phase 2: Catalog & Core Matching
-- [ ] 13-Category Service Catalog
+## Phase 2: Catalog & Core Matching (In Progress)
+- [x] 13-Category Service Catalog
 - [ ] **Standardized Material Catalog** (Top 50 items)
-- [ ] Geo-Matching Engine V2 (PostGIS + Cascading logic)
+- [x] Geo-Matching Engine V2 (PostGIS + Cascading logic)
 - [ ] Order Creation/Tracking flow with "En-route" status
 
 ## Phase 3: Execution & Trust

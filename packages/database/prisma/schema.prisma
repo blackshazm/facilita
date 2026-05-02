@@ -6,7 +6,7 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-  schemas  = ["identity", "catalog", "orders", "payments", "evidence", "fraud", "disputes"]
+  schemas  = ["identity", "catalog", "matching", "orders", "payments", "evidence", "fraud", "disputes"]
 }
 
 // Identity Schema
@@ -93,3 +93,61 @@ enum OrderStatus {
 
   @@schema("orders")
 }
+
+// Catalog Schema
+model Category {
+  id          String    @id @default(uuid())
+  name        String
+  slug        String    @unique
+  description String?
+  iconUrl     String?
+  services    Service[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@schema("catalog")
+}
+
+model Service {
+  id          String    @id @default(uuid())
+  categoryId  String
+  category    Category  @relation(fields: [categoryId], references: [id])
+  name        String
+  description String?
+  basePrice   Decimal   @default(0.0)
+  unitType    UnitType  @default(FIXED)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@schema("catalog")
+}
+
+enum UnitType {
+  HOUR
+  FIXED
+  M2
+  M3
+
+  @@schema("catalog")
+}
+
+// Matching Schema
+model ProviderLocation {
+  id         String                      @id @default(uuid())
+  providerId String                      @unique
+  location   Unsupported("geography(Point, 4326)")
+  updatedAt  DateTime                    @updatedAt
+
+  @@schema("matching")
+}
+
+model ActiveProvider {
+  id         String   @id @default(uuid())
+  providerId String   @unique
+  categoryId String
+  isOnline   Boolean  @default(false)
+  updatedAt  DateTime @updatedAt
+
+  @@schema("matching")
+}
+

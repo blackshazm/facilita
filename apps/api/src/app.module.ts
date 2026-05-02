@@ -1,6 +1,9 @@
 import { Module } from '@nestjs/common';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { IdentityModule } from './modules/identity/identity.module';
+import { CatalogModule } from './modules/catalog/catalog.module';
+import { MatchingModule } from './modules/matching/matching.module';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 
 @Module({
   imports: [
@@ -8,7 +11,10 @@ import { IdentityModule } from './modules/identity/identity.module';
       ttl: 60000,
       limit: 10,
     }]),
+    EventEmitterModule.forRoot(),
     IdentityModule,
+    CatalogModule,
+    MatchingModule,
   ],
 })
 export class AppModule {}
