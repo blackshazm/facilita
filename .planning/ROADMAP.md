@@ -26,11 +26,11 @@
 - [ ] Dispute Management & Refund logic.
 
 ## Milestone: Scale & Hardening
-### Phase 5.1: Payment Escrow & Wallet Module
-- [ ] Ledger-based Wallet system for provider balances.
-- [ ] Pagar.me Escrow API integration for order payments.
-- [ ] Tier-based payout automation (D+15, D+7, D+2).
-- [ ] Automated Refund and Cancellation logic.
+### [x] Phase 5.1: Payment Escrow & Wallet Module
+- [x] Ledger-based Wallet system for provider balances.
+- [x] Pagar.me Escrow API integration for order payments.
+- [x] Tier-based payout automation (D+15, D+7, D+2).
+- [x] Automated Refund and Cancellation logic.
 
 ### Phase 5.2: Anti-fraud & Tiering Engine
 - [ ] Anti-fraud Engine (Rules & Thresholds).

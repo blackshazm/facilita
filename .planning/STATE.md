@@ -1,19 +1,23 @@
 # Project State — FACILITA
 
-## Current Status: **Phase 0 — Planning & Setup**
-**Last Update**: 2026-05-01
-**Milestone**: Sprint 0 - Architecture & PRD Alignment
+## Current Status: **Phase 5.1 — Completed**
+**Last Update**: 2026-05-02
+**Milestone**: Scale & Hardening
 
 ## Completed
-- [x] Initial PRD Analysis (3 Parts)
-- [x] Market & Tech Research 2025
-- [x] GSD Workflow Initialization
-- [x] Core Planning Docs (`PROJECT.md`, `REQUIREMENTS.md`, `ROADMAP.md`)
+- [x] Phase 1.1: Design System & Infrastructure
+- [x] Phase 2.1: Service Catalog & Matching Engine
+- [x] Phase 3.1: Service Flow & Lifecycle
+- [x] Phase 4.1: Evidence & Trust Architecture
+- [x] Phase 5.1: Payment Escrow & Wallet Module
 
 ## In Progress
-- [ ] Technical Implementation Plan for Phase 0
-- [ ] Monorepo Structure scaffolding
+- [ ] Phase 5.2: Anti-fraud & Tiering Engine
 
 ## Blockers / Risks
 - **Risk**: Pagar.me split fiscal complexity (Reforma Tributária 2026).
-- **Risk**: High burn rate requires quick validation of the "Evidence" model to prevent leakage.
+- **Security**: Webhook spoofing protection needs implementation in next hardening cycle.
+- **Scale**: Redis/BullMQ persistence needs production-ready configuration.
+
+---
+*Next position: `/gsd-spec-phase 5.2`*
