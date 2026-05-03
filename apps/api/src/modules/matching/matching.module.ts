@@ -1,11 +1,18 @@
 import { Module } from '@nestjs/common';
-import { MatchingController } from './interface/matching.controller';
-import { MatchingService } from './application/matching.service';
-import { ProviderStatusListener } from './infrastructure/provider-status.listener';
 import { PrismaService } from '../../shared-kernel/database/prisma.service';
+import { MATCHING_ENGINE_PORT } from './ports/matching-engine.port';
+import { PostgisMatchingAdapter } from './adapters/postgis-matching.adapter';
+import { MatchProviderUseCase } from './application/match-provider.usecase';
 
 @Module({
-  controllers: [MatchingController],
-  providers: [MatchingService, ProviderStatusListener, PrismaService],
+  providers: [
+    PrismaService,
+    MatchProviderUseCase,
+    {
+      provide: MATCHING_ENGINE_PORT,
+      useClass: PostgisMatchingAdapter,
+    },
+  ],
+  exports: [MatchProviderUseCase],
 })
 export class MatchingModule {}

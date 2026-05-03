@@ -3,6 +3,8 @@ import { ThrottlerModule } from '@nestjs/throttler';
 import { IdentityModule } from './modules/identity/identity.module';
 import { CatalogModule } from './modules/catalog/catalog.module';
 import { MatchingModule } from './modules/matching/matching.module';
+import { OrdersModule } from './modules/orders/orders.module';
+import { PaymentsModule } from './modules/payments/payments.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 
 @Module({
@@ -15,6 +17,8 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
     IdentityModule,
     CatalogModule,
     MatchingModule,
+    OrdersModule,
+    PaymentsModule,
   ],
 })
 export class AppModule {}

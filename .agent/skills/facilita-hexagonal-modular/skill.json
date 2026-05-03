@@ -1,0 +1,36 @@
+{
+  "name": "facilita-hexagonal-modular",
+  "version": "1.0.0",
+  "architecture": "modular-hexagonal-evolutive",
+  "stack": ["nestJS", "typescript", "prisma", "redis"],
+  "enforcement": {
+    "boundaryPlugin": "eslint-plugin-boundary",
+    "blockedPatterns": [
+      "src/modules/*/core → src/modules/*/adapters",
+      "src/modules/* → src/modules/*",
+      "src/modules/*/adapters → src/modules/*/adapters"
+    ],
+    "allowedPatterns": [
+      "src/modules/*/application → src/modules/*/core",
+      "src/modules/*/application → src/modules/*/ports",
+      "src/modules/*/adapters → src/modules/*/ports",
+      "src/modules/* → src/shared/*"
+    ]
+  },
+  "templates": {
+    "module": "modules/{name}/",
+    "core": "{module}/core/{entity}.entity.ts",
+    "ports": "{module}/ports/{port}.port.ts",
+    "adapters": "{module}/adapters/{adapter}.adapter.ts",
+    "usecase": "{module}/application/{usecase}.usecase.ts",
+    "event": "shared/events/{event}.event.ts"
+  },
+  "githubReferences": [
+    "https://github.com/nestjs/nest/tree/master/sample/01-cats-app",
+    "https://github.com/ddd-plus/ddd-hexagonal-nestjs-starter",
+    "https://github.com/eslint-community/eslint-plugin-boundary",
+    "https://github.com/nestjs/event-emitter"
+  ],
+  "ciGate": true,
+  "prAlignment": "FACILITA v2026 | Domínios críticos: payments, orders, antifraud, disputes, evidence"
+}

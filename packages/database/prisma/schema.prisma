@@ -42,8 +42,18 @@ model ProviderProfile {
   availableDays Int[] // 0 = Sunday, 1 = Monday, etc.
   startHour     String // e.g., "08:00"
   endHour       String // e.g., "18:00"
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  tier               ProviderTier @default(BRONZE)
+  pagarmeRecipientId String?      @unique
+  createdAt          DateTime     @default(now())
+  updatedAt          DateTime     @updatedAt
+
+  @@schema("identity")
+}
+
+enum ProviderTier {
+  BRONZE
+  PRATA
+  OURO
 
   @@schema("identity")
 }
@@ -76,8 +86,14 @@ model Order {
   providerId  String?
   status      OrderStatus @default(PENDING)
   totalAmount Decimal     @default(0.0)
+  latitude    Float?
+  longitude   Float?
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
+
+  payments    Payment[]
+  evidence    Evidence[]
+  disputes    Dispute[]
 
   @@schema("orders")
 }
@@ -94,7 +110,7 @@ enum OrderStatus {
   @@schema("orders")
 }
 
-// Catalog Schema
+// Catalog Schema (Existing models preserved...)
 model Category {
   id          String    @id @default(uuid())
   name        String
@@ -149,5 +165,119 @@ model ActiveProvider {
   updatedAt  DateTime @updatedAt
 
   @@schema("matching")
+}
+
+// Payments Schema
+model Payment {
+  id            String        @id @default(uuid())
+  orderId       String
+  order         Order         @relation(fields: [orderId], references: [id])
+  externalId    String?       @unique // Pagar.me ID
+  amount        Decimal
+  splitAmount   Decimal?      // Provider's share
+  method        PaymentMethod
+  status        PaymentStatus @default(PENDING)
+  transactionLog Json?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@schema("payments")
+}
+
+enum PaymentMethod {
+  CARD
+  PIX
+
+  @@schema("payments")
+}
+
+enum PaymentStatus {
+  PENDING
+  AUTHORIZED
+  PAID
+  REFUNDED
+  FAILED
+
+  @@schema("payments")
+}
+
+model Wallet {
+  id             String              @id @default(uuid())
+  providerId     String              @unique
+  balance        BigInt              @default(0) // Cents
+  pendingBalance BigInt              @default(0) // Cents
+  createdAt      DateTime            @default(now())
+  updatedAt      DateTime            @updatedAt
+  transactions   WalletTransaction[]
+
+  @@schema("payments")
+}
+
+model WalletTransaction {
+  id          String          @id @default(uuid())
+  walletId    String
+  wallet      Wallet          @relation(fields: [walletId], references: [id])
+  type        TransactionType
+  amount      BigInt // Cents
+  orderId     String?
+  externalId  String? // Pagar.me transfer/charge ID
+  description String?
+  createdAt   DateTime        @default(now())
+
+  @@schema("payments")
+}
+
+enum TransactionType {
+  CREDIT // Release from escrow
+  DEBIT // Payout/Withdrawal
+  FROZEN // Entry into escrow (pending)
+  CANCEL // Refund/Reversal
+
+  @@schema("payments")
+}
+
+// Evidence Schema
+model Evidence {
+  id        String       @id @default(uuid())
+  orderId   String
+  order     Order        @relation(fields: [orderId], references: [id])
+  url       String
+  type      EvidenceType
+  metadata  Json?        // EXIF data (GPS, Device, Timestamp)
+  createdAt DateTime     @default(now())
+
+  @@schema("evidence")
+}
+
+enum EvidenceType {
+  BEFORE
+  AFTER
+  DURING
+  DISPUTE
+
+  @@schema("evidence")
+}
+
+// Disputes Schema
+model Dispute {
+  id          String        @id @default(uuid())
+  orderId     String
+  order       Order         @relation(fields: [orderId], references: [id])
+  reason      String
+  description String
+  status      DisputeStatus @default(OPEN)
+  outcome     String?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  @@schema("disputes")
+}
+
+enum DisputeStatus {
+  OPEN
+  RESOLVED
+  CLOSED
+
+  @@schema("disputes")
 }
 

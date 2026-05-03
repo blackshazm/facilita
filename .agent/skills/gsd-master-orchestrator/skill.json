@@ -1,0 +1,19 @@
+{
+  "name": "gsd-master-orchestrator",
+  "version": "1.1.0",
+  "author": "Antigravity Professional",
+  "purpose": "Workflow & Architecture Enforcement",
+  "dependencies": [
+    "gsd-ns-workflow",
+    "facilita-hexagonal-modular"
+  ],
+  "config": {
+    "strict_mode": true,
+    "auto_tagging": true,
+    "boundary_lint_on_verify": true
+  },
+  "workflows": {
+    "intercept": "gsd-master-orchestrator/SKILL.md#process_steps",
+    "decision_matrix": "gsd-master-orchestrator/SKILL.md#routing_logic"
+  }
+}

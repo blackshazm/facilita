@@ -1,0 +1,3 @@
+#!/bin/sh
+npm run lint:boundary
+npm run test:contracts

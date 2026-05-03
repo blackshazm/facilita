@@ -1,0 +1,41 @@
+{
+  "expo": {
+    "name": "FACILITA Prestador",
+    "slug": "facilita-provider",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#064e3b"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.facilita.provider",
+      "infoPlist": {
+        "NSCameraUsageDescription": "O FACILITA precisa da câmera para capturar evidências do serviço.",
+        "NSLocationWhenInUseUsageDescription": "O FACILITA precisa da sua localização para encontrar serviços próximos."
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#064e3b"
+      },
+      "package": "com.facilita.provider",
+      "permissions": [
+        "CAMERA",
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_FINE_LOCATION"
+      ]
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    }
+  }
+}

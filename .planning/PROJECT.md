@@ -27,3 +27,9 @@ To be the most reliable platform for domestic emergencies in Brazil, where quali
 - **Isolamento de Domínio**: Cada módulo mantém suas regras de negócio agnósticas (TypeScript puro) e schemas de banco separados.
 - **Comunicação por Event-Bus**: Fluxos síncronos apenas para consistência financeira; o resto opera via eventos de domínio assíncronos.
 - **Strangler Fig Pattern**: Evolução para microserviços baseada em gargalos operacionais reais, com extração cirúrgica sem reescrita de core domain.
+
+## Governance
+- **Workflow**: All changes follow the **GSD (Get Shit Done)** framework: `Spec -> Discuss -> Plan -> Secure -> Execute -> Verify`.
+- **Architectural Guardrails**: Strict enforcement of module boundaries via `eslint-plugin-boundary` and contract testing.
+- **Orchestration**: Managed by the `gsd-master-orchestrator` skill, ensuring every code change is backed by a validated plan and verification loop.
+

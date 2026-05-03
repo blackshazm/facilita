@@ -1,0 +1,21 @@
+# Tasks: Phase 3.1 Backend Hexagonal Refactoring
+
+- [ ] **Infrastructure & DB**
+    - [ ] Update `schema.prisma` with missing models (Payments, Disputes, Evidence)
+    - [ ] Run `npx prisma generate`
+- [ ] **Identity Module Refactor**
+    - [ ] Create `core/user.entity.ts`
+    - [ ] Create `ports/user-repository.port.ts`
+    - [ ] Create `adapters/prisma-user-repository.adapter.ts`
+    - [ ] Create `application/get-user.usecase.ts`
+    - [ ] Update `identity.module.ts` bindings
+    - [ ] Remove legacy files
+- [ ] **Catalog Module Refactor**
+    - [ ] Create `core/`, `ports/`, `adapters/`, `application/`
+    - [ ] Update bindings
+- [ ] **Orders Module Refactor**
+    - [ ] Create `core/`, `ports/`, `adapters/`, `application/`
+    - [ ] Update bindings
+- [ ] **Verification**
+    - [ ] Run `npm run lint:boundary`
+    - [ ] Manual API smoke test

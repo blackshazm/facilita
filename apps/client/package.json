@@ -11,5 +11,11 @@
     "next": "^15.0.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.5.0",
+    "lucide-react": "^1.14.0",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^4.2.4"
   }
 }

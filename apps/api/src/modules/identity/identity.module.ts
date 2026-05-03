@@ -5,6 +5,10 @@ import { AuthService } from './application/auth.service';
 import { TwilioSmsService } from './infrastructure/twilio-sms.service';
 import { SMS_SERVICE } from './domain/interfaces/sms.service.interface';
 import { JwtStrategy } from '../../shared-kernel/strategies/jwt.strategy';
+import { PrismaService } from '../../shared-kernel/database/prisma.service';
+import { USER_REPOSITORY_PORT } from './ports/user-repository.port';
+import { PrismaUserRepository } from './adapters/prisma-user-repository.adapter';
+import { GetUserUseCase } from './application/get-user.usecase';
 
 @Module({
   imports: [
@@ -17,10 +21,17 @@ import { JwtStrategy } from '../../shared-kernel/strategies/jwt.strategy';
   providers: [
     AuthService,
     JwtStrategy,
+    PrismaService,
+    GetUserUseCase,
     {
       provide: SMS_SERVICE,
       useClass: TwilioSmsService,
     },
+    {
+      provide: USER_REPOSITORY_PORT,
+      useClass: PrismaUserRepository,
+    },
   ],
+  exports: [USER_REPOSITORY_PORT, GetUserUseCase],
 })
 export class IdentityModule {}
