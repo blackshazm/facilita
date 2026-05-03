@@ -1,35 +1,32 @@
 {
   "version": "1.0",
-  "timestamp": "2026-05-01 22:47:33",
-  "phase": "02",
-  "phase_name": "catalog-matching",
-  "phase_dir": ".planning/phases/02-catalog-matching",
-  "plan": 2,
-  "task": 5,
-  "total_tasks": 5,
-  "status": "paused",
+  "timestamp": "2026-05-03T07:32:00Z",
+  "phase": "5.1",
+  "phase_name": "Payment Escrow & Wallet Module",
+  "phase_dir": ".planning/phases/phase_5_1_payment_wallet",
+  "plan": 1,
+  "task": 6,
+  "total_tasks": 6,
+  "status": "completed",
   "completed_tasks": [
-    {"id": 1, "name": "Enable PostGIS and Schema Update", "status": "done"},
-    {"id": 2, "name": "Implement Catalog Module", "status": "done"},
-    {"id": 3, "name": "Seed Catalog Data", "status": "done"},
-    {"id": 4, "name": "Provider Presence Sync (Event Bus)", "status": "done"},
-    {"id": 5, "name": "Geospatial Search Engine", "status": "done"}
+    {"id": 1, "name": "Update Prisma Schema & Push", "status": "done", "commit": "fd2ff0f"},
+    {"id": 2, "name": "Implement Wallet Domain & Persistence", "status": "done", "commit": "fd2ff0f"},
+    {"id": 3, "name": "Pagar.me Gateway Adapter", "status": "done", "commit": "72dbea1"},
+    {"id": 4, "name": "Payment Authorization Flow", "status": "done", "commit": "72dbea1"},
+    {"id": 5, "name": "Payment Capture & Ledger Entry", "status": "done", "commit": "211646b"},
+    {"id": 6, "name": "Tiered Payout Scheduler (BullMQ)", "status": "done", "commit": "211646b"}
   ],
   "remaining_tasks": [],
   "blockers": [],
-  "human_actions_pending": [],
+  "human_actions_pending": [
+    {"action": "Setup Redis environment variables", "context": "BullMQ requires REDIS_HOST and REDIS_PORT", "blocking": true},
+    {"action": "Set PAGARME_SECRET_KEY", "context": "Pagar.me integration requires API key", "blocking": true}
+  ],
   "decisions": [
-    {"decision": "Raw SQL for PostGIS", "rationale": "Prisma has limited native support for spatial functions like ST_DWithin.", "phase": "02"},
-    {"decision": "EventEmitter2 for Presence", "rationale": "Decouples Identity from Matching module while maintaining real-time sync.", "phase": "02"}
+    {"decision": "Used BigInt for Wallet balances", "rationale": "Ensure cents-only precision and avoid floating point errors", "phase": "5.1"},
+    {"decision": "BullMQ for Payout scheduling", "rationale": "Native support for delays (D+15, D+7, D+2) and retry logic", "phase": "5.1"}
   ],
-  "uncommitted_files": [
-    "apps/api/src/app.module.ts",
-    "apps/api/src/modules/catalog/*",
-    "apps/api/src/modules/matching/*",
-    "apps/api/src/shared-kernel/database/prisma.service.ts",
-    "packages/database/prisma/schema.prisma",
-    "packages/database/prisma/seed.ts"
-  ],
-  "next_action": "Verify full UAT and proceed to Phase 3 (Orders & Payments).",
-  "context_notes": "Phase 2 core functionality is implemented. The matching engine is verified with local PostGIS queries. All 13 categories are seeded."
+  "uncommitted_files": [],
+  "next_action": "Spec Phase 5.2: Anti-fraud & Tiering Engine",
+  "context_notes": "Phase 5.1 is fully implemented and committed. Next step is to design the anti-fraud rules and the automatic tiering engine based on the wallet logic established."
 }
