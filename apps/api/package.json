@@ -10,6 +10,8 @@
     "pre-merge": "npm run lint:boundary && npm run test:contracts && npm run build"
   },
   "dependencies": {
+    "@nestjs/bull": "^11.0.4",
+    "@nestjs/bullmq": "^11.0.4",
     "@nestjs/common": "^10.0.0",
     "@nestjs/core": "^10.0.0",
     "@nestjs/event-emitter": "^3.1.0",
@@ -18,7 +20,9 @@
     "@nestjs/platform-express": "^10.0.0",
     "@nestjs/throttler": "^5.0.0",
     "axios": "^1.16.0",
+    "bullmq": "^5.76.5",
     "exif-parser": "^0.1.12",
+    "ioredis": "^5.10.1",
     "passport-jwt": "^4.0.0",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.0"

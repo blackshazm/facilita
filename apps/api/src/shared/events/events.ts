@@ -17,4 +17,11 @@ export class PaymentAuthorizedEvent {
   ) {}
 }
 
+export class OrderDoneEvent {
+  constructor(
+    public readonly orderId: string,
+    public readonly providerId: string,
+  ) {}
+}
+
 // Add more events as needed following the pattern
