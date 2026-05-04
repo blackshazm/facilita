@@ -12,11 +12,19 @@ import { PrismaProviderRepository } from './adapters/prisma-provider-repository.
 import { PROVIDER_REPOSITORY_PORT } from './ports/provider-repository.port';
 import { GetUserUseCase } from './application/get-user.usecase';
 
+import { BullModule } from '@nestjs/bullmq';
+import { TierRecalculationProcessor } from './infrastructure/queues/tier-recalculation.processor';
+
+import { TieringSchedulerService } from './application/tiering-scheduler.service';
+
 @Module({
   imports: [
     JwtModule.register({
       secret: process.env.JWT_SECRET || 'super-secret',
       signOptions: { expiresIn: '7d' },
+    }),
+    BullModule.registerQueue({
+      name: 'tiering',
     }),
   ],
   controllers: [AuthController],
@@ -25,6 +33,8 @@ import { GetUserUseCase } from './application/get-user.usecase';
     JwtStrategy,
     PrismaService,
     GetUserUseCase,
+    TierRecalculationProcessor,
+    TieringSchedulerService,
     {
       provide: SMS_SERVICE,
       useClass: TwilioSmsService,
