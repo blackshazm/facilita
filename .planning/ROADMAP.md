@@ -25,15 +25,5 @@
 - [ ] Pagar.me Split & Escrow integration.
 - [ ] Dispute Management & Refund logic.
 
-## Milestone: Scale & Hardening
-### [x] Phase 5.1: Payment Escrow & Wallet Module
-- [x] Ledger-based Wallet system for provider balances.
-- [x] Pagar.me Escrow API integration for order payments.
-- [x] Tier-based payout automation (D+15, D+7, D+2).
-- [x] Automated Refund and Cancellation logic.
-
-### Phase 5.2: Anti-fraud & Tiering Engine
-- [ ] Anti-fraud Engine (Rules & Thresholds).
-- [ ] Provider Tiering Engine (Bronze/Prata/Ouro).
-- [ ] Backoffice Ops Dashboard.
-
+## Archived Milestones
+- [v5.0: Scale & Hardening](./milestones/v5.0-ROADMAP.md) — 2026-05-04
