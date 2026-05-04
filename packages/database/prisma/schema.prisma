@@ -283,3 +283,15 @@ enum DisputeStatus {
   @@schema("disputes")
 }
 
+model AuditLog {
+  id        String   @id @default(uuid())
+  adminId   String
+  targetId  String
+  action    String
+  reason    String
+  metadata  Json?
+  createdAt DateTime @default(now())
+
+  @@schema("identity")
+}
+
