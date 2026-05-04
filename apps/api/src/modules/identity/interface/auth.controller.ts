@@ -1,5 +1,8 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, Get, UseGuards } from '@nestjs/common';
 import { AuthService } from '../application/auth.service';
+import { Roles } from './decorators/roles.decorator';
+import { UserRole } from '../core/user.entity';
+import { RolesGuard } from './guards/roles.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -14,5 +17,12 @@ export class AuthController {
   @Post('otp/verify')
   async verifyOtp(@Body() body: { phone: string, code: string }) {
     return this.authService.verifyOtp(body.phone, body.code);
+  }
+
+  @Get('admin/ping')
+  @Roles(UserRole.ADMIN)
+  @UseGuards(RolesGuard)
+  async adminPing() {
+    return { message: 'Admin access confirmed' };
   }
 }
