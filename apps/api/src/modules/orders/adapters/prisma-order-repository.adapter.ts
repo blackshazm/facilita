@@ -59,4 +59,21 @@ export class PrismaOrderRepository implements OrderRepositoryPort {
         }),
     );
   }
+
+  async calculateDistance(orderId: string, lat: number, lng: number): Promise<number> {
+    const results = await this.prisma.$queryRawUnsafe<any[]>(
+      `SELECT ST_Distance(
+        ST_SetSRID(ST_MakePoint(longitude, latitude), 4326)::geography,
+        ST_SetSRID(ST_MakePoint($1, $2), 4326)::geography
+      ) as distance
+      FROM "orders"."Order"
+      WHERE id = $3`,
+      lng,
+      lat,
+      orderId
+    );
+
+    if (results.length === 0) return Infinity;
+    return Number(results[0].distance);
+  }
 }
