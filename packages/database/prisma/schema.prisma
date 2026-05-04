@@ -44,6 +44,8 @@ model ProviderProfile {
   endHour       String // e.g., "18:00"
   tier               ProviderTier @default(BRONZE)
   pagarmeRecipientId String?      @unique
+  isFlagged          Boolean      @default(false)
+  fraudReason        String?
   createdAt          DateTime     @default(now())
   updatedAt          DateTime     @updatedAt
 
