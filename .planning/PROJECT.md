@@ -7,13 +7,17 @@ FACILITA is a "closed-loop" transactional marketplace focused on urgent domestic
 To be the most reliable platform for domestic emergencies in Brazil, where quality is guaranteed by mandatory evidence and a rigorous matching engine.
 
 ## Current State
-- **Current Version**: v5.0 (Scale & Hardening)
-- **Last Shipped**: 2026-05-04
+- **Current Version**: v6.0 (Growth & Compliance)
+- **Last Shipped**: 2026-05-04 (v5.0)
 
-## Next Milestone Goals
-- [ ] **Advanced Analytics**: Operational BI for marketplace health.
-- [ ] **Compliance V2**: Global fiscal compliance (Reforma Tributária).
-- [ ] **Mobile Parity**: Fully functional Provider App in production.
+## Current Milestone: v6.0 Growth & Compliance
+
+**Goal**: Expand platform analytical capabilities, ensure fiscal compliance for 2026, and achieve full production readiness for the Provider app.
+
+**Target features**:
+- [ ] **Advanced Analytics**: Operational BI dashboards for marketplace health.
+- [ ] **Compliance V2**: Global fiscal compliance (Reforma Tributária 2026).
+- [ ] **Mobile Parity**: Finalization of the Provider App (Expo) for production.
 
 ## Stakeholders
 - **Users**: Customers needing urgent home repairs.

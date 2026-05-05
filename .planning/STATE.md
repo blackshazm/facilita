@@ -1,19 +1,21 @@
 # Project State — FACILITA
+ 
+## Current Status: **v6.0 — Planning**
+**Last Update**: 2026-05-05
+**Milestone**: Growth & Compliance
 
-## Current Status: **Phase 5.2 — Completed**
-**Last Update**: 2026-05-04
-**Milestone**: Scale & Hardening
+## Current Position
+
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-05-05 — Milestone v6.0 started
 
 ## Completed
-- [x] Phase 1.1: Design System & Infrastructure
-- [x] Phase 2.1: Service Catalog & Matching Engine
-- [x] Phase 3.1: Service Flow & Lifecycle
-- [x] Phase 4.1: Evidence & Trust Architecture
-- [x] Phase 5.1: Payment Escrow & Wallet Module
-- [x] Phase 5.2: Anti-fraud & Tiering Engine
+- [x] Milestone 5.0: Scale & Hardening (2026-05-04)
 
 ## In Progress
-None.
+- [ ] Defining Milestone 6.0 Requirements
 
 ## Blockers / Risks
 - **Risk**: Pagar.me split fiscal complexity (Reforma Tributária 2026).
@@ -23,5 +25,5 @@ None.
 ## Session Continuity
 
 **Last session**: 2026-05-04
-**Status**: Phase 5.2 — Completed (Anti-fraud & Tiering Engine).
-**Next Step**: Milestone Audit or Phase 6.1 (Advanced Analytics & Reporting).
+**Status**: Milestone v6.0 initialized.
+**Next Step**: Define REQUIREMENTS.md.
