@@ -8,8 +8,8 @@
 
 Phase: 6.1 — Operational Analytics & BI
 Plan: Not started
-Status: Planning phase
-Last activity: 2026-05-05 — Milestone v6.0 initialized
+Status: Context gathered, ready for planning
+Last activity: 2026-05-05 — Phase 6.1 context gathered
 
 ## Completed
 - [x] Milestone 5.0: Scale & Hardening (2026-05-04)
