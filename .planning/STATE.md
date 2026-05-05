@@ -7,9 +7,9 @@
 ## Current Position
 
 Phase: 6.1 — Operational Analytics & BI
-Plan: Not started
-Status: Context gathered, ready for planning
-Last activity: 2026-05-05 — Phase 6.1 context gathered
+Plan: 06.1-PLAN.md (4 waves)
+Status: Planned, ready for execution
+Last activity: 2026-05-05 — Phase 6.1 planned
 
 ## Completed
 - [x] Milestone 5.0: Scale & Hardening (2026-05-04)
