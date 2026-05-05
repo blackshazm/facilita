@@ -32,13 +32,13 @@ This milestone focuses on expanding the platform's analytical capabilities, ensu
 ## Traceability
 | REQ-ID | Phase | Status |
 |--------|-------|--------|
-| ANL-01 | | Pending |
-| ANL-02 | | Pending |
-| ANL-03 | | Pending |
-| CMP-01 | | Pending |
-| CMP-02 | | Pending |
-| CMP-03 | | Pending |
-| PRV-01 | | Pending |
-| PRV-02 | | Pending |
-| PRV-03 | | Pending |
-| PRV-04 | | Pending |
+| ANL-01 | 6.1   | Pending |
+| ANL-02 | 6.1   | Pending |
+| ANL-03 | 6.1   | Pending |
+| CMP-01 | 6.2   | Pending |
+| CMP-02 | 6.2   | Pending |
+| CMP-03 | 6.2   | Pending |
+| PRV-01 | 6.3   | Pending |
+| PRV-02 | 6.3   | Pending |
+| PRV-03 | 6.3   | Pending |
+| PRV-04 | 6.3   | Pending |

@@ -6,10 +6,10 @@
 
 ## Current Position
 
-Phase: Not started (defining requirements)
-Plan: —
-Status: Defining requirements
-Last activity: 2026-05-05 — Milestone v6.0 started
+Phase: 6.1 — Operational Analytics & BI
+Plan: Not started
+Status: Planning phase
+Last activity: 2026-05-05 — Milestone v6.0 initialized
 
 ## Completed
 - [x] Milestone 5.0: Scale & Hardening (2026-05-04)
