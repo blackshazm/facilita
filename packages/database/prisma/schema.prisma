@@ -6,7 +6,18 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-  schemas  = ["identity", "catalog", "matching", "orders", "payments", "evidence", "fraud", "disputes"]
+  schemas  = ["identity", "catalog", "matching", "orders", "payments", "evidence", "fraud", "disputes", "analytics"]
+}
+
+// Analytics Schema
+model DailyMetric {
+  date         DateTime @id
+  gmv          BigInt   @default(0)
+  ordersCount  Int      @default(0)
+  matchesCount Int      @default(0)
+  revenue      BigInt   @default(0)
+
+  @@schema("analytics")
 }
 
 // Identity Schema

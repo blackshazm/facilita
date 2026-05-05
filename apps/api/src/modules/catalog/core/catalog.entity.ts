@@ -20,8 +20,8 @@ export class Service {
     public readonly id: string,
     public readonly categoryId: string,
     public readonly name: string,
-    public readonly description?: string,
     public readonly basePrice: number,
     public readonly unitType: UnitType,
+    public readonly description?: string,
   ) {}
 }

@@ -8,7 +8,7 @@ export interface PaymentAuthorizeProps {
 
 export interface PaymentResult {
   externalId: string;
-  status: 'AUTHORIZED' | 'PAID' | 'FAILED' | 'PENDING';
+  status: 'AUTHORIZED' | 'PAID' | 'FAILED' | 'PENDING' | 'REFUNDED';
   rawResponse?: any;
 }
 

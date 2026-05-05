@@ -1,6 +1,6 @@
 {
   "name": "facilita-hexagonal-modular",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "architecture": "modular-hexagonal-evolutive",
   "stack": ["nestJS", "typescript", "prisma", "redis"],
   "enforcement": {
@@ -24,6 +24,52 @@
     "adapters": "{module}/adapters/{adapter}.adapter.ts",
     "usecase": "{module}/application/{usecase}.usecase.ts",
     "event": "shared/events/{event}.event.ts"
+  },
+  "autoLoad": {
+    "triggers": [
+      "src/modules/**",
+      "src/shared/events/**",
+      "prisma/schema.prisma"
+    ],
+    "gsdPhaseKeywords": [
+      "hexagonal", "module", "port", "adapter", "use-case", "usecase",
+      "domain", "bounded context", "event", "payment", "order",
+      "antifraud", "dispute", "evidence"
+    ],
+    "activateOnCommands": [
+      "gsd-plan-phase",
+      "gsd-execute-phase",
+      "gsd-code-review",
+      "gsd-verify-work",
+      "gsd-validate-phase"
+    ]
+  },
+  "prdSections": {
+    "payments": {
+      "section": "4.4",
+      "subsections": ["4.4.1 Gateway Pagar.me", "4.4.2 Escrow", "4.4.3 Payout Schedule"],
+      "criticalPorts": ["PaymentGatewayPort", "WalletRepositoryPort", "PayoutSchedulerPort"]
+    },
+    "orders": {
+      "section": "4.2",
+      "subsections": ["4.2.1 Criação de Pedido", "4.2.2 Matching Geoespacial", "4.2.3 Status Lifecycle"],
+      "criticalPorts": ["OrderRepositoryPort", "GeoMatchingPort"]
+    },
+    "antifraud": {
+      "section": "4.6",
+      "subsections": ["4.6.1 Geofencing", "4.6.2 Score de Confiança", "4.6.3 Bloqueio Automático"],
+      "criticalPorts": ["FraudDetectionPort", "GeoValidationPort"]
+    },
+    "disputes": {
+      "section": "4.5",
+      "subsections": ["4.5.1 Abertura de Disputa", "4.5.2 Resolução", "4.5.3 Estorno"],
+      "criticalPorts": ["DisputeRepositoryPort", "MediationPort"]
+    },
+    "evidence": {
+      "section": "4.7",
+      "subsections": ["4.7.1 Upload de Evidência", "4.7.2 Validação EXIF", "4.7.3 Associação ao Pedido"],
+      "criticalPorts": ["EvidenceStoragePort", "ExifValidationPort"]
+    }
   },
   "githubReferences": [
     "https://github.com/nestjs/nest/tree/master/sample/01-cats-app",

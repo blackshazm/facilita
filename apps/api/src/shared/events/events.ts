@@ -21,7 +21,14 @@ export class OrderDoneEvent {
   constructor(
     public readonly orderId: string,
     public readonly providerId: string,
+    public readonly amount: bigint, // cents
   ) {}
 }
 
-// Add more events as needed following the pattern
+export class PaymentCapturedEvent {
+  constructor(
+    public readonly paymentId: string,
+    public readonly amount: bigint, // cents
+    public readonly fee: bigint, // cents
+  ) {}
+}

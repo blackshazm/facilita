@@ -1,7 +1,10 @@
 {
   "project_name": "Facilita",
   "version": "1.0.0",
-  "workflow": "GSD",
+  "workflow": {
+    "protocol": "GSD",
+    "nyquist_validation": true
+  },
   "stack": {
     "backend": "NestJS",
     "frontend_client": "Next.js 15 PWA",

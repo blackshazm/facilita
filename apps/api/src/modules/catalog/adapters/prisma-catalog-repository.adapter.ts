@@ -31,9 +31,9 @@ export class PrismaCatalogRepository implements CatalogRepositoryPort {
           raw.id,
           raw.categoryId,
           raw.name,
-          raw.description || undefined,
           Number(raw.basePrice),
           raw.unitType as UnitType,
+          raw.description || undefined,
         ),
     );
   }
@@ -47,9 +47,9 @@ export class PrismaCatalogRepository implements CatalogRepositoryPort {
       raw.id,
       raw.categoryId,
       raw.name,
-      raw.description || undefined,
       Number(raw.basePrice),
       raw.unitType as UnitType,
+      raw.description || undefined,
     );
   }
 }

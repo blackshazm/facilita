@@ -6,6 +6,7 @@ import { MatchingModule } from './modules/matching/matching.module';
 import { OrdersModule } from './modules/orders/orders.module';
 import { PaymentsModule } from './modules/payments/payments.module';
 import { FraudModule } from './modules/fraud/fraud.module';
+import { AnalyticsModule } from './modules/analytics/analytics.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 
 @Module({
@@ -21,6 +22,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
     OrdersModule,
     PaymentsModule,
     FraudModule,
+    AnalyticsModule,
   ],
 })
 export class AppModule {}

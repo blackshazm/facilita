@@ -4,13 +4,13 @@
 *Goal: Expand platform analytical capabilities, ensure fiscal compliance for 2026, and achieve full production readiness for the Provider app.*
 
 ### Phase 6.1: Operational Analytics & BI [FUNCIONAL]
-- [ ] Implementar motor de agregação de métricas (GMV, Match Rate, Churn).
-- [ ] Criar dashboard de gestão no Backoffice para visualização de KPIs.
-- [ ] Implementar exportação de relatórios (CSV/PDF) para BI externo.
+- [x] Implementar motor de agregação de métricas (GMV, Match Rate, Churn).
+- [x] Criar dashboard de gestão no Backoffice para visualização de KPIs.
+- [x] Implementar exportação de relatórios (CSV/PDF) para BI externo.
 - **Requirements**: ANL-01, ANL-02, ANL-03
 - **Success Criteria**:
-  - Dashboard funcional com dados em tempo real (latência < 5min).
-  - Exportação de relatório mensal gerada com sucesso.
+  - [x] Dashboard funcional com dados em tempo real (latência < 5min).
+  - [x] Exportação de relatório mensal gerada com sucesso.
 
 ### Phase 6.2: Fiscal Compliance & Tax Engine [FUNCIONAL]
 - [ ] Atualizar cálculo de taxas de serviço para Reforma Tributária 2026.
