@@ -7,6 +7,8 @@ import { OrdersModule } from './modules/orders/orders.module';
 import { PaymentsModule } from './modules/payments/payments.module';
 import { FraudModule } from './modules/fraud/fraud.module';
 import { AnalyticsModule } from './modules/analytics/analytics.module';
+import { FiscalModule } from './modules/fiscal/fiscal.module';
+import { SharedKernelModule } from './shared-kernel/shared-kernel.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 
 @Module({
@@ -23,6 +25,8 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
     PaymentsModule,
     FraudModule,
     AnalyticsModule,
+    FiscalModule,
+    SharedKernelModule,
   ],
 })
 export class AppModule {}

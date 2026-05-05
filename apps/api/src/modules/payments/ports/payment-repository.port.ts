@@ -4,6 +4,8 @@ export interface PaymentProps {
   externalId?: string;
   amount: number;
   splitAmount?: number;
+  ibsAmount?: number;
+  cbsAmount?: number;
   method: 'CARD' | 'PIX';
   status: 'PENDING' | 'AUTHORIZED' | 'PAID' | 'REFUNDED' | 'FAILED';
 }

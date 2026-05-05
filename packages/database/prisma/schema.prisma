@@ -6,7 +6,7 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-  schemas  = ["identity", "catalog", "matching", "orders", "payments", "evidence", "fraud", "disputes", "analytics"]
+  schemas  = ["identity", "catalog", "matching", "orders", "payments", "evidence", "fraud", "disputes", "analytics", "audit"]
 }
 
 // Analytics Schema
@@ -144,9 +144,11 @@ model Service {
   name        String
   description String?
   basePrice   Decimal   @default(0.0)
-  unitType    UnitType  @default(FIXED)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  unitType        UnitType  @default(FIXED)
+  serviceCode     String?   // LC 116 code
+  cityServiceCode String?   // Municipal code
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
 
   @@schema("catalog")
 }
@@ -191,6 +193,10 @@ model Payment {
   method        PaymentMethod
   status        PaymentStatus @default(PENDING)
   transactionLog Json?
+  ibsAmount     Decimal?      // Reforma 2026
+  cbsAmount     Decimal?      // Reforma 2026
+  invoiceId     String?       @unique
+  invoice       Invoice?      @relation(fields: [invoiceId], references: [id])
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
 
@@ -306,3 +312,36 @@ model AuditLog {
   @@schema("identity")
 }
 
+model Invoice {
+  id              String        @id @default(uuid())
+  orderId         String
+  externalId      String?       @unique // eNotas ID
+  status          String        @default("PENDING")
+  xmlUrl          String?
+  pdfUrl          String?
+  totalAmount     Decimal
+  taxAmount       Decimal
+  ibsAmount       Decimal?
+  cbsAmount       Decimal?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  payment         Payment?
+
+  @@schema("payments")
+}
+
+model FinancialAuditLog {
+  id          String   @id @default(uuid())
+  actorId     String
+  actorType   String   // SYSTEM | ADMIN | OPERATOR
+  action      String   // PAYMENT_CAPTURED | PAYOUT_SCHEDULED | etc.
+  entityType  String   // Payment | Wallet | Payout
+  entityId    String
+  before      Json?
+  after       Json?
+  metadata    Json?
+  createdAt   DateTime @default(now())
+
+  @@schema("audit")
+}

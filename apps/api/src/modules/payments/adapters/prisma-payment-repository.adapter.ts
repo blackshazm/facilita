@@ -13,6 +13,8 @@ export class PrismaPaymentRepository implements PaymentRepositoryPort {
         externalId: payment.externalId,
         status: payment.status as any,
         splitAmount: payment.splitAmount,
+        ibsAmount: payment.ibsAmount,
+        cbsAmount: payment.cbsAmount,
       },
       create: {
         id: payment.id,
@@ -20,6 +22,8 @@ export class PrismaPaymentRepository implements PaymentRepositoryPort {
         externalId: payment.externalId,
         amount: payment.amount,
         splitAmount: payment.splitAmount,
+        ibsAmount: payment.ibsAmount,
+        cbsAmount: payment.cbsAmount,
         method: payment.method as any,
         status: payment.status as any,
       },
@@ -49,6 +53,8 @@ export class PrismaPaymentRepository implements PaymentRepositoryPort {
       externalId: raw.externalId || undefined,
       amount: Number(raw.amount),
       splitAmount: raw.splitAmount ? Number(raw.splitAmount) : undefined,
+      ibsAmount: raw.ibsAmount ? Number(raw.ibsAmount) : undefined,
+      cbsAmount: raw.cbsAmount ? Number(raw.cbsAmount) : undefined,
       method: raw.method as any,
       status: raw.status as any,
     };

@@ -14,11 +14,13 @@ import { PaymentWebhookController } from './interface/http/payment.webhook.contr
 import { OrdersModule } from '../orders/orders.module';
 import { IdentityModule } from '../identity/identity.module';
 import { PROVIDER_REPOSITORY_PORT } from '../identity/ports/provider-repository.port';
+import { FiscalModule } from '../fiscal/fiscal.module';
 
 @Module({
   imports: [
     OrdersModule,
     IdentityModule,
+    FiscalModule,
     BullModule.forRoot({
       connection: {
         host: process.env.REDIS_HOST || 'localhost',
