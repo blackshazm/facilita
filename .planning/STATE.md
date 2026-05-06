@@ -1,31 +1,29 @@
 # Project State — FACILITA
- 
-## Current Status: **v6.0 — Growth & Compliance**
-**Last Update**: 2026-05-05
-**Milestone**: Growth & Compliance
+
+## Current Status: **v7.0 — Expansion & Payouts**
+**Last Update**: 2026-05-06
+**Milestone**: Expansion & Payouts
 
 ## Current Position
 
-Phase: 6.3 — Mobile Production & Publishing
-Plan: 06.3-PLAN.md
-Status: COMPLETED
-Last activity: 2026-05-06 — Phase 6.3 finalized with UAT passed and Summary generated.
+Phase: 7.1 — Payout Automation & Ledger Hardening
+Plan: None
+Status: Ready to Discuss
+Last activity: 2026-05-06 — Milestone v7.0 initiated. Requirements and Roadmap locked.
 
 ## Completed
-- [x] Phase 6.3 — Mobile Production & Publishing (2026-05-06)
-- [x] Phase 6.2 — Fiscal Compliance & Tax Engine (2026-05-05)
-- [x] Phase 6.1 — Operational Analytics & BI (2026-05-05)
-- [x] Milestone 5.0: Scale & Hardening (2026-05-04)
+- [x] Milestone v6.0: Growth & Compliance (2026-05-06)
+- [x] Milestone v5.0: Scale & Hardening (2026-05-04)
 
 ## In Progress
-- [ ] Milestone 6.0 Audit & Archive
+- [ ] Phase 7.1 — Payout Automation & Ledger Hardening (Discussion)
 
 ## Blockers / Risks
-- **Scale**: Redis/BullMQ persistence needs production-ready configuration.
-- **Mobile**: App store review process (Apple/Google) for the Provider app.
+- **Payouts**: Compliance with BACEN regulations for escrow-to-payout transfers.
+- **Geo-fencing**: Performance of complex polygon matching at scale.
 
 ## Session Continuity
 
-**Last session**: 2026-05-05
-**Status**: Phase 6.3 context gathered. Decisions on KYC privacy, Push infra, and Offline storage locked.
-**Next Step**: Run /gsd-plan-phase 6.3 to generate the technical implementation plan.
+**Last session**: 2026-05-06
+**Status**: Milestone v7.0 strategy defined (Custom Scheduler, Region filtering, Wallet credits).
+**Next Step**: Run `/gsd-discuss-phase 7.1` to refine the Payout Automation architecture.
