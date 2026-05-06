@@ -3,6 +3,14 @@ export interface ProviderProfileProps {
   userId: string;
   tier: 'BRONZE' | 'PRATA' | 'OURO';
   pagarmeRecipientId?: string;
+  bankCode?: string;
+  bankBranch?: string;
+  bankBranchDigit?: string;
+  bankAccount?: string;
+  bankAccountDigit?: string;
+  bankAccountType?: string;
+  bankDataHash?: string;
+  bankDataUpdatedAt?: Date;
 }
 
 export interface ProviderRepositoryPort {

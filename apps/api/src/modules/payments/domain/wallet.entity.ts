@@ -91,6 +91,18 @@ export class Wallet {
   }
 
   /**
+   * Registers a payout request by debiting the balance immediately.
+   */
+  public registerPayout(amount: bigint): void {
+    if (amount <= 0n) throw new Error('Amount must be positive');
+    if (this.props.balance < amount) {
+      throw new Error('Insufficient balance for payout');
+    }
+    this.props.balance -= amount;
+    this.props.updatedAt = new Date();
+  }
+
+  /**
    * Reverses a frozen amount.
    */
   public cancel(amount: bigint): void {

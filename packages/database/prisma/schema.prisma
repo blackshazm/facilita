@@ -58,6 +58,14 @@ model ProviderProfile {
   pagarmeRecipientId String?      @unique
   isFlagged          Boolean      @default(false)
   fraudReason        String?
+  bankCode           String?
+  bankBranch         String?
+  bankBranchDigit    String?
+  bankAccount        String?
+  bankAccountDigit   String?
+  bankAccountType    String?
+  bankDataHash       String?
+  bankDataUpdatedAt  DateTime?
   createdAt          DateTime     @default(now())
   updatedAt          DateTime     @updatedAt
 
@@ -270,6 +278,31 @@ enum TransactionType {
   DEBIT // Payout/Withdrawal
   FROZEN // Entry into escrow (pending)
   CANCEL // Refund/Reversal
+
+  @@schema("payments")
+}
+
+model Payout {
+  id             String       @id @default(uuid())
+  providerId     String
+  amount         BigInt
+  fee            BigInt       @default(0)
+  status         PayoutStatus @default(PENDING)
+  externalId     String?      @unique
+  bankDataHash   String?
+  metadata       Json?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  @@schema("payments")
+}
+
+enum PayoutStatus {
+  PENDING
+  PROCESSING
+  PAID
+  FAILED
+  PENDING_APPROVAL
 
   @@schema("payments")
 }

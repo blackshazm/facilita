@@ -41,6 +41,13 @@ export class PrismaWalletRepository implements WalletRepositoryPort {
     return this.mapToDomain(raw);
   }
 
+  async findWalletsWithBalance(): Promise<Wallet[]> {
+    const raws = await this.prisma.wallet.findMany({
+      where: { balance: { gt: 0n } },
+    });
+    return raws.map(this.mapToDomain.bind(this));
+  }
+
   private mapToDomain(raw: any): Wallet {
     return new Wallet({
       id: raw.id,
