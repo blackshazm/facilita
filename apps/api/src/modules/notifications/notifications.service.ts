@@ -2,6 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { InjectQueue } from '@nestjs/bullmq';
 import { Queue } from 'bullmq';
 import { PrismaService } from '../../shared-kernel/database/prisma.service';
+import { OnEvent } from '@nestjs/event-emitter';
 
 @Injectable()
 export class NotificationsService {
@@ -11,6 +12,28 @@ export class NotificationsService {
     @InjectQueue('notifications') private readonly notificationQueue: Queue,
     private readonly prisma: PrismaService,
   ) {}
+
+  @OnEvent('payout.failed')
+  async handlePayoutFailed(payload: { providerId: string; amount: string }) {
+    // Find the userId for the provider
+    const profile = await this.prisma.providerProfile.findUnique({
+      where: { id: payload.providerId },
+      select: { userId: true },
+    });
+    if (!profile) return;
+
+    const amountFormatted = (Number(payload.amount) / 100).toLocaleString('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
+    });
+
+    await this.sendToUser(
+      profile.userId,
+      '⚠️ Falha no Payout',
+      `O valor de ${amountFormatted} voltou para sua Wallet. Atualize seus dados bancários.`,
+      { type: 'PAYOUT_FAILED', amount: payload.amount },
+    );
+  }
 
   async sendToUser(userId: string, title: string, body: string, data?: any) {
     this.logger.log(`Agendando notificação para o usuário ${userId}: ${title}`);

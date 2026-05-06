@@ -30,6 +30,12 @@ export class ProcessDailyPayoutsUseCase {
         continue;
       }
 
+      // Guard: KYC must be approved
+      if (provider.kycStatus !== 'APPROVED') {
+        skipped++;
+        continue;
+      }
+
       // Security: Change Lock (24h)
       if (provider.bankDataUpdatedAt) {
         const hoursSinceUpdate = (Date.now() - provider.bankDataUpdatedAt.getTime()) / (1000 * 60 * 60);

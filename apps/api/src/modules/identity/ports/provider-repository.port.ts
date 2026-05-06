@@ -11,6 +11,7 @@ export interface ProviderProfileProps {
   bankAccountType?: string;
   bankDataHash?: string;
   bankDataUpdatedAt?: Date;
+  kycStatus?: 'PENDING' | 'APPROVED' | 'REJECTED';
 }
 
 export interface ProviderRepositoryPort {

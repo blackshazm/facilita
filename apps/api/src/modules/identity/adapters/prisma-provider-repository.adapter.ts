@@ -9,6 +9,7 @@ export class PrismaProviderRepository implements ProviderRepositoryPort {
   async findById(id: string): Promise<ProviderProfileProps | null> {
     const raw = await this.prisma.providerProfile.findUnique({
       where: { id },
+      include: { user: { include: { kycSubmissions: { orderBy: { createdAt: 'desc' }, take: 1 } } } },
     });
     if (!raw) return null;
     return {
@@ -16,6 +17,15 @@ export class PrismaProviderRepository implements ProviderRepositoryPort {
       userId: raw.userId,
       tier: raw.tier as any,
       pagarmeRecipientId: raw.pagarmeRecipientId || undefined,
+      bankCode: raw.bankCode || undefined,
+      bankBranch: raw.bankBranch || undefined,
+      bankBranchDigit: raw.bankBranchDigit || undefined,
+      bankAccount: raw.bankAccount || undefined,
+      bankAccountDigit: raw.bankAccountDigit || undefined,
+      bankAccountType: raw.bankAccountType || undefined,
+      bankDataHash: raw.bankDataHash || undefined,
+      bankDataUpdatedAt: raw.bankDataUpdatedAt || undefined,
+      kycStatus: (raw.user?.kycSubmissions?.[0]?.status as any) || 'PENDING',
     };
   }
 
@@ -25,6 +35,14 @@ export class PrismaProviderRepository implements ProviderRepositoryPort {
       data: {
         tier: provider.tier as any,
         pagarmeRecipientId: provider.pagarmeRecipientId,
+        bankCode: provider.bankCode,
+        bankBranch: provider.bankBranch,
+        bankBranchDigit: provider.bankBranchDigit,
+        bankAccount: provider.bankAccount,
+        bankAccountDigit: provider.bankAccountDigit,
+        bankAccountType: provider.bankAccountType,
+        bankDataHash: provider.bankDataHash,
+        bankDataUpdatedAt: provider.bankDataUpdatedAt,
       },
     });
   }
