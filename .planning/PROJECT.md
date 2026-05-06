@@ -8,16 +8,24 @@ To be the most reliable platform for domestic emergencies in Brazil, where quali
 
 ## Current State
 - **Current Version**: v6.0 (Growth & Compliance)
-- **Last Shipped**: 2026-05-04 (v5.0)
+- **Last Shipped**: 2026-05-06 (v6.0)
 
-## Current Milestone: v6.0 Growth & Compliance
+<details>
+<summary><b>Historical Milestones</b></summary>
 
-**Goal**: Expand platform analytical capabilities, ensure fiscal compliance for 2026, and achieve full production readiness for the Provider app.
+### v6.0 Growth & Compliance (2026-05-06)
+- **Goal**: Expand platform analytical capabilities, ensure fiscal compliance for 2026, and achieve full production readiness for the Provider app.
+- **Achievements**:
+    - [x] **Advanced Analytics**: Operational BI dashboards for marketplace health.
+    - [x] **Compliance V2**: Global fiscal compliance (Reforma Tributária 2026).
+    - [x] **Mobile Parity**: Finalization of the Provider App (Expo) for production.
 
-**Target features**:
-- [ ] **Advanced Analytics**: Operational BI dashboards for marketplace health.
-- [ ] **Compliance V2**: Global fiscal compliance (Reforma Tributária 2026).
-- [ ] **Mobile Parity**: Finalization of the Provider App (Expo) for production.
+### v5.0: Scale & Hardening (2026-05-04)
+- Focus on Escrow systems, Tiering engine and Fraud prevention.
+</details>
+
+## Next Milestone: v7.0 Expansion & Payouts (Draft)
+- **Goal**: Automate payouts, implement referral systems and expand to multi-city operations.
 
 ## Stakeholders
 - **Users**: Customers needing urgent home repairs.
