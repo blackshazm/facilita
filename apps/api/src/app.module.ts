@@ -8,6 +8,7 @@ import { PaymentsModule } from './modules/payments/payments.module';
 import { FraudModule } from './modules/fraud/fraud.module';
 import { AnalyticsModule } from './modules/analytics/analytics.module';
 import { FiscalModule } from './modules/fiscal/fiscal.module';
+import { NotificationsModule } from './modules/notifications/notifications.module';
 import { SharedKernelModule } from './shared-kernel/shared-kernel.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 
@@ -26,6 +27,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
     FraudModule,
     AnalyticsModule,
     FiscalModule,
+    NotificationsModule,
     SharedKernelModule,
   ],
 })

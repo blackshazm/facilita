@@ -16,6 +16,10 @@ import { BullModule } from '@nestjs/bullmq';
 import { TierRecalculationProcessor } from './infrastructure/queues/tier-recalculation.processor';
 
 import { TieringSchedulerService } from './application/tiering-scheduler.service';
+import { KycController } from './interface/kyc.controller';
+import { KycService } from './application/kyc.service';
+import { StoragePort } from './ports/storage.port';
+import { MockStorageAdapter } from './infrastructure/mock-storage.adapter';
 
 @Module({
   imports: [
@@ -27,7 +31,7 @@ import { TieringSchedulerService } from './application/tiering-scheduler.service
       name: 'tiering',
     }),
   ],
-  controllers: [AuthController],
+  controllers: [AuthController, KycController],
   providers: [
     AuthService,
     JwtStrategy,
@@ -46,6 +50,11 @@ import { TieringSchedulerService } from './application/tiering-scheduler.service
     {
       provide: PROVIDER_REPOSITORY_PORT,
       useClass: PrismaProviderRepository,
+    },
+    KycService,
+    {
+      provide: StoragePort,
+      useClass: MockStorageAdapter,
     },
   ],
   exports: [USER_REPOSITORY_PORT, PROVIDER_REPOSITORY_PORT, GetUserUseCase],

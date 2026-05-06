@@ -14,12 +14,17 @@
     "assetBundlePatterns": [
       "**/*"
     ],
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.facilita.provider",
       "infoPlist": {
-        "NSCameraUsageDescription": "O FACILITA precisa da câmera para capturar evidências do serviço.",
-        "NSLocationWhenInUseUsageDescription": "O FACILITA precisa da sua localização para encontrar serviços próximos."
+        "NSCameraUsageDescription": "O FACILITA precisa da câmera para capturar evidências do serviço e realizar a verificação de identidade (KYC).",
+        "NSLocationWhenInUseUsageDescription": "O FACILITA utiliza sua localização para calcular o deslocamento até o cliente e garantir a segurança do atendimento.",
+        "NSPhotoLibraryUsageDescription": "O FACILITA acessa sua galeria para que você possa enviar fotos de documentos salvos.",
+        "NSUserTrackingUsageDescription": "O FACILITA utiliza identificadores para melhorar a entrega de notificações e prevenir fraudes."
       }
     },
     "android": {
@@ -31,7 +36,8 @@
       "permissions": [
         "CAMERA",
         "ACCESS_COARSE_LOCATION",
-        "ACCESS_FINE_LOCATION"
+        "ACCESS_FINE_LOCATION",
+        "NOTIFICATIONS"
       ]
     },
     "web": {
