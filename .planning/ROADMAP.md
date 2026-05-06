@@ -13,13 +13,13 @@
   - [x] Exportação de relatório mensal gerada com sucesso.
 
 ### Phase 6.2: Fiscal Compliance & Tax Engine [FUNCIONAL]
-- [ ] Atualizar cálculo de taxas de serviço para Reforma Tributária 2026.
-- [ ] Integrar API de emissão de NFS-e (Notas Fiscais de Serviço).
-- [ ] Implementar Audit Log imutável para transações financeiras.
+- [x] Atualizar cálculo de taxas de serviço para Reforma Tributária 2026.
+- [x] Integrar API de emissão de NFS-e (Notas Fiscais de Serviço).
+- [x] Implementar Audit Log imutável para transações financeiras.
 - **Requirements**: CMP-01, CMP-02, CMP-03
 - **Success Criteria**:
-  - Cálculo de impostos validado em sandbox conforme novas regras.
-  - Nota Fiscal emitida automaticamente após conclusão de ordem.
+  - [x] Cálculo de impostos validado em sandbox conforme novas regras.
+  - [x] Nota Fiscal emitida automaticamente após conclusão de ordem.
 
 ### Phase 6.3: Mobile Production & Publishing [FUNCIONAL]
 - [ ] Configurar CI/CD Pipeline via Expo EAS Build & Submit.

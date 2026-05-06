@@ -6,14 +6,14 @@ This milestone focuses on expanding the platform's analytical capabilities, ensu
 ## Active Requirements
 
 ### Analytics Avançado (ANL)
-- [ ] **ANL-01**: Dashboard operacional com métricas em tempo real (GMV, Match Rate, Churn) integrado ao Backoffice.
-- [ ] **ANL-02**: Relatórios de performance detalhados por prestador, região e categoria de serviço.
-- [ ] **ANL-03**: Exportação de dados para contabilidade e gestão operacional (CSV/PDF).
+- [x] **ANL-01**: Dashboard operacional com métricas em tempo real (GMV, Match Rate, Churn) integrado ao Backoffice.
+- [x] **ANL-02**: Relatórios de performance detalhados por prestador, região e categoria de serviço.
+- [x] **ANL-03**: Exportação de dados para contabilidade e gestão operacional (CSV/PDF).
 
 ### Compliance Fiscal (CMP)
-- [ ] **CMP-01**: Adaptação do motor de pagamentos (Pagar.me Split) para suportar a retenção e repasse de IBS/CBS conforme Reforma Tributária 2026.
-- [ ] **CMP-02**: Geração automatizada de Notas Fiscais de Serviço (NFS-e) via API para cada ordem finalizada.
-- [ ] **CMP-03**: Registro de log de auditoria fiscal para todas as transações financeiras.
+- [/] **CMP-01**: Adaptação do motor de pagamentos (Pagar.me Split) para suportar a retenção e repasse de IBS/CBS conforme Reforma Tributária 2026.
+- [/] **CMP-02**: Geração automatizada de Notas Fiscais de Serviço (NFS-e) via API para cada ordem finalizada.
+- [/] **CMP-03**: Registro de log de auditoria fiscal para todas as transações financeiras.
 
 ### Provider App - Produção (PRV)
 - [ ] **PRV-01**: Configuração de CI/CD via Expo Application Services (EAS) para builds automáticos e submissão nas lojas.
@@ -32,12 +32,12 @@ This milestone focuses on expanding the platform's analytical capabilities, ensu
 ## Traceability
 | REQ-ID | Phase | Status |
 |--------|-------|--------|
-| ANL-01 | 6.1   | Pending |
-| ANL-02 | 6.1   | Pending |
-| ANL-03 | 6.1   | Pending |
-| CMP-01 | 6.2   | Pending |
-| CMP-02 | 6.2   | Pending |
-| CMP-03 | 6.2   | Pending |
+| ANL-01 | 6.1   | Done |
+| ANL-02 | 6.1   | Done |
+| ANL-03 | 6.1   | Done |
+| CMP-01 | 6.2   | In Verification |
+| CMP-02 | 6.2   | In Verification |
+| CMP-03 | 6.2   | In Verification |
 | PRV-01 | 6.3   | Pending |
 | PRV-02 | 6.3   | Pending |
 | PRV-03 | 6.3   | Pending |

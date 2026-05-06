@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
-import { ENotasGatewayAdapter } from '../infrastructure/enotas-gateway.adapter';
-import { PrismaService } from '../../../shared-kernel/database/prisma.service';
+import { ENotasGatewayAdapter } from '../enotas-gateway.adapter';
+import { PrismaService } from '../../../../shared-kernel/database/prisma.service';
 
 @Injectable()
 export class FiscalInvoiceEventListener {
