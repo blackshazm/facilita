@@ -18,13 +18,73 @@ const categories = [
   { name: 'Gesseiro', slug: 'gesseiro', description: 'Forros e paredes de gesso' },
 ];
 
+const cities = [
+  { 
+    name: 'São Paulo', slug: 'sao-paulo', ibgeCode: '3550308', state: 'SP',
+    neighborhoods: [
+      { name: 'Centro Histórico', slug: 'centro-historico' },
+      { name: 'Moema', slug: 'moema' },
+      { name: 'Pinheiros', slug: 'pinheiros' },
+      { name: 'Vila Mariana', slug: 'vila-mariana' },
+      { name: 'Santana', slug: 'santana' },
+    ]
+  },
+  {
+    name: 'Rio de Janeiro', slug: 'rio-de-janeiro', ibgeCode: '3304557', state: 'RJ',
+    neighborhoods: [
+      { name: 'Copacabana', slug: 'copacabana' },
+      { name: 'Botafogo', slug: 'botafogo' },
+      { name: 'Tijuca', slug: 'tijuca' },
+      { name: 'Barra da Tijuca', slug: 'barra-da-tijuca' },
+      { name: 'Centro', slug: 'centro-rj' },
+    ]
+  }
+];
+
 async function main() {
+  console.log('Seeding cities and neighborhoods...');
+  for (const city of cities) {
+    const createdCity = await prisma.city.upsert({
+      where: { slug: city.slug },
+      update: {},
+      create: {
+        name: city.name,
+        slug: city.slug,
+        ibgeCode: city.ibgeCode,
+        state: city.state,
+      },
+    });
+
+    for (const neighborhood of city.neighborhoods) {
+      await prisma.neighborhood.upsert({
+        where: { slug: neighborhood.slug },
+        update: {},
+        create: {
+          name: neighborhood.name,
+          slug: neighborhood.slug,
+          cityId: createdCity.id,
+        },
+      });
+    }
+  }
+
+  const allCities = await prisma.city.findMany();
+
   console.log('Seeding categories...');
   for (const cat of categories) {
     await prisma.category.upsert({
       where: { slug: cat.slug },
-      update: {},
-      create: cat,
+      update: {
+        activeCities: {
+          connect: allCities.map(c => ({ id: c.id }))
+        }
+      },
+      create: {
+        ...cat,
+        activeCities: {
+          connect: allCities.map(c => ({ id: c.id }))
+        }
+      },
     });
   }
   console.log('Seed complete.');

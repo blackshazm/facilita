@@ -9,7 +9,10 @@ export class PrismaProviderRepository implements ProviderRepositoryPort {
   async findById(id: string): Promise<ProviderProfileProps | null> {
     const raw = await this.prisma.providerProfile.findUnique({
       where: { id },
-      include: { user: { include: { kycSubmissions: { orderBy: { createdAt: 'desc' }, take: 1 } } } },
+      include: { 
+        user: { include: { kycSubmissions: { orderBy: { createdAt: 'desc' }, take: 1 } } },
+        serviceZones: true
+      },
     });
     if (!raw) return null;
     return {
@@ -26,6 +29,7 @@ export class PrismaProviderRepository implements ProviderRepositoryPort {
       bankDataHash: raw.bankDataHash || undefined,
       bankDataUpdatedAt: raw.bankDataUpdatedAt || undefined,
       kycStatus: (raw.user?.kycSubmissions?.[0]?.status as any) || 'PENDING',
+      serviceZoneIds: (raw as any).serviceZones?.map((z: any) => z.id) || [],
     };
   }
 
@@ -43,6 +47,11 @@ export class PrismaProviderRepository implements ProviderRepositoryPort {
         bankAccountType: provider.bankAccountType,
         bankDataHash: provider.bankDataHash,
         bankDataUpdatedAt: provider.bankDataUpdatedAt,
+        ...(provider.serviceZoneIds !== undefined && {
+          serviceZones: {
+            set: provider.serviceZoneIds.map((id) => ({ id })),
+          },
+        }),
       },
     });
   }

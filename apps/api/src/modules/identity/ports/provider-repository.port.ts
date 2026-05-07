@@ -12,6 +12,7 @@ export interface ProviderProfileProps {
   bankDataHash?: string;
   bankDataUpdatedAt?: Date;
   kycStatus?: 'PENDING' | 'APPROVED' | 'REJECTED';
+  serviceZoneIds?: string[];
 }
 
 export interface ProviderRepositoryPort {

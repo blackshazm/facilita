@@ -17,6 +17,7 @@ import { TierRecalculationProcessor } from './infrastructure/queues/tier-recalcu
 
 import { TieringSchedulerService } from './application/tiering-scheduler.service';
 import { KycController } from './interface/kyc.controller';
+import { ProviderController } from './interface/provider.controller';
 import { KycService } from './application/kyc.service';
 import { StoragePort } from './ports/storage.port';
 import { MockStorageAdapter } from './infrastructure/mock-storage.adapter';
@@ -31,7 +32,7 @@ import { MockStorageAdapter } from './infrastructure/mock-storage.adapter';
       name: 'tiering',
     }),
   ],
-  controllers: [AuthController, KycController],
+  controllers: [AuthController, KycController, ProviderController],
   providers: [
     AuthService,
     JwtStrategy,

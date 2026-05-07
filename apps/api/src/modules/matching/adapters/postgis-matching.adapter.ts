@@ -7,42 +7,39 @@ import { MatchingEnginePort, NearbyProvider } from '../ports/matching-engine.por
 export class PostgisMatchingAdapter implements MatchingEnginePort {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findNearbyProviders(
-    location: Location,
+  async findProvidersInNeighborhood(
+    neighborhoodId: string,
     categoryId: string,
-    radiusInMeters: number,
     limit: number = 10
   ): Promise<NearbyProvider[]> {
-    // Note: Using Raw SQL for PostGIS performance and spatial functions
-    const query = `
-      SELECT 
-        ap."providerId",
-        ST_Distance(pl.location, ST_SetSRID(ST_MakePoint($1, $2), 4326)) as distance
-      FROM "matching"."ActiveProvider" ap
-      JOIN "matching"."ProviderLocation" pl ON ap."providerId" = pl."providerId"
-      WHERE ap."categoryId" = $3
-        AND ap."isOnline" = true
-        AND ST_DWithin(
-          pl.location, 
-          ST_SetSRID(ST_MakePoint($1, $2), 4326), 
-          $4
-        )
-      ORDER BY distance ASC
-      LIMIT $5
-    `;
+    // Array intersection query to find providers who have this neighborhood in their service zones
+    const providers = await this.prisma.activeProvider.findMany({
+      where: {
+        categoryId,
+        isOnline: true,
+        // Since activeProvider doesn't hold the zones, we need to query through the ProviderProfile
+        providerId: {
+          in: (
+            await this.prisma.providerProfile.findMany({
+              where: {
+                serviceZones: {
+                  some: {
+                    id: neighborhoodId
+                  }
+                }
+              },
+              select: { id: true } // ProviderProfile id is the providerId
+            })
+          ).map(p => p.id)
+        }
+      },
+      take: limit
+    });
 
-    const results = await this.prisma.$queryRawUnsafe<any[]>(
-      query,
-      location.longitude,
-      location.latitude,
-      categoryId,
-      radiusInMeters,
-      limit
-    );
-
-    return results.map(r => ({
-      providerId: r.providerId,
-      distance: Number(r.distance)
+    // We no longer have distance in a strict sense, so we return distance 0 or we can remove it later.
+    return providers.map(p => ({
+      providerId: p.providerId,
+      distance: 0 
     }));
   }
 }

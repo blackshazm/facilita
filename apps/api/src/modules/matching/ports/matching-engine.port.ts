@@ -6,10 +6,9 @@ export interface NearbyProvider {
 }
 
 export interface MatchingEnginePort {
-  findNearbyProviders(
-    location: Location,
+  findProvidersInNeighborhood(
+    neighborhoodId: string,
     categoryId: string,
-    radiusInMeters: number,
     limit?: number
   ): Promise<NearbyProvider[]>;
 }

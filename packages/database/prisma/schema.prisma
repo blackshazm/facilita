@@ -6,7 +6,39 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-  schemas  = ["identity", "catalog", "matching", "orders", "payments", "evidence", "fraud", "disputes", "analytics", "audit"]
+  schemas  = ["identity", "catalog", "matching", "orders", "payments", "evidence", "fraud", "disputes", "analytics", "audit", "geo"]
+}
+
+// Geo Schema
+model City {
+  id        String   @id @default(uuid())
+  name      String
+  slug      String   @unique
+  ibgeCode  String?  @unique
+  state     String
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  neighborhoods Neighborhood[]
+  categories    Category[]     @relation("CategoryToCity")
+
+  @@schema("geo")
+}
+
+model Neighborhood {
+  id        String   @id @default(uuid())
+  cityId    String
+  city      City     @relation(fields: [cityId], references: [id])
+  name      String
+  slug      String   @unique
+  ibgeCode  String?  @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  providerProfiles ProviderProfile[] @relation("ProviderToNeighborhood")
+
+  @@schema("geo")
 }
 
 // Analytics Schema
@@ -45,18 +77,18 @@ enum Role {
 }
 
 model ProviderProfile {
-  id            String   @id @default(uuid())
-  userId        String   @unique
-  user          User     @relation(fields: [userId], references: [id])
-  cpfCnpj       String   @unique
-  rating        Float    @default(5.0)
-  isOnline      Boolean  @default(false)
-  availableDays Int[] // 0 = Sunday, 1 = Monday, etc.
-  startHour     String // e.g., "08:00"
-  endHour       String // e.g., "18:00"
-  tier               ProviderTier @default(BRONZE)
-  pagarmeRecipientId String?      @unique
-  isFlagged          Boolean      @default(false)
+  id                 String         @id @default(uuid())
+  userId             String         @unique
+  user               User           @relation(fields: [userId], references: [id])
+  cpfCnpj            String         @unique
+  rating             Float          @default(5.0)
+  isOnline           Boolean        @default(false)
+  availableDays      Int[] // 0 = Sunday, 1 = Monday, etc.
+  startHour          String // e.g., "08:00"
+  endHour            String // e.g., "18:00"
+  tier               ProviderTier   @default(BRONZE)
+  pagarmeRecipientId String?        @unique
+  isFlagged          Boolean        @default(false)
   fraudReason        String?
   bankCode           String?
   bankBranch         String?
@@ -66,8 +98,9 @@ model ProviderProfile {
   bankAccountType    String?
   bankDataHash       String?
   bankDataUpdatedAt  DateTime?
-  createdAt          DateTime     @default(now())
-  updatedAt          DateTime     @updatedAt
+  serviceZones       Neighborhood[] @relation("ProviderToNeighborhood")
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @updatedAt
 
   @@schema("identity")
 }
@@ -131,9 +164,9 @@ model Order {
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
 
-  payments    Payment[]
-  evidence    Evidence[]
-  disputes    Dispute[]
+  payments Payment[]
+  evidence Evidence[]
+  disputes Dispute[]
 
   @@schema("orders")
 }
@@ -152,30 +185,31 @@ enum OrderStatus {
 
 // Catalog Schema (Existing models preserved...)
 model Category {
-  id          String    @id @default(uuid())
-  name        String
-  slug        String    @unique
-  description String?
-  iconUrl     String?
-  services    Service[]
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  id           String    @id @default(uuid())
+  name         String
+  slug         String    @unique
+  description  String?
+  iconUrl      String?
+  services     Service[]
+  activeCities City[]    @relation("CategoryToCity")
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
 
   @@schema("catalog")
 }
 
 model Service {
-  id          String    @id @default(uuid())
-  categoryId  String
-  category    Category  @relation(fields: [categoryId], references: [id])
-  name        String
-  description String?
-  basePrice   Decimal   @default(0.0)
-  unitType        UnitType  @default(FIXED)
-  serviceCode     String?   // LC 116 code
-  cityServiceCode String?   // Municipal code
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
+  id              String   @id @default(uuid())
+  categoryId      String
+  category        Category @relation(fields: [categoryId], references: [id])
+  name            String
+  description     String?
+  basePrice       Decimal  @default(0.0)
+  unitType        UnitType @default(FIXED)
+  serviceCode     String? // LC 116 code
+  cityServiceCode String? // Municipal code
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 
   @@schema("catalog")
 }
@@ -191,10 +225,10 @@ enum UnitType {
 
 // Matching Schema
 model ProviderLocation {
-  id         String                      @id @default(uuid())
-  providerId String                      @unique
+  id         String                                @id @default(uuid())
+  providerId String                                @unique
   location   Unsupported("geography(Point, 4326)")
-  updatedAt  DateTime                    @updatedAt
+  updatedAt  DateTime                              @updatedAt
 
   @@schema("matching")
 }
@@ -211,21 +245,21 @@ model ActiveProvider {
 
 // Payments Schema
 model Payment {
-  id            String        @id @default(uuid())
-  orderId       String
-  order         Order         @relation(fields: [orderId], references: [id])
-  externalId    String?       @unique // Pagar.me ID
-  amount        Decimal
-  splitAmount   Decimal?      // Provider's share
-  method        PaymentMethod
-  status        PaymentStatus @default(PENDING)
+  id             String        @id @default(uuid())
+  orderId        String
+  order          Order         @relation(fields: [orderId], references: [id])
+  externalId     String?       @unique // Pagar.me ID
+  amount         Decimal
+  splitAmount    Decimal? // Provider's share
+  method         PaymentMethod
+  status         PaymentStatus @default(PENDING)
   transactionLog Json?
-  ibsAmount     Decimal?      // Reforma 2026
-  cbsAmount     Decimal?      // Reforma 2026
-  invoiceId     String?       @unique
-  invoice       Invoice?      @relation(fields: [invoiceId], references: [id])
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
+  ibsAmount      Decimal? // Reforma 2026
+  cbsAmount      Decimal? // Reforma 2026
+  invoiceId      String?       @unique
+  invoice        Invoice?      @relation(fields: [invoiceId], references: [id])
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
 
   @@schema("payments")
 }
@@ -283,16 +317,16 @@ enum TransactionType {
 }
 
 model Payout {
-  id             String       @id @default(uuid())
-  providerId     String
-  amount         BigInt
-  fee            BigInt       @default(0)
-  status         PayoutStatus @default(PENDING)
-  externalId     String?      @unique
-  bankDataHash   String?
-  metadata       Json?
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
+  id           String       @id @default(uuid())
+  providerId   String
+  amount       BigInt
+  fee          BigInt       @default(0)
+  status       PayoutStatus @default(PENDING)
+  externalId   String?      @unique
+  bankDataHash String?
+  metadata     Json?
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
 
   @@schema("payments")
 }
@@ -314,7 +348,7 @@ model Evidence {
   order     Order        @relation(fields: [orderId], references: [id])
   url       String
   type      EvidenceType
-  metadata  Json?        // EXIF data (GPS, Device, Timestamp)
+  metadata  Json? // EXIF data (GPS, Device, Timestamp)
   createdAt DateTime     @default(now())
 
   @@schema("evidence")
@@ -365,35 +399,35 @@ model AuditLog {
 }
 
 model Invoice {
-  id              String        @id @default(uuid())
-  orderId         String
-  externalId      String?       @unique // eNotas ID
-  status          String        @default("PENDING")
-  xmlUrl          String?
-  pdfUrl          String?
-  totalAmount     Decimal
-  taxAmount       Decimal
-  ibsAmount       Decimal?
-  cbsAmount       Decimal?
-  createdAt       DateTime      @default(now())
-  updatedAt       DateTime      @updatedAt
+  id          String   @id @default(uuid())
+  orderId     String
+  externalId  String?  @unique // eNotas ID
+  status      String   @default("PENDING")
+  xmlUrl      String?
+  pdfUrl      String?
+  totalAmount Decimal
+  taxAmount   Decimal
+  ibsAmount   Decimal?
+  cbsAmount   Decimal?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
-  payment         Payment?
+  payment Payment?
 
   @@schema("payments")
 }
 
 model FinancialAuditLog {
-  id          String   @id @default(uuid())
-  actorId     String
-  actorType   String   // SYSTEM | ADMIN | OPERATOR
-  action      String   // PAYMENT_CAPTURED | PAYOUT_SCHEDULED | etc.
-  entityType  String   // Payment | Wallet | Payout
-  entityId    String
-  before      Json?
-  after       Json?
-  metadata    Json?
-  createdAt   DateTime @default(now())
+  id         String   @id @default(uuid())
+  actorId    String
+  actorType  String // SYSTEM | ADMIN | OPERATOR
+  action     String // PAYMENT_CAPTURED | PAYOUT_SCHEDULED | etc.
+  entityType String // Payment | Wallet | Payout
+  entityId   String
+  before     Json?
+  after      Json?
+  metadata   Json?
+  createdAt  DateTime @default(now())
 
   @@schema("audit")
 }

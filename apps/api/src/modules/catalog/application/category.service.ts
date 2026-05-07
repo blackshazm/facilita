@@ -5,8 +5,10 @@ import { PrismaService } from '../../../shared-kernel/database/prisma.service';
 export class CategoryService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findAll() {
+  async findAll(cityId?: string) {
+    const where = cityId ? { activeCities: { some: { id: cityId } } } : {};
     return this.prisma.category.findMany({
+      where,
       include: { services: true },
     });
   }
