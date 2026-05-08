@@ -30,3 +30,17 @@
 ## 4. Operational Oversight
 - **OPS-01: Payout Monitoring Dashboard**
     - Admin must view and manually override/block payouts for flagged accounts.
+
+## Traceability Matrix
+
+| ID | Description | Assigned Phase | Status |
+|---|---|---|---|
+| PAY-01 | Automated Payout Scheduler | 7.1 | [x] |
+| PAY-02 | Advanced Wallet Visualization | 7.1 | [x] |
+| PAY-03 | Bank Account Verification | 7.1 | [x] |
+| EXP-01 | Multi-City Service Discovery | 7.2 | [x] |
+| EXP-02 | Regional Availability Logic | 7.2 | [x] |
+| GROW-01 | Referral Invitation System | 7.3 | [x] |
+| GROW-02 | Reward Engine | 7.3 | [x] |
+| GROW-03 | Referral Anti-Fraud | 7.3 | [x] |
+| OPS-01 | Payout Monitoring Dashboard | 7.4 | [ ] |
