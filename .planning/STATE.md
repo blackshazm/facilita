@@ -8,8 +8,8 @@
 
 Phase: 7.4 — Operational Payout Dashboard
 Plan: pending
-Status: UI-SPEC approved
-Last activity: 2026-05-08 — Phase 7.4 UI-SPEC approved (07.4-UI-SPEC.md).
+Status: Ready for execution (2 plans)
+Last activity: 2026-05-08 — Phase 7.4 planned (2 plans).
 
 ## Completed
 - [x] Phase 7.2 — Regional Expansion & Geo-Filtering (2026-05-06)
