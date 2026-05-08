@@ -33,13 +33,13 @@ export class AdminPayoutController {
 
   @Post(':id/approve')
   async approve(@Param('id') id: string, @Req() req: any) {
-    const adminId = req.user.id;
+    const adminId = req.user.userId;
     return this.approvePayoutUseCase.execute(id, adminId);
   }
 
   @Post(':id/block')
   async block(@Param('id') id: string, @Req() req: any) {
-    const adminId = req.user.id;
+    const adminId = req.user.userId;
     return this.blockPayoutUseCase.execute(id, adminId);
   }
 }

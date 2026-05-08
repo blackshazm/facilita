@@ -32,8 +32,8 @@ export class AdminApprovePayoutUseCase {
       action: 'PAYOUT_MANUAL_OVERRIDE_APPROVE',
       entityType: 'Payout',
       entityId: payout.id,
-      before,
-      after: payout,
+      before: JSON.parse(JSON.stringify(before, (_, v) => typeof v === 'bigint' ? v.toString() : v)),
+      after: JSON.parse(JSON.stringify(payout, (_, v) => typeof v === 'bigint' ? v.toString() : v)),
       metadata: { timestamp: new Date() },
     });
   }
