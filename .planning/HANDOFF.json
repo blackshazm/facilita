@@ -1,46 +1,28 @@
 {
   "version": "1.0",
-  "timestamp": "2026-05-07 20:52:16",
-  "phase": "07.3",
-  "phase_name": "viral-growth-referral-system",
-  "phase_dir": ".planning/phases/07.3-viral-growth-referral-system",
-  "plan": 07.3,
-  "task": 7,
-  "total_tasks": 7,
+  "timestamp": "2026-05-08T00:27:40-03:00",
+  "phase": null,
+  "phase_name": "Milestone v8.0 Planning",
+  "phase_dir": ".planning",
+  "plan": null,
+  "task": 1,
+  "total_tasks": 5,
   "status": "paused",
   "completed_tasks": [
-    {"id": 1, "name": "Wave 1: Database Schema & Domain Updates", "status": "done"},
-    {"id": 2, "name": "Wave 1: Schema Push", "status": "done"},
-    {"id": 3, "name": "Wave 2: Invite Code Generation", "status": "done"},
-    {"id": 4, "name": "Wave 2: API Exposure", "status": "done"},
-    {"id": 5, "name": "Wave 3: Reward Trigger & Processor", "status": "done"},
-    {"id": 6, "name": "Wave 4: Discount Application", "status": "done"},
-    {"id": 7, "name": "Wave 5: Frontend Dashboard", "status": "done"}
+    {"id": 1, "name": "Milestone Questioning", "status": "done", "commit": null}
   ],
   "remaining_tasks": [
-    {"id": 8, "name": "Verify work (UAT)", "status": "not_started"},
-    {"id": 9, "name": "Update ROADMAP.md", "status": "not_started"},
-    {"id": 10, "name": "Final Commit & PR", "status": "not_started"}
+    {"id": 2, "name": "Research (optional)", "status": "not_started"},
+    {"id": 3, "name": "Requirement Definition", "status": "not_started"},
+    {"id": 4, "name": "Roadmapping", "status": "not_started"},
+    {"id": 5, "name": "Commit Milestone Docs", "status": "not_started"}
   ],
-  "blockers": [
-    {"description": "Implementation finished but UAT is pending (all tests marked as pending in 07.3-UAT.md).", "type": "technical", "workaround": "Need to run the test suite and verify results."}
-  ],
+  "blockers": [],
   "human_actions_pending": [],
   "decisions": [
-    {"decision": "Used BullMQ for delayed rewards", "rationale": "Allows for easy cancellation if order is refunded.", "phase": "07.3"},
-    {"decision": "BigInt for promoBalance", "rationale": "Financial precision and consistency with existing wallet fields.", "phase": "07.3"},
-    {"decision": "Marketplace fee subsidy for providers", "rationale": "Incentivizes providers without affecting customer total or marketplace bottom line excessively.", "phase": "07.3"}
+    {"decision": "Milestone v8.0 Focus", "rationale": "Enhance administrative productivity and refine service quality loops.", "phase": "v8.0 Planning"}
   ],
-  "uncommitted_files": [
-    "apps/api/src/modules/identity/application/auth.service.ts",
-    "apps/api/src/modules/payments/application/capture-payment.usecase.ts",
-    "apps/api/src/modules/payments/application/authorize-payment.usecase.ts",
-    "packages/database/prisma/schema.prisma",
-    "apps/api/src/modules/payments/infrastructure/queues/referral-reward.processor.ts",
-    "apps/client/src/app/referrals/page.tsx",
-    ".planning/phases/07.3-viral-growth-referral-system/07.3-SUMMARY.md",
-    ".planning/phases/07.3-viral-growth-referral-system/07.3-UAT.md"
-  ],
-  "next_action": "Run UAT Smoke Test to verify application startup with new schema.",
-  "context_notes": "The coding part of Phase 7.3 is complete. The summary has been generated prematurely (marking it as completed) while UAT is actually pending. The next agent should focus on executing the tests in 07.3-UAT.md."
+  "uncommitted_files": [],
+  "next_action": "Resume /gsd-new-milestone to decide on Research and define Requirements.",
+  "context_notes": "We are at the very beginning of Milestone v8.0. The goal is set, but requirements are not yet defined."
 }
