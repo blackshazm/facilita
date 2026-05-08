@@ -1,32 +1,30 @@
 # Project State — FACILITA
 
-## Current Status: **v7.0 — Expansion & Payouts**
-**Last Update**: 2026-05-06
-**Milestone**: Expansion & Payouts
+## Current Status: **v8.0 — Operational Excellence (Planning)**
+**Last Update**: 2026-05-08
+**Milestone**: Operational Excellence
 
 ## Current Position
 
-Phase: 7.4 — Operational Payout Dashboard
+Phase: Planning
 Plan: pending
-Status: Completed
-Last activity: 2026-05-08 — Phase 7.4 implemented (API, Dashboard, Audit Log).
+Status: Planning v8.0
+Last activity: 2026-05-08 — Milestone v7.0 archived and shipped.
 
 ## Completed
-- [x] Phase 7.2 — Regional Expansion & Geo-Filtering (2026-05-06)
-- [x] Phase 7.1 — Payout Automation & Ledger Hardening (2026-05-06)
+- [x] Milestone v7.0: Expansion & Payouts (2026-05-08)
 - [x] Milestone v6.0: Growth & Compliance (2026-05-06)
 - [x] Milestone v5.0: Scale & Hardening (2026-05-04)
 
 ## In Progress
-- [ ] Phase 7.3 — Viral Growth & Referral System
+- [ ] Planning v8.0 Requirements
 
 ## Blockers / Risks
-- **Fraud**: Referral systems are high-risk for self-referral and sybil attacks.
-- **Payouts**: Compliance with BACEN regulations for escrow-to-payout transfers (Ongoing monitor).
+- **Operational Complexity**: As we scale to multiple cities, manual payout management needs bulk capabilities (v8.1).
+- **Service Quality**: Need more granular feedback loops to maintain "Evidence-First" quality at scale.
 
 ## Session Continuity
 
-**Last session**: 2026-05-06
-**Status**: Milestone 7.0 is advancing quickly. Phase 7.2 (Geo-filtering) is deployed and verified.
-**Next Step**: Run `/gsd-spec-phase 7.3` to define the requirements for the Viral Growth & Referral System.
-
+**Last session**: 2026-05-08
+**Status**: Milestone v7.0 completed with success. All 9 requirements satisfied.
+**Next Step**: Run `/gsd-new-milestone` to define requirements for v8.0.

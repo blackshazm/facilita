@@ -7,25 +7,29 @@ FACILITA is a "closed-loop" transactional marketplace focused on urgent domestic
 To be the most reliable platform for domestic emergencies in Brazil, where quality is guaranteed by mandatory evidence and a rigorous matching engine.
 
 ## Current State
-- **Current Version**: v7.0 (Expansion & Payouts) - **In Progress**
-- **Last Shipped**: 2026-05-06 (v6.0)
+- **Current Version**: v8.0 (Operational Excellence) - **Planning**
+- **Last Shipped**: 2026-05-08 (v7.0)
 
 <details>
 <summary><b>Historical Milestones</b></summary>
 
+### v7.0 Expansion & Payouts (2026-05-08)
+- **Goal**: Automate the financial lifecycle, enable regional scale, and drive organic growth through referrals.
+- **Achievements**:
+    - [x] **Payout Automation**: Automated ledger-to-gateway transfers with audit logs.
+    - [x] **Regional Scale**: Multi-city support and neighborhood geo-fencing.
+    - [x] **Viral Growth**: Referral system with D+15 rewards via BullMQ.
+    - [x] **Operational Control**: Admin dashboard for manual payout management.
+
 ### v6.0 Growth & Compliance (2026-05-06)
 - **Goal**: Expand platform analytical capabilities, ensure fiscal compliance for 2026, and achieve full production readiness for the Provider app.
-- **Achievements**:
-    - [x] **Advanced Analytics**: Operational BI dashboards for marketplace health.
-    - [x] **Compliance V2**: Global fiscal compliance (Reforma Tributária 2026).
-    - [x] **Mobile Parity**: Finalization of the Provider App (Expo) for production.
 
 ### v5.0: Scale & Hardening (2026-05-04)
 - Focus on Escrow systems, Tiering engine and Fraud prevention.
 </details>
 
-## Next Milestone: v7.0 Expansion & Payouts (Draft)
-- **Goal**: Automate payouts, implement referral systems and expand to multi-city operations.
+## Next Milestone: v8.0 Operational Excellence (Draft)
+- **Goal**: Enhance administrative productivity and refine service quality loops.
 
 ## Stakeholders
 - **Users**: Customers needing urgent home repairs.
@@ -54,3 +58,5 @@ To be the most reliable platform for domestic emergencies in Brazil, where quali
 - **Architectural Guardrails**: Strict enforcement of module boundaries via `eslint-plugin-boundary` and contract testing.
 - **Orchestration**: Managed by the `gsd-master-orchestrator` skill, ensuring every code change is backed by a validated plan and verification loop.
 
+---
+*Last updated: 2026-05-08 after v7.0 milestone*

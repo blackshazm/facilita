@@ -1,45 +1,30 @@
-# Roadmap — FACILITA v7.0
+# Roadmap — FACILITA
 
-## Milestone: Expansion & Payouts (Current)
-*Goal: Automate the financial lifecycle, enable regional scale, and drive organic growth through referrals.*
+## Milestones
 
-### Phase 7.1: Payout Automation & Ledger Hardening
-- Implementar `PayoutService` para agendamento automático de transferências.
-- Criar interface de gestão de dados bancários no App do Prestador.
-- Hardening do Ledger para suportar reconciliação bancária (Pagar.me -> Wallet).
-- **Requirements**: PAY-01, PAY-02, PAY-03
-- **Success Criteria**:
-    - [x] Transferência enviada automaticamente para o Pagar.me com base no saldo da Wallet.
-    - [x] Histórico de Payouts visível no App.
+- ✅ **v7.0: Expansion & Payouts** — Phases 7.1-7.4 (shipped 2026-05-08)
+- 🚧 **v8.0: Operational Excellence** — Phases 8.1-8.3 (planned)
 
-### Phase 7.2: Regional Expansion & Geo-Filtering
-- Implementar suporte a múltiplas cidades no Catálogo e Matching.
-- Criar gestão de "Zonas de Atendimento" para prestadores.
-- Otimizar `MatchingEngine` para geofencing por polígonos de cidade.
-- **Requirements**: EXP-01, EXP-02
-- **Success Criteria**:
-    - [x] Cliente vê apenas serviços disponíveis em sua cidade.
-    - [x] Prestador recebe apenas ordens dentro de sua zona definida.
+## Phases
 
-### Phase 7.3: Viral Growth & Referral System
-- Implementar motor de convites e códigos de indicação.
-- Criar lógica de recompensa automática (`GROW-02`) com proteção anti-fraude.
-- Dashboards de acompanhamento de indicações para usuários.
-- **Requirements**: GROW-01, GROW-02, GROW-03
-- **Success Criteria**:
-    - [x] Crédito inserido na Wallet automaticamente após a primeira ordem do indicado.
-    - [x] Bloqueio de 100% das tentativas de auto-indicação detectadas.
+<details>
+<summary>✅ v7.0: Expansion & Payouts (Phases 7.1-7.4) — SHIPPED 2026-05-08</summary>
 
-### Phase 7.4: Operational Payout Dashboard (Gap Closure)
-- Implementar API administrativa para monitoramento de payouts.
-- Criar Dashboard Admin para visualização e bloqueio manual de transferências.
-- Integrar logs de auditoria para intervenções manuais.
-- **Requirements**: OPS-01
-- **Success Criteria**:
-    - [ ] Admin visualiza lista de todos os payouts (pendentes/concluídos).
-    - [ ] Admin consegue bloquear um payout pendente com um clique.
+- [x] Phase 7.1: Payout Automation & Ledger Hardening (1/1 plan) — completed 2026-05-06
+- [x] Phase 7.2: Regional Expansion & Geo-Filtering (1/1 plan) — completed 2026-05-06
+- [x] Phase 7.3: Viral Growth & Referral System (1/1 plan) — completed 2026-05-07
+- [x] Phase 7.4: Operational Payout Dashboard (2/2 plans) — completed 2026-05-08
+
+</details>
+
+### 🚧 v8.0 Operational Excellence (Planned)
+
+- [ ] Phase 8.1: Bulk Payout Actions & Advanced Filtering (0/2 plans)
+- [ ] Phase 8.2: Service Quality Scoring & Feedback Loop (0/3 plans)
+- [ ] Phase 8.3: Automated Incident Resolution (0/2 plans)
 
 ## Archived Milestones
+- [v7.0: Expansion & Payouts](./milestones/v7.0-ROADMAP.md) — 2026-05-08
 - [v6.0: Growth & Compliance](./milestones/v6.0-ROADMAP.md) — 2026-05-06
 - [v5.0: Scale & Hardening](./milestones/v5.0-ROADMAP.md) — 2026-05-04
 
