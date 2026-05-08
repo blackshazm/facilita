@@ -1,0 +1,18 @@
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
+
+async function main() {
+  const devices = await prisma.userDevice.findMany({
+    include: {
+      user: true
+    }
+  });
+  console.log(JSON.stringify(devices, null, 2));
+}
+
+main()
+  .catch(e => console.error(e))
+  .finally(async () => {
+    await prisma.$disconnect();
+  });

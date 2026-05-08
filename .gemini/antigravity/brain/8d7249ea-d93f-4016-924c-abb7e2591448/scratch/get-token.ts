@@ -1,0 +1,24 @@
+async function main() {
+  const phone = '+5511999999999';
+  const code = '123456'; 
+  
+  try {
+    console.log('Registering user...');
+    const res = await fetch('http://localhost:3333/auth/otp/verify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ 
+        phone, 
+        code,
+        deviceId: 'test-device-id'
+      })
+    });
+    
+    const data = await res.json();
+    console.log('Result:', JSON.stringify(data, null, 2));
+  } catch (err: any) {
+    console.error('Error:', err.message);
+  }
+}
+
+main();

@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
+import { PassportModule } from '@nestjs/passport';
 import { AuthController } from './interface/auth.controller';
 import { AuthService } from './application/auth.service';
 import { TwilioSmsService } from './infrastructure/twilio-sms.service';
@@ -24,6 +25,7 @@ import { MockStorageAdapter } from './infrastructure/mock-storage.adapter';
 
 @Module({
   imports: [
+    PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.register({
       secret: process.env.JWT_SECRET || 'super-secret',
       signOptions: { expiresIn: '7d' },

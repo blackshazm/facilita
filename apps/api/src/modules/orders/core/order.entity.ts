@@ -27,6 +27,10 @@ export class Order {
     return this.props.id;
   }
 
+  public get userId(): string {
+    return this.props.userId;
+  }
+
   public get status(): OrderStatus {
     return this.props.status;
   }

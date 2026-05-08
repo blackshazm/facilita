@@ -10,6 +10,10 @@ export interface UserProps {
   name?: string;
   role: UserRole;
   isVerified: boolean;
+  inviteCode?: string;
+  invitedById?: string;
+  referralCount: number;
+  referralLimit: number;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -57,6 +61,38 @@ export class User {
   public updateName(name: string): void {
     this.props.name = name;
     this.props.updatedAt = new Date();
+  }
+
+  public get inviteCode(): string | undefined {
+    return this.props.inviteCode;
+  }
+
+  public get invitedById(): string | undefined {
+    return this.props.invitedById;
+  }
+
+  public get referralCount(): number {
+    return this.props.referralCount;
+  }
+
+  public get referralLimit(): number {
+    return this.props.referralLimit;
+  }
+
+  public setInviteCode(code: string): void {
+    this.props.inviteCode = code;
+  }
+
+  public setInvitedBy(referrerId: string): void {
+    this.props.invitedById = referrerId;
+  }
+
+  public incrementReferralCount(): void {
+    this.props.referralCount += 1;
+  }
+
+  public updateReferralLimit(limit: number): void {
+    this.props.referralLimit = limit;
   }
 
   public toJSON() {

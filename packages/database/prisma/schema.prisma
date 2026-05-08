@@ -6,20 +6,18 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-  schemas  = ["identity", "catalog", "matching", "orders", "payments", "evidence", "fraud", "disputes", "analytics", "audit", "geo"]
+  schemas  = ["analytics", "audit", "catalog", "disputes", "evidence", "fraud", "geo", "identity", "matching", "orders", "payments"]
 }
 
-// Geo Schema
 model City {
-  id        String   @id @default(uuid())
-  name      String
-  slug      String   @unique
-  ibgeCode  String?  @unique
-  state     String
-  isActive  Boolean  @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
+  id            String         @id @default(uuid())
+  name          String
+  slug          String         @unique
+  ibgeCode      String?        @unique
+  state         String
+  isActive      Boolean        @default(true)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
   neighborhoods Neighborhood[]
   categories    Category[]     @relation("CategoryToCity")
 
@@ -27,21 +25,19 @@ model City {
 }
 
 model Neighborhood {
-  id        String   @id @default(uuid())
-  cityId    String
-  city      City     @relation(fields: [cityId], references: [id])
-  name      String
-  slug      String   @unique
-  ibgeCode  String?  @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
+  id               String            @id @default(uuid())
+  cityId           String
+  name             String
+  slug             String            @unique
+  ibgeCode         String?           @unique
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  city             City              @relation(fields: [cityId], references: [id])
   providerProfiles ProviderProfile[] @relation("ProviderToNeighborhood")
 
   @@schema("geo")
 }
 
-// Analytics Schema
 model DailyMetric {
   date         DateTime @id
   gmv          BigInt   @default(0)
@@ -52,7 +48,6 @@ model DailyMetric {
   @@schema("analytics")
 }
 
-// Identity Schema
 model User {
   id             String           @id @default(uuid())
   phone          String           @unique
@@ -61,17 +56,15 @@ model User {
   isVerified     Boolean          @default(false)
   createdAt      DateTime         @default(now())
   updatedAt      DateTime         @updatedAt
-  profile        ProviderProfile?
+  inviteCode     String?          @unique
+  invitedById    String?
+  referralCount  Int              @default(0)
+  referralLimit  Int              @default(200)
   kycSubmissions KycSubmission[]
+  profile        ProviderProfile?
+  invitedBy      User?            @relation("UserReferrals", fields: [invitedById], references: [id])
+  referrals      User[]           @relation("UserReferrals")
   devices        UserDevice[]
-
-  @@schema("identity")
-}
-
-enum Role {
-  CUSTOMER
-  PROVIDER
-  ADMIN
 
   @@schema("identity")
 }
@@ -79,36 +72,28 @@ enum Role {
 model ProviderProfile {
   id                 String         @id @default(uuid())
   userId             String         @unique
-  user               User           @relation(fields: [userId], references: [id])
   cpfCnpj            String         @unique
   rating             Float          @default(5.0)
   isOnline           Boolean        @default(false)
-  availableDays      Int[] // 0 = Sunday, 1 = Monday, etc.
-  startHour          String // e.g., "08:00"
-  endHour            String // e.g., "18:00"
-  tier               ProviderTier   @default(BRONZE)
+  availableDays      Int[]
+  startHour          String
+  endHour            String
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @updatedAt
   pagarmeRecipientId String?        @unique
-  isFlagged          Boolean        @default(false)
+  tier               ProviderTier   @default(BRONZE)
   fraudReason        String?
-  bankCode           String?
-  bankBranch         String?
-  bankBranchDigit    String?
+  isFlagged          Boolean        @default(false)
   bankAccount        String?
   bankAccountDigit   String?
   bankAccountType    String?
+  bankBranch         String?
+  bankBranchDigit    String?
+  bankCode           String?
   bankDataHash       String?
   bankDataUpdatedAt  DateTime?
+  user               User           @relation(fields: [userId], references: [id])
   serviceZones       Neighborhood[] @relation("ProviderToNeighborhood")
-  createdAt          DateTime       @default(now())
-  updatedAt          DateTime       @updatedAt
-
-  @@schema("identity")
-}
-
-enum ProviderTier {
-  BRONZE
-  PRATA
-  OURO
 
   @@schema("identity")
 }
@@ -116,14 +101,14 @@ enum ProviderTier {
 model KycSubmission {
   id               String    @id @default(uuid())
   userId           String
-  user             User      @relation(fields: [userId], references: [id])
-  documentFrontUrl String
-  documentBackUrl  String?
   selfieUrl        String
   status           KycStatus @default(PENDING)
-  rejectionReason  String?
   createdAt        DateTime  @default(now())
   updatedAt        DateTime  @updatedAt
+  documentBackUrl  String?
+  documentFrontUrl String
+  rejectionReason  String?
+  user             User      @relation(fields: [userId], references: [id])
 
   @@index([userId])
   @@schema("identity")
@@ -132,68 +117,45 @@ model KycSubmission {
 model UserDevice {
   id        String   @id @default(uuid())
   userId    String
-  user      User     @relation(fields: [userId], references: [id])
   pushToken String   @unique
   deviceId  String?
   platform  String?
   lastLogin DateTime @default(now())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id])
 
   @@index([userId])
   @@schema("identity")
 }
 
-enum KycStatus {
-  PENDING
-  APPROVED
-  REJECTED
-
-  @@schema("identity")
-}
-
-// Order Schema
 model Order {
   id          String      @id @default(uuid())
   userId      String
   providerId  String?
   status      OrderStatus @default(PENDING)
   totalAmount Decimal     @default(0.0)
-  latitude    Float?
-  longitude   Float?
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
-
-  payments Payment[]
-  evidence Evidence[]
-  disputes Dispute[]
-
-  @@schema("orders")
-}
-
-enum OrderStatus {
-  PENDING
-  MATCHED
-  EN_ROUTE
-  ARRIVED
-  IN_PROGRESS
-  DONE
-  CANCELED
+  latitude    Float?
+  longitude   Float?
+  disputes    Dispute[]
+  evidence    Evidence[]
+  payments    Payment[]
 
   @@schema("orders")
 }
 
-// Catalog Schema (Existing models preserved...)
 model Category {
   id           String    @id @default(uuid())
   name         String
   slug         String    @unique
   description  String?
   iconUrl      String?
-  services     Service[]
-  activeCities City[]    @relation("CategoryToCity")
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
+  services     Service[]
+  activeCities City[]    @relation("CategoryToCity")
 
   @@schema("catalog")
 }
@@ -201,34 +163,24 @@ model Category {
 model Service {
   id              String   @id @default(uuid())
   categoryId      String
-  category        Category @relation(fields: [categoryId], references: [id])
   name            String
   description     String?
   basePrice       Decimal  @default(0.0)
   unitType        UnitType @default(FIXED)
-  serviceCode     String? // LC 116 code
-  cityServiceCode String? // Municipal code
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
+  cityServiceCode String?
+  serviceCode     String?
+  category        Category @relation(fields: [categoryId], references: [id])
 
   @@schema("catalog")
 }
 
-enum UnitType {
-  HOUR
-  FIXED
-  M2
-  M3
-
-  @@schema("catalog")
-}
-
-// Matching Schema
 model ProviderLocation {
-  id         String                                @id @default(uuid())
-  providerId String                                @unique
-  location   Unsupported("geography(Point, 4326)")
-  updatedAt  DateTime                              @updatedAt
+  id         String                   @id @default(uuid())
+  providerId String                   @unique
+  location   Unsupported("geography")
+  updatedAt  DateTime                 @updatedAt
 
   @@schema("matching")
 }
@@ -243,40 +195,22 @@ model ActiveProvider {
   @@schema("matching")
 }
 
-// Payments Schema
 model Payment {
   id             String        @id @default(uuid())
   orderId        String
-  order          Order         @relation(fields: [orderId], references: [id])
-  externalId     String?       @unique // Pagar.me ID
+  externalId     String?       @unique
   amount         Decimal
-  splitAmount    Decimal? // Provider's share
+  splitAmount    Decimal?
   method         PaymentMethod
   status         PaymentStatus @default(PENDING)
   transactionLog Json?
-  ibsAmount      Decimal? // Reforma 2026
-  cbsAmount      Decimal? // Reforma 2026
-  invoiceId      String?       @unique
-  invoice        Invoice?      @relation(fields: [invoiceId], references: [id])
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @updatedAt
-
-  @@schema("payments")
-}
-
-enum PaymentMethod {
-  CARD
-  PIX
-
-  @@schema("payments")
-}
-
-enum PaymentStatus {
-  PENDING
-  AUTHORIZED
-  PAID
-  REFUNDED
-  FAILED
+  cbsAmount      Decimal?
+  ibsAmount      Decimal?
+  invoiceId      String?       @unique
+  invoice        Invoice?      @relation(fields: [invoiceId], references: [id])
+  order          Order         @relation(fields: [orderId], references: [id])
 
   @@schema("payments")
 }
@@ -284,10 +218,11 @@ enum PaymentStatus {
 model Wallet {
   id             String              @id @default(uuid())
   providerId     String              @unique
-  balance        BigInt              @default(0) // Cents
-  pendingBalance BigInt              @default(0) // Cents
+  balance        BigInt              @default(0)
+  pendingBalance BigInt              @default(0)
   createdAt      DateTime            @default(now())
   updatedAt      DateTime            @updatedAt
+  promoBalance   BigInt              @default(0)
   transactions   WalletTransaction[]
 
   @@schema("payments")
@@ -296,22 +231,13 @@ model Wallet {
 model WalletTransaction {
   id          String          @id @default(uuid())
   walletId    String
-  wallet      Wallet          @relation(fields: [walletId], references: [id])
   type        TransactionType
-  amount      BigInt // Cents
+  amount      BigInt
   orderId     String?
-  externalId  String? // Pagar.me transfer/charge ID
+  externalId  String?
   description String?
   createdAt   DateTime        @default(now())
-
-  @@schema("payments")
-}
-
-enum TransactionType {
-  CREDIT // Release from escrow
-  DEBIT // Payout/Withdrawal
-  FROZEN // Entry into escrow (pending)
-  CANCEL // Refund/Reversal
+  wallet      Wallet          @relation(fields: [walletId], references: [id])
 
   @@schema("payments")
 }
@@ -331,57 +257,28 @@ model Payout {
   @@schema("payments")
 }
 
-enum PayoutStatus {
-  PENDING
-  PROCESSING
-  PAID
-  FAILED
-  PENDING_APPROVAL
-
-  @@schema("payments")
-}
-
-// Evidence Schema
 model Evidence {
   id        String       @id @default(uuid())
   orderId   String
-  order     Order        @relation(fields: [orderId], references: [id])
   url       String
   type      EvidenceType
-  metadata  Json? // EXIF data (GPS, Device, Timestamp)
+  metadata  Json?
   createdAt DateTime     @default(now())
+  order     Order        @relation(fields: [orderId], references: [id])
 
   @@schema("evidence")
 }
 
-enum EvidenceType {
-  BEFORE
-  AFTER
-  DURING
-  DISPUTE
-
-  @@schema("evidence")
-}
-
-// Disputes Schema
 model Dispute {
   id          String        @id @default(uuid())
   orderId     String
-  order       Order         @relation(fields: [orderId], references: [id])
   reason      String
   description String
   status      DisputeStatus @default(OPEN)
   outcome     String?
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
-
-  @@schema("disputes")
-}
-
-enum DisputeStatus {
-  OPEN
-  RESOLVED
-  CLOSED
+  order       Order         @relation(fields: [orderId], references: [id])
 
   @@schema("disputes")
 }
@@ -401,7 +298,7 @@ model AuditLog {
 model Invoice {
   id          String   @id @default(uuid())
   orderId     String
-  externalId  String?  @unique // eNotas ID
+  externalId  String?  @unique
   status      String   @default("PENDING")
   xmlUrl      String?
   pdfUrl      String?
@@ -411,8 +308,7 @@ model Invoice {
   cbsAmount   Decimal?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-
-  payment Payment?
+  payment     Payment?
 
   @@schema("payments")
 }
@@ -420,9 +316,9 @@ model Invoice {
 model FinancialAuditLog {
   id         String   @id @default(uuid())
   actorId    String
-  actorType  String // SYSTEM | ADMIN | OPERATOR
-  action     String // PAYMENT_CAPTURED | PAYOUT_SCHEDULED | etc.
-  entityType String // Payment | Wallet | Payout
+  actorType  String
+  action     String
+  entityType String
   entityId   String
   before     Json?
   after      Json?
@@ -430,4 +326,103 @@ model FinancialAuditLog {
   createdAt  DateTime @default(now())
 
   @@schema("audit")
+}
+
+enum Role {
+  CUSTOMER
+  PROVIDER
+  ADMIN
+
+  @@schema("identity")
+}
+
+enum ProviderTier {
+  BRONZE
+  PRATA
+  OURO
+
+  @@schema("identity")
+}
+
+enum KycStatus {
+  PENDING
+  APPROVED
+  REJECTED
+
+  @@schema("identity")
+}
+
+enum OrderStatus {
+  PENDING
+  MATCHED
+  EN_ROUTE
+  ARRIVED
+  IN_PROGRESS
+  DONE
+  CANCELED
+
+  @@schema("orders")
+}
+
+enum UnitType {
+  HOUR
+  FIXED
+  M2
+  M3
+
+  @@schema("catalog")
+}
+
+enum PaymentMethod {
+  CARD
+  PIX
+
+  @@schema("payments")
+}
+
+enum PaymentStatus {
+  PENDING
+  AUTHORIZED
+  PAID
+  REFUNDED
+  FAILED
+
+  @@schema("payments")
+}
+
+enum TransactionType {
+  CREDIT
+  DEBIT
+  FROZEN
+  CANCEL
+  PROMO_CREDIT
+
+  @@schema("payments")
+}
+
+enum PayoutStatus {
+  PENDING
+  PROCESSING
+  PAID
+  FAILED
+  PENDING_APPROVAL
+
+  @@schema("payments")
+}
+
+enum EvidenceType {
+  BEFORE
+  AFTER
+  DURING
+  DISPUTE
+
+  @@schema("evidence")
+}
+
+enum DisputeStatus {
+  OPEN
+  RESOLVED
+  CLOSED
+
+  @@schema("disputes")
 }

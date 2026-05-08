@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "build": "nest build",
+    "dev": "nest start --watch",
     "start": "nest start",
     "lint:boundary": "eslint 'src/modules' --ext .ts",
     "test:contracts": "jest --testPathPattern='ports\\.contract\\.spec\\.ts$'",

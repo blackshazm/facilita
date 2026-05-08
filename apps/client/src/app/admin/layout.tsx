@@ -18,6 +18,9 @@ export default function AdminLayout({
           <Link href="/admin/tiers" className="block px-4 py-2 rounded hover:bg-slate-800 transition">
             🏆 Provider Tiers
           </Link>
+          <Link href="/admin/payouts" className="block px-4 py-2 rounded hover:bg-slate-800 transition">
+            💰 Payouts
+          </Link>
           <Link href="/admin/audit" className="block px-4 py-2 rounded hover:bg-slate-800 transition">
             📋 Audit Log
           </Link>

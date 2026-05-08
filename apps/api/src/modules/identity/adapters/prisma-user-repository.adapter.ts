@@ -15,6 +15,10 @@ export class PrismaUserRepository implements UserRepositoryPort {
         name: data.name,
         role: data.role as any,
         isVerified: data.isVerified,
+        inviteCode: data.inviteCode,
+        invitedById: data.invitedById,
+        referralCount: data.referralCount,
+        referralLimit: data.referralLimit,
       },
       create: {
         id: data.id,
@@ -22,6 +26,10 @@ export class PrismaUserRepository implements UserRepositoryPort {
         name: data.name,
         role: data.role as any,
         isVerified: data.isVerified,
+        inviteCode: data.inviteCode,
+        invitedById: data.invitedById,
+        referralCount: data.referralCount,
+        referralLimit: data.referralLimit,
       },
     });
   }
@@ -39,6 +47,10 @@ export class PrismaUserRepository implements UserRepositoryPort {
       name: raw.name || undefined,
       role: raw.role as UserRole,
       isVerified: raw.isVerified,
+      inviteCode: raw.inviteCode || undefined,
+      invitedById: raw.invitedById || undefined,
+      referralCount: raw.referralCount,
+      referralLimit: raw.referralLimit,
       createdAt: raw.createdAt,
       updatedAt: raw.updatedAt,
     });
@@ -57,9 +69,44 @@ export class PrismaUserRepository implements UserRepositoryPort {
       name: raw.name || undefined,
       role: raw.role as UserRole,
       isVerified: raw.isVerified,
+      inviteCode: raw.inviteCode || undefined,
+      invitedById: raw.invitedById || undefined,
+      referralCount: raw.referralCount,
+      referralLimit: raw.referralLimit,
       createdAt: raw.createdAt,
       updatedAt: raw.updatedAt,
     });
+  }
+
+  async findByInviteCode(code: string): Promise<User | null> {
+    const raw = await this.prisma.user.findUnique({
+      where: { inviteCode: code },
+    });
+
+    if (!raw) return null;
+
+    return new User({
+      id: raw.id,
+      phone: raw.phone,
+      name: raw.name || undefined,
+      role: raw.role as UserRole,
+      isVerified: raw.isVerified,
+      inviteCode: raw.inviteCode || undefined,
+      invitedById: raw.invitedById || undefined,
+      referralCount: raw.referralCount,
+      referralLimit: raw.referralLimit,
+      createdAt: raw.createdAt,
+      updatedAt: raw.updatedAt,
+    });
+  }
+
+  async findDeviceIdsByUserId(userId: string): Promise<string[]> {
+    const devices = await this.prisma.userDevice.findMany({
+      where: { userId },
+      select: { deviceId: true },
+    });
+
+    return devices.map((d) => d.deviceId).filter((id): id is string => !!id);
   }
 
   async delete(id: string): Promise<void> {
