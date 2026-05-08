@@ -51,7 +51,29 @@ export class PrismaPayoutRepository implements PayoutRepositoryPort {
     const raws = await this.prisma.payout.findMany({
       where: { status: status as any },
     });
-    return raws.map(raw => ({
+    return raws.map(this.toProps);
+  }
+
+  async find(params: { status?: PayoutStatus; skip?: number; take?: number }): Promise<{ items: PayoutProps[]; total: number }> {
+    const where = params.status ? { status: params.status as any } : {};
+    const [items, total] = await Promise.all([
+      this.prisma.payout.findMany({
+        where,
+        skip: params.skip,
+        take: params.take,
+        orderBy: { createdAt: 'desc' },
+      }),
+      this.prisma.payout.count({ where }),
+    ]);
+
+    return {
+      items: items.map(this.toProps),
+      total,
+    };
+  }
+
+  private toProps(raw: any): PayoutProps {
+    return {
       id: raw.id,
       providerId: raw.providerId,
       amount: raw.amount,
@@ -62,6 +84,6 @@ export class PrismaPayoutRepository implements PayoutRepositoryPort {
       metadata: raw.metadata,
       createdAt: raw.createdAt,
       updatedAt: raw.updatedAt,
-    }));
+    };
   }
 }

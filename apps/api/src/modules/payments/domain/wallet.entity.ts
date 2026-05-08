@@ -3,6 +3,7 @@ export enum TransactionType {
   DEBIT = 'DEBIT',
   FROZEN = 'FROZEN',
   CANCEL = 'CANCEL',
+  PROMO_CREDIT = 'PROMO_CREDIT',
 }
 
 export interface WalletTransactionProps {
@@ -21,6 +22,7 @@ export interface WalletProps {
   providerId: string;
   balance: bigint;
   pendingBalance: bigint;
+  promoBalance: bigint;
   createdAt: Date;
   updatedAt: Date;
   transactions?: WalletTransactionProps[];
@@ -43,6 +45,10 @@ export class Wallet {
 
   public get pendingBalance(): bigint {
     return this.props.pendingBalance;
+  }
+
+  public get promoBalance(): bigint {
+    return this.props.promoBalance;
   }
 
   /**
@@ -114,11 +120,27 @@ export class Wallet {
     this.props.updatedAt = new Date();
   }
 
+  public creditPromo(amount: bigint): void {
+    if (amount <= 0n) throw new Error('Amount must be positive');
+    this.props.promoBalance += amount;
+    this.props.updatedAt = new Date();
+  }
+
+  public debitPromo(amount: bigint): void {
+    if (amount <= 0n) throw new Error('Amount must be positive');
+    if (this.props.promoBalance < amount) {
+      throw new Error('Insufficient promo balance');
+    }
+    this.props.promoBalance -= amount;
+    this.props.updatedAt = new Date();
+  }
+
   public toJSON() {
     return {
       ...this.props,
       balance: this.props.balance.toString(),
       pendingBalance: this.props.pendingBalance.toString(),
+      promoBalance: this.props.promoBalance.toString(),
     };
   }
 }

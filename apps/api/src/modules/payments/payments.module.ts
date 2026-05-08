@@ -15,6 +15,8 @@ import { PayoutProcessor } from './infrastructure/queues/payout.processor';
 import { ExecutePayoutProcessor } from './infrastructure/queues/execute-payout.processor';
 import { OrderMatchedListener } from './infrastructure/listeners/order-matched.listener';
 import { OrderDoneListener } from './infrastructure/listeners/order-done.listener';
+import { ReferralRewardListener } from './infrastructure/listeners/referral-reward.listener';
+import { ReferralRewardProcessor } from './infrastructure/queues/referral-reward.processor';
 import { PaymentWebhookController } from './interface/http/payment.webhook.controller';
 import { BankDataController } from './interface/http/bank-data.controller';
 import { OrdersModule } from '../orders/orders.module';
@@ -22,6 +24,10 @@ import { IdentityModule } from '../identity/identity.module';
 import { PROVIDER_REPOSITORY_PORT } from '../identity/ports/provider-repository.port';
 import { FiscalModule } from '../fiscal/fiscal.module';
 import { SecurityService } from '../../shared-kernel/services/security.service';
+import { GetPayoutsUseCase } from './application/get-payouts.usecase';
+import { AdminApprovePayoutUseCase } from './application/admin-approve-payout.usecase';
+import { AdminBlockPayoutUseCase } from './application/admin-block-payout.usecase';
+import { AdminPayoutController } from './interface/http/admin-payout.controller';
 
 @Module({
   imports: [
@@ -36,8 +42,9 @@ import { SecurityService } from '../../shared-kernel/services/security.service';
     }),
     BullModule.registerQueue({ name: 'payouts' }),
     BullModule.registerQueue({ name: 'payout-execution' }),
+    BullModule.registerQueue({ name: 'referral-reward' }),
   ],
-  controllers: [PaymentWebhookController, BankDataController],
+  controllers: [PaymentWebhookController, BankDataController, AdminPayoutController],
   providers: [
     PrismaService,
     SecurityService,
@@ -46,10 +53,15 @@ import { SecurityService } from '../../shared-kernel/services/security.service';
     SchedulePayoutUseCase,
     ProcessDailyPayoutsUseCase,
     ReverseFailedPayoutUseCase,
+    GetPayoutsUseCase,
+    AdminApprovePayoutUseCase,
+    AdminBlockPayoutUseCase,
     PayoutProcessor,
     ExecutePayoutProcessor,
     OrderMatchedListener,
     OrderDoneListener,
+    ReferralRewardListener,
+    ReferralRewardProcessor,
     { provide: 'WalletRepositoryPort', useClass: PrismaWalletRepository },
     { provide: 'PaymentRepositoryPort', useClass: PrismaPaymentRepository },
     { provide: 'PayoutRepositoryPort', useClass: PrismaPayoutRepository },

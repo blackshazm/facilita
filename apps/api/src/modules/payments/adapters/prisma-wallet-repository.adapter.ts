@@ -14,6 +14,7 @@ export class PrismaWalletRepository implements WalletRepositoryPort {
       update: {
         balance: BigInt(data.balance),
         pendingBalance: BigInt(data.pendingBalance),
+        promoBalance: BigInt(data.promoBalance),
         updatedAt: new Date(),
       },
       create: {
@@ -21,6 +22,7 @@ export class PrismaWalletRepository implements WalletRepositoryPort {
         providerId: data.providerId,
         balance: BigInt(data.balance),
         pendingBalance: BigInt(data.pendingBalance),
+        promoBalance: BigInt(data.promoBalance),
       },
     });
   }
@@ -54,6 +56,7 @@ export class PrismaWalletRepository implements WalletRepositoryPort {
       providerId: raw.providerId,
       balance: BigInt(raw.balance),
       pendingBalance: BigInt(raw.pendingBalance),
+      promoBalance: BigInt(raw.promoBalance),
       createdAt: raw.createdAt,
       updatedAt: raw.updatedAt,
     });
