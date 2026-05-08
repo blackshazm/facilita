@@ -28,8 +28,14 @@ To be the most reliable platform for domestic emergencies in Brazil, where quali
 - Focus on Escrow systems, Tiering engine and Fraud prevention.
 </details>
 
-## Next Milestone: v8.0 Operational Excellence (Draft)
-- **Goal**: Enhance administrative productivity and refine service quality loops.
+## Current Milestone: v8.0 Operational Excellence
+
+**Goal**: Enhance administrative productivity and refine service quality loops to support platform scale.
+
+**Target features**:
+- **Bulk Payouts**: Automated and manual batch processing for provider payments.
+- **Granular Feedback Loops**: Evidence-based quality tracking and detailed customer/provider reviews.
+- **Operational Dashboard**: Enhanced administrative tools for financial and quality monitoring.
 
 ## Stakeholders
 - **Users**: Customers needing urgent home repairs.

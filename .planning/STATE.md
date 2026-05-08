@@ -1,15 +1,15 @@
 # Project State — FACILITA
 
-## Current Status: **v8.0 — Operational Excellence (Planning)**
+## Current Status: **v8.0 — Operational Excellence (Research)**
 **Last Update**: 2026-05-08
 **Milestone**: Operational Excellence
 
 ## Current Position
 
-Phase: Planning
-Plan: pending
-Status: Planning v8.0
-Last activity: 2026-05-08 — Milestone v7.0 archived and shipped.
+Phase: Not started (Researching)
+Plan: —
+Status: Researching domain ecosystem
+Last activity: 2026-05-08 — Milestone v8.0 started
 
 ## Completed
 - [x] Milestone v7.0: Expansion & Payouts (2026-05-08)
@@ -17,7 +17,7 @@ Last activity: 2026-05-08 — Milestone v7.0 archived and shipped.
 - [x] Milestone v5.0: Scale & Hardening (2026-05-04)
 
 ## In Progress
-- [ ] Planning v8.0 Requirements
+- [ ] Domain Research for v8.0 Features
 
 ## Blockers / Risks
 - **Operational Complexity**: As we scale to multiple cities, manual payout management needs bulk capabilities (v8.1).
@@ -26,5 +26,5 @@ Last activity: 2026-05-08 — Milestone v7.0 archived and shipped.
 ## Session Continuity
 
 **Last session**: 2026-05-08
-**Status**: Milestone v7.0 completed with success. All 9 requirements satisfied.
-**Next Step**: Run `/gsd-new-milestone` to define requirements for v8.0.
+**Status**: Resumed planning for Milestone v8.0.
+**Next Step**: Perform parallel research for Bulk Payouts and Quality Loops.
