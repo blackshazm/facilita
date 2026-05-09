@@ -6,10 +6,10 @@
 
 ## Current Position
 
-Phase: 08.1 — Bulk Payout Foundation
-Plan: pending
-Status: Context gathered, ready for planning
-Last activity: 2026-05-08 — Phase 08.1 context and implementation decisions captured.
+- [ ] **Phase 08.1**: Bulk Payout Foundation (Planned and Reviewed)
+    - Context gathered, Research complete, Plan reviewed and revised.
+    - Next: Execution.
+- [ ] **Phase 08.2**: Payout Resilience & Automation (Waiting)
 
 ## Completed
 - [x] Milestone v7.0: Expansion & Payouts (2026-05-08)
