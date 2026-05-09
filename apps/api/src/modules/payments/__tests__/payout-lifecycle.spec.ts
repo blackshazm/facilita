@@ -48,6 +48,7 @@ describe('Payout Lifecycle', () => {
       providerId: 'p1',
       balance: 100000n, // R$ 1.000,00
       pendingBalance: 0n,
+      promoBalance: 0n,
       createdAt: new Date(),
       updatedAt: new Date(),
     });
@@ -56,6 +57,7 @@ describe('Payout Lifecycle', () => {
     providerRepo.findById.mockResolvedValue({
       id: 'p1',
       pagarmeRecipientId: 're_123',
+      kycStatus: 'APPROVED',
       bankDataUpdatedAt: new Date(Date.now() - 48 * 60 * 60 * 1000), // 48h ago
     });
 
@@ -76,6 +78,7 @@ describe('Payout Lifecycle', () => {
       providerId: 'p1',
       balance: 100000n,
       pendingBalance: 0n,
+      promoBalance: 0n,
       createdAt: new Date(),
       updatedAt: new Date(),
     });
@@ -84,6 +87,7 @@ describe('Payout Lifecycle', () => {
     providerRepo.findById.mockResolvedValue({
       id: 'p1',
       pagarmeRecipientId: 're_123',
+      kycStatus: 'APPROVED',
       bankDataUpdatedAt: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2h ago
     });
 
@@ -100,6 +104,7 @@ describe('Payout Lifecycle', () => {
       providerId: 'p1',
       balance: 300000n, // R$ 3.000,00
       pendingBalance: 0n,
+      promoBalance: 0n,
       createdAt: new Date(),
       updatedAt: new Date(),
     });
@@ -108,6 +113,7 @@ describe('Payout Lifecycle', () => {
     providerRepo.findById.mockResolvedValue({
       id: 'p1',
       pagarmeRecipientId: 're_123',
+      kycStatus: 'APPROVED',
       bankDataUpdatedAt: new Date(Date.now() - 48 * 60 * 60 * 1000),
     });
 
