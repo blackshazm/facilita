@@ -16,7 +16,34 @@ import {
 export default function PayoutsPage() {
   const [activeTab, setActiveTab] = useState<'pending' | 'history'>('pending');
   const [page, setPage] = useState(1);
-  const { payouts, total, isLoading, fetchPayouts, approvePayout, blockPayout } = usePayouts();
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [batchId, setBatchId] = useState<string | null>(null);
+  const [batchStatus, setBatchStatus] = useState<any>(null);
+  const [gatewayBalance, setGatewayBalance] = useState<string>('0');
+  const { payouts, total, isLoading, fetchPayouts, approvePayout, blockPayout, startBatchPayout, getBatchStatus, getBalance } = usePayouts();
+
+  useEffect(() => {
+    const loadBalance = async () => {
+      const balance = await getBalance();
+      setGatewayBalance(balance);
+    };
+    loadBalance();
+  }, [getBalance]);
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (batchId) {
+      interval = setInterval(async () => {
+        const status = await getBatchStatus(batchId);
+        setBatchStatus(status);
+        if (status?.status === 'COMPLETED' || status?.status?.startsWith('FAILED')) {
+          setBatchId(null);
+          fetchPayouts(activeTab === 'pending' ? 'PENDING_APPROVAL' : undefined, page, 10);
+        }
+      }, 3000);
+    }
+    return () => clearInterval(interval);
+  }, [batchId, getBatchStatus, activeTab, page, fetchPayouts]);
 
   useEffect(() => {
     const status = activeTab === 'pending' ? 'PENDING_APPROVAL' : undefined;
@@ -41,6 +68,36 @@ export default function PayoutsPage() {
     }
   };
 
+  const handleToggleSelect = (id: string) => {
+    const next = new Set(selectedIds);
+    if (next.has(id)) next.delete(id);
+    else next.add(id);
+    setSelectedIds(next);
+  };
+
+  const handleSelectAll = () => {
+    if (selectedIds.size === payouts.length) {
+      setSelectedIds(new Set());
+    } else {
+      setSelectedIds(new Set(payouts.map(p => p.id)));
+    }
+  };
+
+  const handleStartBatch = async () => {
+    if (confirm(`Deseja iniciar o processamento em lote de ${selectedIds.size} itens?`)) {
+      const id = await startBatchPayout(Array.from(selectedIds));
+      if (id) {
+        setBatchId(id);
+        setSelectedIds(new Set());
+      }
+    }
+  };
+
+  const selectedTotal = Array.from(selectedIds).reduce((acc, id) => {
+    const p = payouts.find(p => p.id === id);
+    return acc + (p ? parseFloat(p.amount) : 0);
+  }, 0);
+
   const totalPages = Math.ceil(total / 10);
 
   return (
@@ -54,6 +111,16 @@ export default function PayoutsPage() {
             </div>
             <h1 className="text-4xl font-black text-white tracking-tight">Monitoramento de Payouts</h1>
             <p className="text-slate-400 mt-2">Aprovação manual e histórico de liquidações.</p>
+          </div>
+
+          <div className="bg-slate-900 border border-slate-800 p-4 rounded-2xl flex items-center gap-4">
+            <div className="p-3 bg-emerald-500/10 rounded-xl text-emerald-500">
+              <Wallet size={24} />
+            </div>
+            <div>
+              <div className="text-[10px] text-slate-500 font-black uppercase tracking-widest">Saldo Pagar.me</div>
+              <div className="text-xl font-black text-white">R$ {(parseFloat(gatewayBalance) / 100).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</div>
+            </div>
           </div>
         </header>
 
@@ -89,11 +156,19 @@ export default function PayoutsPage() {
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr className="bg-slate-900/60">
+                  <th className="px-8 py-5 w-10">
+                    <input 
+                      type="checkbox" 
+                      onChange={handleSelectAll}
+                      checked={selectedIds.size > 0 && selectedIds.size === payouts.length}
+                      className="rounded border-slate-700 bg-slate-800 text-emerald-500 focus:ring-emerald-500/50"
+                    />
+                  </th>
                   <th className="px-8 py-5 text-xs font-black uppercase text-slate-500 tracking-widest">ID / Data</th>
                   <th className="px-8 py-5 text-xs font-black uppercase text-slate-500 tracking-widest">Prestador</th>
                   <th className="px-8 py-5 text-xs font-black uppercase text-slate-500 tracking-widest">Valor</th>
                   <th className="px-8 py-5 text-xs font-black uppercase text-slate-500 tracking-widest">Status</th>
-                  <th className="px-8 py-5 text-xs font-black uppercase text-slate-500 tracking-widest">Dados Bancários (Mascarados)</th>
+                  <th className="px-8 py-5 text-xs font-black uppercase text-slate-500 tracking-widest">Dados Bancários</th>
                   {activeTab === 'pending' && <th className="px-8 py-5 text-xs font-black uppercase text-slate-500 tracking-widest text-right">Ações</th>}
                 </tr>
               </thead>
@@ -108,6 +183,14 @@ export default function PayoutsPage() {
                   </tr>
                 ) : payouts.map((payout) => (
                   <tr key={payout.id} className="hover:bg-slate-800/20 transition-colors group">
+                    <td className="px-8 py-6">
+                      <input 
+                        type="checkbox" 
+                        checked={selectedIds.has(payout.id)}
+                        onChange={() => handleToggleSelect(payout.id)}
+                        className="rounded border-slate-700 bg-slate-800 text-emerald-500 focus:ring-emerald-500/50"
+                      />
+                    </td>
                     <td className="px-8 py-6">
                       <div className="font-mono text-[10px] text-slate-500">#{payout.id.slice(0, 8)}</div>
                       <div className="text-sm font-medium">{new Date(payout.createdAt).toLocaleDateString()}</div>
@@ -196,6 +279,88 @@ export default function PayoutsPage() {
           </p>
         </div>
       </div>
+
+      {/* Floating Selection Summary */}
+      {selectedIds.size > 0 && (
+        <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50">
+          <div className="bg-slate-900 border border-emerald-500/50 p-4 pr-6 rounded-full shadow-2xl shadow-emerald-500/20 backdrop-blur-xl flex items-center gap-6 animate-in slide-in-from-bottom-10">
+            <div className="flex gap-4 items-center">
+              <div className="w-10 h-10 bg-emerald-500 text-slate-950 rounded-full flex items-center justify-center font-black">
+                {selectedIds.size}
+              </div>
+              <div>
+                <div className="text-[10px] text-slate-500 font-black uppercase tracking-widest">Selecionados</div>
+                <div className="text-lg font-black text-white">R$ {(selectedTotal / 100).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</div>
+              </div>
+            </div>
+            <div className="h-8 w-px bg-slate-800"></div>
+            <button 
+              onClick={handleStartBatch}
+              className="bg-emerald-500 hover:bg-emerald-400 text-slate-950 px-8 py-3 rounded-full font-black transition-all active:scale-95 flex items-center gap-2"
+            >
+              <CheckCircle2 size={18} />
+              Processar Lote
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Batch Processing Modal */}
+      {(batchId || batchStatus) && (
+        <div className="fixed inset-0 z-[100] bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-slate-900 border border-slate-800 p-8 rounded-[2rem] w-full max-w-md shadow-2xl">
+            <h2 className="text-2xl font-black text-white mb-4">Processando Lote</h2>
+            
+            <div className="relative pt-1">
+              <div className="flex mb-2 items-center justify-between">
+                <div>
+                  <span className="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-emerald-400 bg-emerald-400/10">
+                    {batchStatus?.status || 'INICIANDO'}
+                  </span>
+                </div>
+                <div className="text-right">
+                  <span className="text-xs font-semibold inline-block text-emerald-400">
+                    {batchStatus ? Math.round((batchStatus.processedCount / batchStatus.totalCount) * 100) : 0}%
+                  </span>
+                </div>
+              </div>
+              <div className="overflow-hidden h-2 mb-4 text-xs flex rounded bg-slate-800">
+                <div 
+                  style={{ width: `${batchStatus ? (batchStatus.processedCount / batchStatus.totalCount) * 100 : 0}%` }}
+                  className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-emerald-500 transition-all duration-500"
+                ></div>
+              </div>
+            </div>
+
+            <div className="mt-4 space-y-2">
+              <div className="flex justify-between text-sm">
+                <span className="text-slate-500">Total de Itens:</span>
+                <span className="text-white font-bold">{batchStatus?.totalCount || selectedIds.size}</span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-slate-500">Processados:</span>
+                <span className="text-white font-bold">{batchStatus?.processedCount || 0}</span>
+              </div>
+            </div>
+
+            {batchStatus?.errorMessage && (
+              <div className="mt-6 p-4 bg-rose-500/10 border border-rose-500/20 rounded-xl flex items-start gap-3">
+                <AlertTriangle className="text-rose-500 shrink-0" size={18} />
+                <p className="text-xs text-rose-500 font-medium">{batchStatus.errorMessage}</p>
+              </div>
+            )}
+
+            {(batchStatus?.status === 'COMPLETED' || batchStatus?.status?.startsWith('FAILED')) && (
+              <button 
+                onClick={() => { setBatchStatus(null); setBatchId(null); }}
+                className="w-full mt-8 py-3 bg-slate-800 hover:bg-slate-700 text-white rounded-xl font-bold transition-colors"
+              >
+                Fechar
+              </button>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

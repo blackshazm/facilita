@@ -70,6 +70,48 @@ export function usePayouts() {
     }
   };
 
+  const startBatchPayout = async (payoutIds: string[]) => {
+    setIsLoading(true);
+    try {
+      const response = await fetch(`/api/admin/payouts/batch`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ payoutIds }),
+      });
+      if (!response.ok) throw new Error('Failed to start batch payout');
+      const data = await response.json();
+      return data; // returns batchId string
+    } catch (err: any) {
+      setError(err.message);
+      return null;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const getBatchStatus = async (batchId: string) => {
+    try {
+      const response = await fetch(`/api/admin/payouts/batch/${batchId}`);
+      if (!response.ok) throw new Error('Failed to fetch batch status');
+      return await response.json();
+    } catch (err: any) {
+      setError(err.message);
+      return null;
+    }
+  };
+
+  const getBalance = async () => {
+    try {
+      const response = await fetch(`/api/admin/payouts/balance`);
+      if (!response.ok) throw new Error('Failed to fetch balance');
+      const data = await response.json();
+      return data.available;
+    } catch (err: any) {
+      setError(err.message);
+      return '0';
+    }
+  };
+
   return {
     payouts,
     total,
@@ -78,5 +120,8 @@ export function usePayouts() {
     fetchPayouts,
     approvePayout,
     blockPayout,
+    startBatchPayout,
+    getBatchStatus,
+    getBalance,
   };
 }

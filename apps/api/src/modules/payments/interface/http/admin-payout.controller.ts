@@ -7,6 +7,10 @@ import { RolesGuard } from '../../../identity/interface/guards/roles.guard';
 import { Roles } from '../../../identity/interface/decorators/roles.decorator';
 import { UserRole } from '../../../identity/core/user.entity';
 import { PayoutStatus } from '../../ports/payout-repository.port';
+import { StartBatchPayoutUseCase } from '../../application/start-batch-payout.usecase';
+import { GetBatchStatusUseCase } from '../../application/get-batch-status.usecase';
+import { PayoutPort } from '../../ports/payout.port';
+import { Inject, Body } from '@nestjs/common';
 
 @Controller('admin/payouts')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -16,6 +20,10 @@ export class AdminPayoutController {
     private readonly getPayoutsUseCase: GetPayoutsUseCase,
     private readonly approvePayoutUseCase: AdminApprovePayoutUseCase,
     private readonly blockPayoutUseCase: AdminBlockPayoutUseCase,
+    private readonly startBatchPayoutUseCase: StartBatchPayoutUseCase,
+    private readonly getBatchStatusUseCase: GetBatchStatusUseCase,
+    @Inject('PayoutPort')
+    private readonly payoutPort: PayoutPort,
   ) {}
 
   @Get()
@@ -41,5 +49,24 @@ export class AdminPayoutController {
   async block(@Param('id') id: string, @Req() req: any) {
     const adminId = req.user.userId;
     return this.blockPayoutUseCase.execute(id, adminId);
+  }
+
+  @Post('batch')
+  async startBatch(@Body('payoutIds') payoutIds: string[], @Req() req: any) {
+    const adminId = req.user.userId;
+    return this.startBatchPayoutUseCase.execute(payoutIds, adminId);
+  }
+
+  @Get('batch/:id')
+  async getBatchStatus(@Param('id') id: string) {
+    return this.getBatchStatusUseCase.execute(id);
+  }
+
+  @Get('balance')
+  async getBalance() {
+    const masterRecipientId = process.env.PAGARME_MASTER_RECIPIENT_ID;
+    if (!masterRecipientId) return { available: '0' };
+    const balance = await this.payoutPort.getBalance(masterRecipientId);
+    return { available: balance.toString() };
   }
 }
