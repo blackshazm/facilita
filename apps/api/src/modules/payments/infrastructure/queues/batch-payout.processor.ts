@@ -31,6 +31,7 @@ export class BatchPayoutProcessor extends WorkerHost {
 
   async process(job: Job<{ batchId: string; payoutId: string }>): Promise<any> {
     const { batchId, payoutId } = job.data;
+    this.logger.log(`Processando job: batch=${batchId}, payout=${payoutId}`);
 
     // 1. Atualizar Heartbeat e checar status do lote
     const batch = await this.prisma.payoutBatch.update({

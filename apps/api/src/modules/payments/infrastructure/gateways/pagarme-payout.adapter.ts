@@ -8,6 +8,13 @@ export class PagarMePayoutAdapter implements PayoutPort {
   private readonly apiKey = process.env.PAGARME_SECRET_KEY;
 
   async transfer(request: PayoutTransferRequest): Promise<PayoutTransferResponse> {
+    if (this.apiKey === 'sk_test_mock') {
+      return {
+        externalId: 'tr_' + Math.random().toString(36).substring(7),
+        status: 'PAID',
+        fee: 500n,
+      };
+    }
     try {
       const response = await axios.post(
         `${this.baseUrl}/transfers`,
@@ -43,6 +50,9 @@ export class PagarMePayoutAdapter implements PayoutPort {
   }
 
   async getBalance(recipientId: string): Promise<bigint> {
+    if (this.apiKey === 'sk_test_mock') {
+      return 1000000n; // R$ 10.000,00
+    }
     try {
       const response = await axios.get(
         `${this.baseUrl}/recipients/${recipientId}/balance`,

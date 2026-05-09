@@ -31,6 +31,9 @@ export class GetBatchStatusUseCase {
       });
     }
 
-    return batch;
+    return {
+      ...batch,
+      totalAmount: batch.totalAmount.toString(),
+    };
   }
 }

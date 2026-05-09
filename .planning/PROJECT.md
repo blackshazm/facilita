@@ -7,7 +7,7 @@ FACILITA is a "closed-loop" transactional marketplace focused on urgent domestic
 To be the most reliable platform for domestic emergencies in Brazil, where quality is guaranteed by mandatory evidence and a rigorous matching engine.
 
 ## Current State
-- **Current Version**: v8.0 (Operational Excellence) - **Planning**
+- **Current Version**: v8.0 (Operational Excellence) - **In Execution**
 - **Last Shipped**: 2026-05-08 (v7.0)
 
 <details>
@@ -32,10 +32,9 @@ To be the most reliable platform for domestic emergencies in Brazil, where quali
 
 **Goal**: Enhance administrative productivity and refine service quality loops to support platform scale.
 
-**Target features**:
-- **Bulk Payouts**: Automated and manual batch processing for provider payments.
-- **Granular Feedback Loops**: Evidence-based quality tracking and detailed customer/provider reviews.
-- **Operational Dashboard**: Enhanced administrative tools for financial and quality monitoring.
+- [x] **Bulk Payouts**: Automated and manual batch processing for provider payments.
+- [ ] **Granular Feedback Loops**: Evidence-based quality tracking and detailed customer/provider reviews.
+- [ ] **Operational Dashboard**: Enhanced administrative tools for financial and quality monitoring.
 
 ## Stakeholders
 - **Users**: Customers needing urgent home repairs.
