@@ -28,6 +28,9 @@ import { GetPayoutsUseCase } from './application/get-payouts.usecase';
 import { AdminApprovePayoutUseCase } from './application/admin-approve-payout.usecase';
 import { AdminBlockPayoutUseCase } from './application/admin-block-payout.usecase';
 import { AdminPayoutController } from './interface/http/admin-payout.controller';
+import { StartBatchPayoutUseCase } from './application/start-batch-payout.usecase';
+import { GetBatchStatusUseCase } from './application/get-batch-status.usecase';
+import { BatchPayoutProcessor } from './infrastructure/queues/batch-payout.processor';
 
 @Module({
   imports: [
@@ -63,6 +66,9 @@ import { AdminPayoutController } from './interface/http/admin-payout.controller'
     OrderDoneListener,
     ReferralRewardListener,
     ReferralRewardProcessor,
+    StartBatchPayoutUseCase,
+    GetBatchStatusUseCase,
+    BatchPayoutProcessor,
     { provide: 'WalletRepositoryPort', useClass: PrismaWalletRepository },
     { provide: 'PaymentRepositoryPort', useClass: PrismaPaymentRepository },
     { provide: 'PayoutRepositoryPort', useClass: PrismaPayoutRepository },
