@@ -241,6 +241,21 @@ model WalletTransaction {
 
   @@schema("payments")
 }
+model PayoutBatch {
+  id             String    @id @default(uuid())
+  adminId        String
+  totalAmount    BigInt
+  totalCount     Int
+  processedCount Int       @default(0)
+  status         String
+  errorMessage   String?
+  lastHeartbeat  DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  payouts        Payout[]
+
+  @@schema("payments")
+}
 
 model Payout {
   id           String       @id @default(uuid())
@@ -253,6 +268,8 @@ model Payout {
   metadata     Json?
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
+  batchId      String?
+  batch        PayoutBatch? @relation(fields: [batchId], references: [id])
 
   @@schema("payments")
 }
