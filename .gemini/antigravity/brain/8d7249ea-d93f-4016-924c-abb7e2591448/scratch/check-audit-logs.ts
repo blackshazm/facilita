@@ -1,17 +1,12 @@
 import { PrismaClient } from '@prisma/client';
-
 const prisma = new PrismaClient();
 
 async function main() {
   const logs = await prisma.financialAuditLog.findMany({
-    where: { action: 'PROMO_DISCOUNT_APPLIED' }
+    orderBy: { createdAt: 'desc' },
+    take: 50
   });
-  
-  console.log('Promo logs:', JSON.stringify(logs, null, 2));
+  console.log(JSON.stringify(logs, null, 2));
 }
 
-main()
-  .catch(e => console.error(e))
-  .finally(async () => {
-    await prisma.$disconnect();
-  });
+main().finally(() => prisma.$disconnect());

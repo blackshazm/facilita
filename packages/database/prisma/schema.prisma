@@ -241,6 +241,7 @@ model WalletTransaction {
 
   @@schema("payments")
 }
+
 model PayoutBatch {
   id             String    @id @default(uuid())
   adminId        String

@@ -43,6 +43,7 @@ import { AdminPayoutController } from './interface/http/admin-payout.controller'
     BullModule.registerQueue({ name: 'payouts' }),
     BullModule.registerQueue({ name: 'payout-execution' }),
     BullModule.registerQueue({ name: 'referral-reward' }),
+    BullModule.registerQueue({ name: 'payout-batch' }),
   ],
   controllers: [PaymentWebhookController, BankDataController, AdminPayoutController],
   providers: [

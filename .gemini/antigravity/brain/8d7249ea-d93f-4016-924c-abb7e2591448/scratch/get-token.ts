@@ -3,7 +3,6 @@ async function main() {
   const code = '123456'; 
   
   try {
-    console.log('Registering user...');
     const res = await fetch('http://localhost:3333/auth/otp/verify', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -14,8 +13,12 @@ async function main() {
       })
     });
     
-    const data = await res.json();
-    console.log('Result:', JSON.stringify(data, null, 2));
+    const data: any = await res.json();
+    if (data.accessToken) {
+      console.log('TOKEN:' + data.accessToken);
+    } else {
+      console.log('Error:', JSON.stringify(data));
+    }
   } catch (err: any) {
     console.error('Error:', err.message);
   }

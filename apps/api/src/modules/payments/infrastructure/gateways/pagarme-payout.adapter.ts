@@ -42,6 +42,24 @@ export class PagarMePayoutAdapter implements PayoutPort {
     }
   }
 
+  async getBalance(recipientId: string): Promise<bigint> {
+    try {
+      const response = await axios.get(
+        `${this.baseUrl}/recipients/${recipientId}/balance`,
+        {
+          headers: {
+            Authorization: `Basic ${Buffer.from(`${this.apiKey}:`).toString('base64')}`,
+          },
+        }
+      );
+
+      return BigInt(response.data.available || 0);
+    } catch (error: any) {
+      console.error('PagarMe GetBalance Error:', error.response?.data || error.message);
+      throw new Error(`Failed to fetch balance for recipient ${recipientId}`);
+    }
+  }
+
   private mapStatus(status: string): 'PROCESSING' | 'PAID' | 'FAILED' {
     const statusMap: Record<string, 'PROCESSING' | 'PAID' | 'FAILED'> = {
       'pending': 'PROCESSING',
