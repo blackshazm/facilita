@@ -1,32 +1,29 @@
-# Roadmap — FACILITA
+# Roadmap — Milestone v8.0: Operational Excellence
 
-## Milestones
+## Phase 08.1: Bulk Payout Foundation
+**Goal**: Enable administrative batch processing of provider payouts with strict safety controls.
+- **Requirements**: PAY-04, PAY-06, OPS-02.
+- **Success Criteria**:
+    - Admin can select 10+ payouts and process them with one click.
+    - Payouts are blocked if gateway balance is insufficient (Real-time check).
+    - Idempotency keys prevent double transfers during manual retry.
 
-- ✅ **v7.0: Expansion & Payouts** — Phases 7.1-7.4 (shipped 2026-05-08)
-- 🚧 **v8.0: Operational Excellence** — Phases 8.1-8.3 (planned)
+## Phase 08.2: Payout Resilience & Automation
+**Goal**: Automate the reconciliation of payout statuses via gateway webhooks.
+- **Requirements**: PAY-05.
+- **Success Criteria**:
+    - Internal ledger status updates from `Pending` to `Paid` automatically on Pagar.me confirmation.
+    - Failed transfers trigger an internal alert/log for admin review.
 
-## Phases
+## Phase 08.3: Advanced Feedback Loops
+**Goal**: Implement the "Evidence-First" granular review system to safeguard platform quality.
+- **Requirements**: QUAL-01, QUAL-02, QUAL-03.
+- **Success Criteria**:
+    - Users can rate Punctuality, Technique, and Cleanliness separately.
+    - Photos of the service are displayed alongside the review text.
+    - Reviews remain hidden until both sides participate or the timeout expires.
 
-<details>
-<summary>✅ v7.0: Expansion & Payouts (Phases 7.1-7.4) — SHIPPED 2026-05-08</summary>
-
-- [x] Phase 7.1: Payout Automation & Ledger Hardening (1/1 plan) — completed 2026-05-06
-- [x] Phase 7.2: Regional Expansion & Geo-Filtering (1/1 plan) — completed 2026-05-06
-- [x] Phase 7.3: Viral Growth & Referral System (1/1 plan) — completed 2026-05-07
-- [x] Phase 7.4: Operational Payout Dashboard (2/2 plans) — completed 2026-05-08
-
-</details>
-
-### 🚧 v8.0 Operational Excellence (Planned)
-
-- [ ] Phase 8.1: Bulk Payout Actions & Advanced Filtering (0/2 plans)
-- [ ] Phase 8.2: Service Quality Scoring & Feedback Loop (0/3 plans)
-- [ ] Phase 8.3: Automated Incident Resolution (0/2 plans)
-
-## Archived Milestones
-- [v7.0: Expansion & Payouts](./milestones/v7.0-ROADMAP.md) — 2026-05-08
-- [v6.0: Growth & Compliance](./milestones/v6.0-ROADMAP.md) — 2026-05-06
-- [v5.0: Scale & Hardening](./milestones/v5.0-ROADMAP.md) — 2026-05-04
-
----
-*Run `/gsd-new-milestone` to start the next roadmap cycle.*
+## Milestone v8.0 Summary
+- **Total Phases**: 3
+- **Total Requirements**: 7
+- **Estimated Effort**: Medium

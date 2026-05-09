@@ -1,15 +1,15 @@
 # Project State — FACILITA
 
-## Current Status: **v8.0 — Operational Excellence (Research)**
+## Current Status: **v8.0 — Operational Excellence (Planning)**
 **Last Update**: 2026-05-08
 **Milestone**: Operational Excellence
 
 ## Current Position
 
-Phase: Not started (Researching)
-Plan: —
-Status: Researching domain ecosystem
-Last activity: 2026-05-08 — Milestone v8.0 started
+Phase: 08.1 — Bulk Payout Foundation
+Plan: pending
+Status: Initializing Phase 08.1
+Last activity: 2026-05-08 — Milestone v8.0 Research and Requirements finalized.
 
 ## Completed
 - [x] Milestone v7.0: Expansion & Payouts (2026-05-08)
@@ -17,7 +17,7 @@ Last activity: 2026-05-08 — Milestone v8.0 started
 - [x] Milestone v5.0: Scale & Hardening (2026-05-04)
 
 ## In Progress
-- [ ] Domain Research for v8.0 Features
+- [ ] Phase 08.1 Specification
 
 ## Blockers / Risks
 - **Operational Complexity**: As we scale to multiple cities, manual payout management needs bulk capabilities (v8.1).
@@ -26,5 +26,5 @@ Last activity: 2026-05-08 — Milestone v8.0 started
 ## Session Continuity
 
 **Last session**: 2026-05-08
-**Status**: Resumed planning for Milestone v8.0.
-**Next Step**: Perform parallel research for Bulk Payouts and Quality Loops.
+**Status**: Milestone v8.0 Research and Requirements finalized. Roadmap created.
+**Next Step**: Start Phase 08.1 (Bulk Payout Foundation).
