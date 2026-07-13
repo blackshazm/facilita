@@ -11,6 +11,7 @@ import { CapturePaymentUseCase } from './application/capture-payment.usecase';
 import { SchedulePayoutUseCase } from './application/schedule-payout.usecase';
 import { ProcessDailyPayoutsUseCase } from './application/process-daily-payouts.usecase';
 import { ReverseFailedPayoutUseCase } from './application/reverse-failed-payout.usecase';
+import { ProcessPayoutWebhookUseCase } from './application/process-payout-webhook.usecase';
 import { PayoutProcessor } from './infrastructure/queues/payout.processor';
 import { ExecutePayoutProcessor } from './infrastructure/queues/execute-payout.processor';
 import { OrderMatchedListener } from './infrastructure/listeners/order-matched.listener';
@@ -31,6 +32,22 @@ import { AdminPayoutController } from './interface/http/admin-payout.controller'
 import { StartBatchPayoutUseCase } from './application/start-batch-payout.usecase';
 import { GetBatchStatusUseCase } from './application/get-batch-status.usecase';
 import { BatchPayoutProcessor } from './infrastructure/queues/batch-payout.processor';
+
+import { ProcessPayoutUseCase } from './application/process-payout.use-case';
+import { PaymentsEventHandler } from './application/payments-event.handler';
+import { PAYMENT_GATEWAY, PAYMENTS_REPOSITORY } from './ports/payments.port';
+import { StripePaymentGatewayAdapter } from './adapters/stripe-payment-gateway.adapter';
+import { PaymentEntity } from './core/payment.entity';
+
+// Mock DB
+const mockPaymentsDb: PaymentEntity[] = [];
+
+const mockPaymentsRepo = {
+  save: async (payment: PaymentEntity) => {
+    mockPaymentsDb.push(payment);
+  },
+  findById: async (id: string) => mockPaymentsDb.find(p => p.id === id) || null,
+};
 
 @Module({
   imports: [
@@ -57,6 +74,7 @@ import { BatchPayoutProcessor } from './infrastructure/queues/batch-payout.proce
     SchedulePayoutUseCase,
     ProcessDailyPayoutsUseCase,
     ReverseFailedPayoutUseCase,
+    ProcessPayoutWebhookUseCase,
     GetPayoutsUseCase,
     AdminApprovePayoutUseCase,
     AdminBlockPayoutUseCase,
@@ -69,11 +87,16 @@ import { BatchPayoutProcessor } from './infrastructure/queues/batch-payout.proce
     StartBatchPayoutUseCase,
     GetBatchStatusUseCase,
     BatchPayoutProcessor,
+    ProcessPayoutUseCase,
+    PaymentsEventHandler,
     { provide: 'WalletRepositoryPort', useClass: PrismaWalletRepository },
     { provide: 'PaymentRepositoryPort', useClass: PrismaPaymentRepository },
     { provide: 'PayoutRepositoryPort', useClass: PrismaPayoutRepository },
     { provide: 'PaymentGatewayPort', useClass: PagarMeAdapter },
     { provide: 'PayoutPort', useClass: PagarMePayoutAdapter },
+    // Mock for new MVP flow
+    { provide: PAYMENT_GATEWAY, useClass: StripePaymentGatewayAdapter },
+    { provide: PAYMENTS_REPOSITORY, useValue: mockPaymentsRepo },
   ],
   exports: ['WalletRepositoryPort', 'PaymentRepositoryPort'],
 })
