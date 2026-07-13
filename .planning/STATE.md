@@ -8,7 +8,8 @@
 
 - [x] **Phase 08.1**: Bulk Payout Foundation (Completed 2026-05-08)
     - Implemented PayoutBatch, BullMQ Sequential Processor, and Admin Dashboard.
-- [ ] **Phase 08.2**: Payout Resilience & Automation (In Progress - UI-SPEC Approved)
+- [x] **Phase 08.2**: Payout Resilience & Automation (Completed 2026-05-20)
+    - Implemented secure HMAC SHA-256 webhook validation, strict idempotency checks, and automated ledger reversals on transfer failure.
 
 ## Completed
 - [x] Milestone v7.0: Expansion & Payouts (2026-05-08)
@@ -18,7 +19,7 @@
 ## In Progress
 - [x] Phase 08.2 Context & Research
 - [x] Phase 08.2 UI-SPEC (Approved - Backend Only)
-- [ ] Phase 08.2 Planning
+- [x] Phase 08.2 Planning
 
 ## Blockers / Risks
 - **Operational Complexity**: As we scale to multiple cities, manual payout management needs bulk capabilities (v8.1).
