@@ -22,6 +22,7 @@ export interface PayoutProps {
 export interface PayoutRepositoryPort {
   save(payout: PayoutProps): Promise<void>;
   findById(id: string): Promise<PayoutProps | null>;
+  findByExternalId(externalId: string): Promise<PayoutProps | null>;
   findByStatus(status: PayoutStatus): Promise<PayoutProps[]>;
   find(params: { status?: PayoutStatus; skip?: number; take?: number }): Promise<{ items: PayoutProps[]; total: number }>;
 }

@@ -47,6 +47,14 @@ export class PrismaPayoutRepository implements PayoutRepositoryPort {
     };
   }
 
+  async findByExternalId(externalId: string): Promise<PayoutProps | null> {
+    const raw = await this.prisma.payout.findUnique({
+      where: { externalId },
+    });
+    if (!raw) return null;
+    return this.toProps(raw);
+  }
+
   async findByStatus(status: PayoutStatus): Promise<PayoutProps[]> {
     const raws = await this.prisma.payout.findMany({
       where: { status: status as any },
