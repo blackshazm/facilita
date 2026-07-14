@@ -1,17 +1,17 @@
 # Requirements — Milestone v8.0: Operational Excellence
 
 ## 1. Scalable Financial Operations (Bulk Payouts)
-- [ ] **PAY-04**: **Batch Payout Processing**. Admin can select multiple pending payouts and execute them in a single batch operation.
-- [ ] **PAY-05**: **Payout Conciliation Webhooks**. System must automatically reconcile internal ledger statuses based on Pagar.me transfer events.
-- [ ] **PAY-06**: **Batch Idempotency Control**. Every payout in a batch must be linked to a unique transaction ID to prevent duplicate transfers on retries.
+- [x] **PAY-04**: **Batch Payout Processing**. Admin can select multiple pending payouts and execute them in a single batch operation.
+- [x] **PAY-05**: **Payout Conciliation Webhooks**. System must automatically reconcile internal ledger statuses based on Pagar.me transfer events.
+- [x] **PAY-06**: **Batch Idempotency Control**. Every payout in a batch must be linked to a unique transaction ID to prevent duplicate transfers on retries.
 
 ## 2. Granular Quality Loops (Feedback)
-- [ ] **QUAL-01**: **Multi-Category Service Rating**. Users must rate providers in specific categories: Punctuality, Technical Skill, and Cleanliness.
-- [ ] **QUAL-02**: **Double-Blind Review System**. Reviews (text and scores) only become visible after both parties have submitted or after a 7-day window.
-- [ ] **QUAL-03**: **Evidence-Linked Feedback**. Users can attach up to 3 photos of the completed service as evidence within the review flow.
+- [x] **QUAL-01**: **Multi-Category Service Rating**. Users must rate providers in specific categories: Punctuality, Technical Skill, and Cleanliness.
+- [x] **QUAL-02**: **Double-Blind Review System**. Reviews (text and scores) only become visible after both parties have submitted or after a 7-day window.
+- [x] **QUAL-03**: **Evidence-Linked Feedback**. Users can attach up to 3 photos of the completed service as evidence within the review flow.
 
 ## 3. Operational Oversight
-- [ ] **OPS-02**: **Real-time Financial Gateway Balance**. Admin dashboard must display the actual balance available in Pagar.me versus the internal ledger.
+- [x] **OPS-02**: **Real-time Financial Gateway Balance**. Admin dashboard must display the actual balance available in Pagar.me versus the internal ledger.
 
 ## Future Requirements (Backlog)
 - **QUAL-04**: Dynamic Provider Ranking based on granular scores.
@@ -25,10 +25,10 @@
 
 | ID | Description | Phase | Status | Outcome |
 |---|---|---|---|---|
-| PAY-04 | Batch Payout Processing | 08.4 | Pending | |
-| PAY-05 | Payout Conciliation Webhooks | 08.4 | Pending | |
-| PAY-06 | Batch Idempotency Control | 08.4 | Pending | |
-| QUAL-01 | Multi-Category Service Rating | 08.4 | Pending | |
-| QUAL-02 | Double-Blind Review System | 08.4 | Pending | |
-| QUAL-03 | Evidence-Linked Feedback | 08.4 | Pending | |
-| OPS-02 | Real-time Financial Gateway Balance | 08.4 | Pending | |
+| PAY-04 | Batch Payout Processing | 08.4 | Satisfied | |
+| PAY-05 | Payout Conciliation Webhooks | 08.4 | Satisfied | |
+| PAY-06 | Batch Idempotency Control | 08.4 | Satisfied | |
+| QUAL-01 | Multi-Category Service Rating | 08.4 | Satisfied | |
+| QUAL-02 | Double-Blind Review System | 08.4 | Satisfied | |
+| QUAL-03 | Evidence-Linked Feedback | 08.4 | Satisfied | |
+| OPS-02 | Real-time Financial Gateway Balance | 08.4 | Satisfied | |
