@@ -6,6 +6,15 @@ import { ReviewResponse } from '../interface/http/dtos/review.response';
 export class GetOrderReviewsUseCase {
   constructor(private readonly prisma: PrismaService) {}
 
+  /**
+   * Retrieves all reviews for a specific order.
+   * Enforces double-blind visibility rules: reviews are only visible if both parties
+   * have submitted their reviews, or if 7 days have passed since the order completion.
+   * Hidden reviews will have their content obfuscated.
+   * 
+   * @param orderId The UUID of the order
+   * @returns A list of ReviewResponse DTOs
+   */
   async execute(orderId: string): Promise<ReviewResponse[]> {
     const order = await this.prisma.order.findUnique({
       where: { id: orderId }

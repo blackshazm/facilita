@@ -11,6 +11,15 @@ export class SubmitReviewUseCase {
     private readonly eventEmitter: EventEmitter2
   ) {}
 
+  /**
+   * Submits a new review for an order.
+   * Validates rules specific to Customer and Provider roles, aggregates scores,
+   * and dispatches a 'review.revealed' event if both parties have reviewed.
+   *
+   * @param orderId The UUID of the order
+   * @param authorId The UUID of the author
+   * @param dto The review payload
+   */
   async execute(orderId: string, authorId: string, dto: SubmitReviewDto) {
     if (dto.photoUrls && dto.photoUrls.length > 3) {
       throw new BadRequestException('Maximum of 3 photos allowed');
@@ -24,13 +33,7 @@ export class SubmitReviewUseCase {
       throw new BadRequestException('Order not found');
     }
 
-    let targetId: string;
-    if (dto.role === ReviewRole.CUSTOMER) {
-      if (!order.providerId) throw new BadRequestException('Order has no provider assigned');
-      targetId = order.providerId;
-    } else {
-      targetId = order.userId;
-    }
+    const targetId = this.resolveTargetId(dto.role, order);
 
     const existingReview = await this.prisma.review.findFirst({
       where: { orderId, authorId }
@@ -40,18 +43,7 @@ export class SubmitReviewUseCase {
       throw new BadRequestException('You have already submitted a review for this order');
     }
 
-    let overallScore = 0;
-    if (dto.role === ReviewRole.CUSTOMER) {
-      if (!dto.punctualityScore || !dto.technicalScore || !dto.cleanlinessScore) {
-        throw new BadRequestException('Customer reviews must include punctuality, technical, and cleanliness scores');
-      }
-      overallScore = (dto.punctualityScore + dto.technicalScore + dto.cleanlinessScore) / 3;
-    } else {
-      if (!dto.overallScore) {
-        throw new BadRequestException('Provider reviews must include an overall score');
-      }
-      overallScore = dto.overallScore;
-    }
+    const overallScore = this.calculateOverallScore(dto);
 
     const review = await this.prisma.review.create({
       data: {
@@ -68,6 +60,34 @@ export class SubmitReviewUseCase {
       }
     });
 
+    await this.checkAndEmitRevealedEvent(orderId, targetId, review);
+
+    return review;
+  }
+
+  private resolveTargetId(role: ReviewRole, order: any): string {
+    if (role === ReviewRole.CUSTOMER) {
+      if (!order.providerId) throw new BadRequestException('Order has no provider assigned');
+      return order.providerId;
+    }
+    return order.userId;
+  }
+
+  private calculateOverallScore(dto: SubmitReviewDto): number {
+    if (dto.role === ReviewRole.CUSTOMER) {
+      if (!dto.punctualityScore || !dto.technicalScore || !dto.cleanlinessScore) {
+        throw new BadRequestException('Customer reviews must include punctuality, technical, and cleanliness scores');
+      }
+      return (dto.punctualityScore + dto.technicalScore + dto.cleanlinessScore) / 3;
+    }
+    
+    if (!dto.overallScore) {
+      throw new BadRequestException('Provider reviews must include an overall score');
+    }
+    return dto.overallScore;
+  }
+
+  private async checkAndEmitRevealedEvent(orderId: string, targetId: string, review: any): Promise<void> {
     const otherReview = await this.prisma.review.findFirst({
       where: {
         orderId,
@@ -81,7 +101,5 @@ export class SubmitReviewUseCase {
         reviews: [review, otherReview]
       });
     }
-
-    return review;
   }
 }

@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Body, Param, Req, UseGuards } from '@nestjs/common';
+import { Controller, Post, Get, Body, Param, Req, UseGuards, ParseUUIDPipe } from '@nestjs/common';
 import { SubmitReviewUseCase } from '../../application/submit-review.usecase';
 import { GetOrderReviewsUseCase } from '../../application/get-order-reviews.usecase';
 import { SubmitReviewDto } from './dtos/submit-review.dto';
@@ -14,7 +14,7 @@ export class ReviewsController {
   @Post()
   @UseGuards(JwtAuthGuard)
   async submitReview(
-    @Param('id') orderId: string,
+    @Param('id', ParseUUIDPipe) orderId: string,
     @Body() dto: SubmitReviewDto,
     @Req() req: any
   ) {
@@ -24,7 +24,7 @@ export class ReviewsController {
 
   @Get()
   @UseGuards(JwtAuthGuard)
-  async getReviews(@Param('id') orderId: string) {
+  async getReviews(@Param('id', ParseUUIDPipe) orderId: string) {
     return this.getOrderReviewsUseCase.execute(orderId);
   }
 }

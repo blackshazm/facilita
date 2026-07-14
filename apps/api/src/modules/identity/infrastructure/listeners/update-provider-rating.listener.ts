@@ -19,11 +19,8 @@ export class UpdateProviderRatingListener {
     const providerId = providerReview.targetId;
 
     // Get all visible reviews for this provider
-    // Visible means there's a corresponding review from the provider to the customer OR 7 days passed
-    // For simplicity, we can just aggregate all reviews targeting this provider that are from CUSTOMERS.
-    // In a real scenario we'd filter strictly by visibility rules, but since this updates the profile,
-    // we can approximate or run the exact visibility logic.
-    
+    // Get all visible reviews for this provider.
+    // Visible means there's a corresponding review from the provider to the customer OR 7 days passed.
     const allProviderReviews = await this.prisma.review.findMany({
       where: {
         targetId: providerId,
