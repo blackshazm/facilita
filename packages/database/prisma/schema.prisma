@@ -6,7 +6,7 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-  schemas  = ["analytics", "audit", "catalog", "disputes", "evidence", "fraud", "geo", "identity", "matching", "orders", "payments"]
+  schemas  = ["analytics", "audit", "catalog", "disputes", "evidence", "fraud", "geo", "identity", "matching", "orders", "payments", "reviews"]
 }
 
 model City {
@@ -142,6 +142,7 @@ model Order {
   disputes    Dispute[]
   evidence    Evidence[]
   payments    Payment[]
+  reviews     Review[]
 
   @@schema("orders")
 }
@@ -444,3 +445,31 @@ enum DisputeStatus {
 
   @@schema("disputes")
 }
+
+enum ReviewRole {
+  CUSTOMER
+  PROVIDER
+
+  @@schema("reviews")
+}
+
+model Review {
+  id               String      @id @default(uuid())
+  orderId          String
+  order            Order       @relation(fields: [orderId], references: [id])
+  authorId         String
+  targetId         String
+  role             ReviewRole
+  punctualityScore Float?
+  technicalScore   Float?
+  cleanlinessScore Float?
+  overallScore     Float
+  comment          String?     @db.Text
+  photoUrls        String[]
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+
+  @@map("reviews")
+  @@schema("reviews")
+}
+

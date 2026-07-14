@@ -1,17 +1,14 @@
 import { Processor, WorkerHost } from '@nestjs/bullmq';
 import { Job } from 'bullmq';
 import { Inject, Injectable } from '@nestjs/common';
-import { 'WalletRepositoryPort' as WalletRepoPort } from '../../ports/wallet-repository.port'; // Wait, this syntax is wrong for import
 import { USER_REPOSITORY_PORT, UserRepositoryPort } from '../../../identity/ports/user-repository.port';
 import { PrismaService } from '../../../../shared-kernel/database/prisma.service';
-import { TransactionType } from '../../domain/wallet.entity';
 import { v4 as uuid } from 'uuid';
 
 @Processor('referral-reward')
 @Injectable()
 export class ReferralRewardProcessor extends WorkerHost {
   constructor(
-    @Inject('WalletRepositoryPort') private readonly walletRepository: any, // Using any to avoid port/entity mismatch issues for now
     @Inject(USER_REPOSITORY_PORT) private readonly userRepository: UserRepositoryPort,
     private readonly prisma: PrismaService,
   ) {

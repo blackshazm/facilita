@@ -11,6 +11,7 @@ import { FiscalModule } from './modules/fiscal/fiscal.module';
 import { NotificationsModule } from './modules/notifications/notifications.module';
 import { SharedKernelModule } from './shared-kernel/shared-kernel.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { ReviewsModule } from './modules/reviews/reviews.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
     FiscalModule,
     NotificationsModule,
     SharedKernelModule,
+    ReviewsModule,
   ],
 })
 export class AppModule {}

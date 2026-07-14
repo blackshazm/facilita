@@ -1,6 +1,7 @@
 {
   "project_name": "Facilita",
   "version": "1.0.0",
+  "model_profile": "quality",
   "workflow": {
     "protocol": "GSD",
     "nyquist_validation": true
