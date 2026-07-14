@@ -466,6 +466,8 @@ model Review {
   overallScore     Float
   comment          String?     @db.Text
   photoUrls        String[]
+  isPositive       Boolean?
+  tags             String[]
   createdAt        DateTime    @default(now())
   updatedAt        DateTime    @updatedAt
 

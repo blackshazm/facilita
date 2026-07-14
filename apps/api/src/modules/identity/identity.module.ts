@@ -15,6 +15,7 @@ import { GetUserUseCase } from './application/get-user.usecase';
 
 import { BullModule } from '@nestjs/bullmq';
 import { TierRecalculationProcessor } from './infrastructure/queues/tier-recalculation.processor';
+import { UpdateProviderRatingListener } from './infrastructure/listeners/update-provider-rating.listener';
 
 import { TieringSchedulerService } from './application/tiering-scheduler.service';
 import { KycController } from './interface/kyc.controller';
@@ -41,6 +42,7 @@ import { MockStorageAdapter } from './infrastructure/mock-storage.adapter';
     PrismaService,
     GetUserUseCase,
     TierRecalculationProcessor,
+    UpdateProviderRatingListener,
     TieringSchedulerService,
     {
       provide: SMS_SERVICE,

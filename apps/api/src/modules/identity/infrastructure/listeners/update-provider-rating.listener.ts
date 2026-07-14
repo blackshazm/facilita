@@ -1,12 +1,17 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
+import { InjectQueue } from '@nestjs/bullmq';
+import { Queue } from 'bullmq';
 import { PrismaService } from '../../../../shared-kernel/database/prisma.service';
 
 @Injectable()
 export class UpdateProviderRatingListener {
   private readonly logger = new Logger(UpdateProviderRatingListener.name);
 
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    @InjectQueue('tiering') private readonly tieringQueue: Queue
+  ) {}
 
   @OnEvent('review.revealed')
   async handleReviewRevealedEvent(payload: { orderId: string, reviews: any[] }) {
@@ -19,8 +24,6 @@ export class UpdateProviderRatingListener {
     const providerId = providerReview.targetId;
 
     // Get all visible reviews for this provider
-    // Get all visible reviews for this provider.
-    // Visible means there's a corresponding review from the provider to the customer OR 7 days passed.
     const allProviderReviews = await this.prisma.review.findMany({
       where: {
         targetId: providerId,
@@ -39,5 +42,13 @@ export class UpdateProviderRatingListener {
     });
 
     this.logger.log(`Updated provider ${providerId} rating to ${averageScore}`);
+
+    // Queue tier recalculation job asynchronously
+    await this.tieringQueue.add(
+      'recalculate-tier',
+      { providerId },
+      { removeOnComplete: true }
+    );
+    this.logger.log(`Enqueued tier recalculation job for provider ${providerId}`);
   }
 }

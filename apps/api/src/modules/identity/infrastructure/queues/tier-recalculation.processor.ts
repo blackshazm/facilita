@@ -11,8 +11,13 @@ export class TierRecalculationProcessor extends WorkerHost {
   }
 
   async process(job: Job<any, any, string>): Promise<any> {
+    const providerId = job.data?.providerId;
+
     const providers = await this.prisma.providerProfile.findMany({
-      where: { isFlagged: false },
+      where: {
+        isFlagged: false,
+        ...(providerId ? { userId: providerId } : {})
+      },
       include: { user: true }
     });
 

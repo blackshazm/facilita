@@ -1,4 +1,4 @@
-import { IsEnum, IsNumber, IsOptional, IsString, Max, Min, IsArray, ArrayMaxSize, IsUrl } from 'class-validator';
+import { IsEnum, IsNumber, IsOptional, IsString, Max, Min, IsArray, ArrayMaxSize, IsUrl, IsBoolean } from 'class-validator';
 import { ReviewRole } from '@prisma/client';
 
 export class SubmitReviewDto {
@@ -28,6 +28,15 @@ export class SubmitReviewDto {
   @Min(1)
   @Max(5)
   overallScore?: number;
+
+  @IsOptional()
+  @IsBoolean()
+  isPositive?: boolean;
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  tags?: string[];
 
   @IsOptional()
   @IsString()

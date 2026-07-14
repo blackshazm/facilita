@@ -21,8 +21,17 @@ export class SubmitReviewUseCase {
    * @param dto The review payload
    */
   async execute(orderId: string, authorId: string, dto: SubmitReviewDto) {
-    if (dto.photoUrls && dto.photoUrls.length > 3) {
+    if (!dto.photoUrls || dto.photoUrls.length === 0) {
+      throw new BadRequestException('At least 1 photo is required');
+    }
+    if (dto.photoUrls.length > 3) {
       throw new BadRequestException('Maximum of 3 photos allowed');
+    }
+    if (dto.isPositive === undefined) {
+      throw new BadRequestException('isPositive is required');
+    }
+    if (dto.isPositive === false && (!dto.tags || dto.tags.length === 0)) {
+      throw new BadRequestException('Tags are required for negative reviews');
     }
 
     const order = await this.prisma.order.findUnique({
@@ -43,7 +52,7 @@ export class SubmitReviewUseCase {
       throw new BadRequestException('You have already submitted a review for this order');
     }
 
-    const overallScore = this.calculateOverallScore(dto);
+    const overallScore = dto.isPositive ? 5.0 : 1.0;
 
     const review = await this.prisma.review.create({
       data: {
@@ -55,6 +64,8 @@ export class SubmitReviewUseCase {
         technicalScore: dto.technicalScore,
         cleanlinessScore: dto.cleanlinessScore,
         overallScore,
+        isPositive: dto.isPositive,
+        tags: dto.tags || [],
         comment: dto.comment,
         photoUrls: dto.photoUrls || []
       }
@@ -71,20 +82,6 @@ export class SubmitReviewUseCase {
       return order.providerId;
     }
     return order.userId;
-  }
-
-  private calculateOverallScore(dto: SubmitReviewDto): number {
-    if (dto.role === ReviewRole.CUSTOMER) {
-      if (!dto.punctualityScore || !dto.technicalScore || !dto.cleanlinessScore) {
-        throw new BadRequestException('Customer reviews must include punctuality, technical, and cleanliness scores');
-      }
-      return (dto.punctualityScore + dto.technicalScore + dto.cleanlinessScore) / 3;
-    }
-    
-    if (!dto.overallScore) {
-      throw new BadRequestException('Provider reviews must include an overall score');
-    }
-    return dto.overallScore;
   }
 
   private async checkAndEmitRevealedEvent(orderId: string, targetId: string, review: any): Promise<void> {

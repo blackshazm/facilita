@@ -7,11 +7,18 @@ FACILITA is a "closed-loop" transactional marketplace focused on urgent domestic
 To be the most reliable platform for domestic emergencies in Brazil, where quality is guaranteed by mandatory evidence and a rigorous matching engine.
 
 ## Current State
-- **Current Version**: v8.0 (Operational Excellence) - **In Execution**
-- **Last Shipped**: 2026-05-08 (v7.0)
+- **Current Version**: v9.0 (Operational Dashboard) - **Planning**
+- **Last Shipped**: 2026-07-13 (v8.0)
 
 <details>
 <summary><b>Historical Milestones</b></summary>
+
+### v8.0 Operational Excellence (2026-07-13)
+- **Goal**: Enhance administrative productivity and refine service quality loops to support platform scale.
+- **Achievements**:
+    - [x] **Bulk Payouts**: Automated and manual batch processing for provider payments.
+    - [x] **Payout Resilience**: Webhook validation and automated reversals.
+    - [x] **Advanced Feedback Loops**: Service quality evaluation structure.
 
 ### v7.0 Expansion & Payouts (2026-05-08)
 - **Goal**: Automate the financial lifecycle, enable regional scale, and drive organic growth through referrals.
@@ -28,13 +35,13 @@ To be the most reliable platform for domestic emergencies in Brazil, where quali
 - Focus on Escrow systems, Tiering engine and Fraud prevention.
 </details>
 
-## Current Milestone: v8.0 Operational Excellence
+## Current Milestone: v9.0 Operational Dashboard
 
-**Goal**: Enhance administrative productivity and refine service quality loops to support platform scale.
+**Goal:** Construir o painel administrativo aprimorado para monitoramento financeiro e de qualidade da plataforma.
 
-- [x] **Bulk Payouts**: Automated and manual batch processing for provider payments.
-- [ ] **Granular Feedback Loops**: Evidence-based quality tracking and detailed customer/provider reviews.
-- [ ] **Operational Dashboard**: Enhanced administrative tools for financial and quality monitoring.
+**Target features:**
+- [ ] Operational Dashboard (Visão geral de pagamentos, estornos e aprovações)
+- [ ] Granular Feedback Loops (Módulo de revisão de qualidade e evidências)
 
 ## Stakeholders
 - **Users**: Customers needing urgent home repairs.
@@ -64,4 +71,21 @@ To be the most reliable platform for domestic emergencies in Brazil, where quali
 - **Orchestration**: Managed by the `gsd-master-orchestrator` skill, ensuring every code change is backed by a validated plan and verification loop.
 
 ---
-*Last updated: 2026-05-08 after v7.0 milestone*
+*Last updated: 2026-07-13 after v8.0 milestone*
+
+## Evolution
+
+This document evolves at phase transitions and milestone boundaries.
+
+**After each phase transition** (via `/gsd-transition`):
+1. Requirements invalidated? → Move to Out of Scope with reason
+2. Requirements validated? → Move to Validated with phase reference
+3. New requirements emerged? → Add to Active
+4. Decisions to log? → Add to Key Decisions
+5. "What This Is" still accurate? → Update if drifted
+
+**After each milestone** (via `/gsd-complete-milestone`):
+1. Full review of all sections
+2. Core Value check — still the right priority?
+3. Audit Out of Scope — reasons still valid?
+4. Update Context with current state
