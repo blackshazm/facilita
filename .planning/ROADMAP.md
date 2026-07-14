@@ -23,7 +23,12 @@
     - Photos of the service are displayed alongside the review text.
     - Reviews remain hidden until both sides participate or the timeout expires.
 
+## Phase 08.4: Milestone Formal Verification
+**Goal**: Produce all missing VERIFICATION.md and SUMMARY.md artifacts, and ensure test coverage meets Nyquist requirements to formally close Milestone v8.0.
+- **Requirements**: PAY-04, PAY-05, PAY-06, QUAL-01, QUAL-02, QUAL-03, OPS-02
+- **Gap Closure**: Closes gaps from audit
+
 ## Milestone v8.0 Summary
-- **Total Phases**: 3
+- **Total Phases**: 4
 - **Total Requirements**: 7
 - **Estimated Effort**: Medium

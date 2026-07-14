@@ -25,10 +25,10 @@
 
 | ID | Description | Phase | Status | Outcome |
 |---|---|---|---|---|
-| PAY-04 | Batch Payout Processing | 08.1 | Pending | |
-| PAY-05 | Payout Conciliation Webhooks | 08.2 | Pending | |
-| PAY-06 | Batch Idempotency Control | 08.1 | Pending | |
-| QUAL-01 | Multi-Category Service Rating | 08.3 | Pending | |
-| QUAL-02 | Double-Blind Review System | 08.3 | Pending | |
-| QUAL-03 | Evidence-Linked Feedback | 08.3 | Pending | |
-| OPS-02 | Real-time Financial Gateway Balance | 08.1 | Pending | |
+| PAY-04 | Batch Payout Processing | 08.4 | Pending | |
+| PAY-05 | Payout Conciliation Webhooks | 08.4 | Pending | |
+| PAY-06 | Batch Idempotency Control | 08.4 | Pending | |
+| QUAL-01 | Multi-Category Service Rating | 08.4 | Pending | |
+| QUAL-02 | Double-Blind Review System | 08.4 | Pending | |
+| QUAL-03 | Evidence-Linked Feedback | 08.4 | Pending | |
+| OPS-02 | Real-time Financial Gateway Balance | 08.4 | Pending | |
