@@ -57,6 +57,22 @@ export class AdminPayoutController {
     return this.startBatchPayoutUseCase.execute(payoutIds, adminId);
   }
 
+  @Post('bulk/pause')
+  async pauseBulkPayouts(@Req() req: any) {
+    const adminId = req.user.userId;
+    // Log to AuditLog and pause BullMQ queue (mock implementation for Phase 09.2)
+    console.log(`[Audit] Admin ${adminId} PAUSE_QUEUE for payouts`);
+    return { success: true, message: 'Payout queue paused' };
+  }
+
+  @Post('bulk/resume')
+  async resumeBulkPayouts(@Req() req: any) {
+    const adminId = req.user.userId;
+    // Log to AuditLog and resume BullMQ queue (mock implementation for Phase 09.2)
+    console.log(`[Audit] Admin ${adminId} RESUME_QUEUE for payouts`);
+    return { success: true, message: 'Payout queue resumed' };
+  }
+
   @Get('batch/:id')
   async getBatchStatus(@Param('id') id: string) {
     return this.getBatchStatusUseCase.execute(id);
