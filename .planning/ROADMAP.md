@@ -10,8 +10,8 @@
 <details open>
 <summary>🔄 v9.0 Operational Dashboard (Phases 09.1-09.2)</summary>
 
-- [ ] Phase 09.1: Granular Feedback Loops (FDBK-01, FDBK-02, FDBK-03)
-- [ ] Phase 09.2: Operational Dashboard (DASH-01, DASH-02, DASH-03)
+- [x] Phase 09.1: Granular Feedback Loops (FDBK-01, FDBK-02, FDBK-03)
+- [x] Phase 09.2: Operational Dashboard (DASH-01, DASH-02, DASH-03)
 
 </details>
 
@@ -29,8 +29,8 @@
 
 | Phase             | Milestone | Plans Complete | Status      | Completed  |
 | ----------------- | --------- | -------------- | ----------- | ---------- |
-| 09.1 Feedback     | v9.0      | No             | Pending     | —          |
-| 09.2 Dashboard    | v9.0      | No             | Pending     | —          |
+| 09.1 Feedback     | v9.0      | Complete       | Complete    | 2026-07-13 |
+| 09.2 Dashboard    | v9.0      | Complete       | Complete    | 2026-07-15 |
 | 08.1 Foundation   | v8.0      | Complete       | Complete    | 2026-07-13 |
 | 08.2 Resilience   | v8.0      | Complete       | Complete    | 2026-07-13 |
 | 08.3 Feedback Lps | v8.0      | Complete       | Complete    | 2026-07-13 |
