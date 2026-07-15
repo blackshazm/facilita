@@ -8,6 +8,18 @@ import { Roles } from '../../identity/interface/decorators/roles.decorator';
 import { UserRole } from '../../identity/core/user.entity';
 import { GetDailyMetricsUseCase } from '../application/use-cases/get-daily-metrics.usecase';
 
+// DTOs (Normally would be in separate files)
+export class FinancialMetricsDto {
+  payouts: number;
+  chargebacks: number;
+}
+
+export class QualityMetricsDto {
+  ratings: number;
+  disputeRatio: number;
+  trend: 'up' | 'down' | 'stable';
+}
+
 @Controller('analytics')
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Roles(UserRole.ADMIN)
@@ -17,6 +29,25 @@ export class AnalyticsController {
   @Get('daily')
   async getDaily(@Query('days') days?: string) {
     return this.getDailyMetrics.execute(days ? parseInt(days) : 30);
+  }
+
+  @Get('financial')
+  async getFinancialMetrics(): Promise<FinancialMetricsDto> {
+    // Mocked implementation for Phase 09.2
+    return {
+      payouts: 15420.50,
+      chargebacks: 320.00,
+    };
+  }
+
+  @Get('quality')
+  async getQualityMetrics(): Promise<QualityMetricsDto> {
+    // Mocked implementation for Phase 09.2
+    return {
+      ratings: 4.8,
+      disputeRatio: 0.02,
+      trend: 'up',
+    };
   }
 
   @Get('export')
