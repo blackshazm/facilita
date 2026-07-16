@@ -2,26 +2,26 @@
 
 ## Milestones
 
-- 🔄 **v9.0 Operational Dashboard** — Phases 09.1 - 09.2 (In Progress)
+- ✅ **v9.0 Operational Dashboard** — Phases 09.1 - 09.2 (shipped 2026-07-15)
 - ✅ **v8.0 Operational Excellence** — Phases 08.1 - 08.4 (shipped 2026-07-13)
 
 ## Phases
 
-<details open>
-<summary>🔄 v9.0 Operational Dashboard (Phases 09.1-09.2)</summary>
+<details>
+<summary>✅ v9.0 Operational Dashboard (Phases 09.1-09.2) — SHIPPED 2026-07-15</summary>
 
-- [x] Phase 09.1: Granular Feedback Loops (FDBK-01, FDBK-02, FDBK-03)
-- [x] Phase 09.2: Operational Dashboard (DASH-01, DASH-02, DASH-03)
+- [x] Phase 09.1: Granular Feedback Loops (FDBK-01, FDBK-02, FDBK-03) — completed 2026-07-13
+- [x] Phase 09.2: Operational Dashboard (DASH-01, DASH-02, DASH-03) — completed 2026-07-15
 
 </details>
 
 <details>
 <summary>✅ v8.0 Operational Excellence (Phases 08.1-08.4) — SHIPPED 2026-07-13</summary>
 
-- [x] Phase 08.1: Bulk Payout Foundation (completed)
-- [x] Phase 08.2: Payout Resilience & Automation (completed)
-- [x] Phase 08.3: Advanced Feedback Loops (completed)
-- [x] Phase 08.4: Milestone Formal Verification (completed)
+- [x] Phase 08.1: Bulk Payout Foundation — completed 2026-07-13
+- [x] Phase 08.2: Payout Resilience & Automation — completed 2026-07-13
+- [x] Phase 08.3: Advanced Feedback Loops — completed 2026-07-13
+- [x] Phase 08.4: Milestone Formal Verification — completed 2026-07-13
 
 </details>
 

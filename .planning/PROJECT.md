@@ -7,11 +7,17 @@ FACILITA is a "closed-loop" transactional marketplace focused on urgent domestic
 To be the most reliable platform for domestic emergencies in Brazil, where quality is guaranteed by mandatory evidence and a rigorous matching engine.
 
 ## Current State
-- **Current Version**: v9.0 (Operational Dashboard) - **Planning**
-- **Last Shipped**: 2026-07-13 (v8.0)
+- **Current Version**: v9.0 (Operational Dashboard)
+- **Last Shipped**: 2026-07-15 (v9.0)
 
 <details>
 <summary><b>Historical Milestones</b></summary>
+
+### v9.0 Operational Dashboard (2026-07-15)
+- **Goal**: Construir o painel administrativo aprimorado para monitoramento financeiro e de qualidade da plataforma.
+- **Achievements**:
+    - [x] **Granular Feedback Loops**: Módulo de avaliação com fotos obrigatórias, tags de justificativas e recálculo assíncrono via BullMQ.
+    - [x] **Operational Dashboard**: Dashboard financeiro e de qualidade administrativa com controles de pagamentos em massa (pausar/retomar).
 
 ### v8.0 Operational Excellence (2026-07-13)
 - **Goal**: Enhance administrative productivity and refine service quality loops to support platform scale.
@@ -35,13 +41,9 @@ To be the most reliable platform for domestic emergencies in Brazil, where quali
 - Focus on Escrow systems, Tiering engine and Fraud prevention.
 </details>
 
-## Current Milestone: v9.0 Operational Dashboard
+## Next Milestone: v10.0 (A definir)
 
-**Goal:** Construir o painel administrativo aprimorado para monitoramento financeiro e de qualidade da plataforma.
-
-**Target features:**
-- [ ] Operational Dashboard (Visão geral de pagamentos, estornos e aprovações)
-- [ ] Granular Feedback Loops (Módulo de revisão de qualidade e evidências)
+**Goal:** Próxima milestone pendente de definição de requisitos e planejamento.
 
 ## Stakeholders
 - **Users**: Customers needing urgent home repairs.
@@ -71,7 +73,7 @@ To be the most reliable platform for domestic emergencies in Brazil, where quali
 - **Orchestration**: Managed by the `gsd-master-orchestrator` skill, ensuring every code change is backed by a validated plan and verification loop.
 
 ---
-*Last updated: 2026-07-13 after v8.0 milestone*
+*Last updated: 2026-07-16 after v9.0 milestone*
 
 ## Evolution
 
