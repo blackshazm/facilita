@@ -1,11 +1,12 @@
 ---
 gsd_state_version: 1.0
-milestone: v10.0
-milestone_name: A definir
+milestone: v11.0
+milestone_name: Live Tracking & Dispatch
 status: planning
-last_updated: "2026-07-16T14:57:00Z"
+last_updated: "2026-07-17T16:06:32.747Z"
+last_activity: 2026-07-17
 progress:
-  total_phases: 1
+  total_phases: 0
   completed_phases: 0
   total_plans: 0
   completed_plans: 0
@@ -21,8 +22,10 @@ progress:
 
 ## Current Position
 
-Phase: 10.1 (a-definir) — NOT STARTED
-Plan: 0 of 0
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-07-17 — Milestone v11.0 started
 
 ## Completed
 

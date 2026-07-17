@@ -7,11 +7,18 @@ FACILITA is a "closed-loop" transactional marketplace focused on urgent domestic
 To be the most reliable platform for domestic emergencies in Brazil, where quality is guaranteed by mandatory evidence and a rigorous matching engine.
 
 ## Current State
-- **Current Version**: v9.0 (Operational Dashboard)
-- **Last Shipped**: 2026-07-15 (v9.0)
+- **Current Version**: v11.0 (Em Planejamento)
+- **Last Shipped**: 2026-07-16 (v10.0)
 
 <details>
 <summary><b>Historical Milestones</b></summary>
+
+### v10.0 Robust Testing & QA (2026-07-16)
+- **Goal**: Garantir a estabilidade da plataforma com cobertura de testes completa em todas as partes do sistema.
+- **Achievements**:
+    - [x] **Test Orchestration**: Setup global do TurboRepo para testes unitários e E2E.
+    - [x] **Massive Test Generation**: 40+ arquivos de testes gerados cobrindo 100% dos módulos do backend.
+    - [x] **Mega-Teste Cross-Platform**: Testes E2E (Playwright) interligando Cliente, Provedor e Admin num fluxo único de lifecycle.
 
 ### v9.0 Operational Dashboard (2026-07-15)
 - **Goal**: Construir o painel administrativo aprimorado para monitoramento financeiro e de qualidade da plataforma.
@@ -41,9 +48,14 @@ To be the most reliable platform for domestic emergencies in Brazil, where quali
 - Focus on Escrow systems, Tiering engine and Fraud prevention.
 </details>
 
-## Next Milestone: v10.0 (A definir)
+## Next Milestone: v11.0 Live Tracking & Dispatch
 
-**Goal:** Próxima milestone pendente de definição de requisitos e planejamento.
+**Goal:** Implementar o rastreamento em tempo real do provedor para serviços urgentes, reduzindo a ansiedade do cliente e reforçando o pilar "evidence-first".
+
+**Target features:**
+- Transmissão de localização em tempo real pelo app do Provedor (React Native/Expo).
+- Visualização ao vivo no mapa pelo app do Cliente (Next.js PWA).
+- Atualização do status de despacho e cálculo de ETA (Tempo Estimado de Chegada).
 
 ## Stakeholders
 - **Users**: Customers needing urgent home repairs.
