@@ -1,37 +1,38 @@
-# Roadmap: Facilita
+# Roadmap
 
-## Milestones
+## Milestone v11.0: Live Tracking & Dispatch
 
-- ✅ **v9.0 Operational Dashboard** — Phases 09.1 - 09.2 (shipped 2026-07-15)
-- ✅ **v8.0 Operational Excellence** — Phases 08.1 - 08.4 (shipped 2026-07-13)
+| # | Phase | Goal | Requirements |
+|---|-------|------|--------------|
+| 11.1 | WebSockets Infrastructure | Setup Socket.io Gateway, Redis Adapter and Rooms | TRACK-01 |
+| 11.2 | Provider Background Tracking | Implement `expo-location` and transmit coordinates | TRACK-02 |
+| 11.3 | Client Live Map | Render real-time provider location on Next.js map | TRACK-03 |
 
-## Phases
+---
 
-<details>
-<summary>✅ v9.0 Operational Dashboard (Phases 09.1-09.2) — SHIPPED 2026-07-15</summary>
+## Phase 11.1: WebSockets Infrastructure
+**Goal:** Setup Socket.io Gateway, Redis Adapter and Rooms
+**Requirements:** TRACK-01
 
-- [x] Phase 09.1: Granular Feedback Loops (FDBK-01, FDBK-02, FDBK-03) — completed 2026-07-13
-- [x] Phase 09.2: Operational Dashboard (DASH-01, DASH-02, DASH-03) — completed 2026-07-15
+**Success Criteria:**
+1. Servidor NestJS responde a conexões WebSocket e autentica usando JWT.
+2. É possível criar uma sala (`room`) associada ao ID de um serviço ativo e conectar clientes nela.
+3. Eventos de localização emitidos por um provider loggado são roteados apenas para a sala correta.
 
-</details>
+## Phase 11.2: Provider Background Tracking
+**Goal:** Implement `expo-location` and transmit coordinates
+**Requirements:** TRACK-02
 
-<details>
-<summary>✅ v8.0 Operational Excellence (Phases 08.1-08.4) — SHIPPED 2026-07-13</summary>
+**Success Criteria:**
+1. O app do provider consegue rastrear a localização no nível OS, mesmo em background.
+2. A transmissão para o WebSocket ocorre com debouncing inteligente para economizar bateria e rede.
+3. Eventos são silenciados se o provedor não possuir nenhum serviço 'In Progress'.
 
-- [x] Phase 08.1: Bulk Payout Foundation — completed 2026-07-13
-- [x] Phase 08.2: Payout Resilience & Automation — completed 2026-07-13
-- [x] Phase 08.3: Advanced Feedback Loops — completed 2026-07-13
-- [x] Phase 08.4: Milestone Formal Verification — completed 2026-07-13
+## Phase 11.3: Client Live Map
+**Goal:** Render real-time provider location on Next.js map
+**Requirements:** TRACK-03
 
-</details>
-
-## Progress
-
-| Phase             | Milestone | Plans Complete | Status      | Completed  |
-| ----------------- | --------- | -------------- | ----------- | ---------- |
-| 09.1 Feedback     | v9.0      | Complete       | Complete    | 2026-07-13 |
-| 09.2 Dashboard    | v9.0      | Complete       | Complete    | 2026-07-15 |
-| 08.1 Foundation   | v8.0      | Complete       | Complete    | 2026-07-13 |
-| 08.2 Resilience   | v8.0      | Complete       | Complete    | 2026-07-13 |
-| 08.3 Feedback Lps | v8.0      | Complete       | Complete    | 2026-07-13 |
-| 08.4 Verification | v8.0      | Complete       | Complete    | 2026-07-13 |
+**Success Criteria:**
+1. O app do cliente se conecta à sala de WebSocket correta assim que o serviço entra em 'In Progress'.
+2. Marcador no mapa atualiza a posição instantaneamente conforme as mensagens chegam.
+3. Tratamento visual para "Perda de sinal" quando as mensagens pararem de chegar por um longo período.
