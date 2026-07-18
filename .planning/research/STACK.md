@@ -1,28 +1,20 @@
-# Research Dimension: Stack (v8.0)
+# Research: Stack
 
-## New Capabilities Required
-- **Batch Payout Processing**: Efficiently handling hundreds of transfers to providers in single operations.
-- **Enhanced Quality Monitoring**: Automated and manual analysis of service evidence and feedback.
+## Objetivo
+Analisar as adições e mudanças necessárias na stack atual (NestJS, Next.js, React Native/Expo) para suportar Live Tracking & Dispatch.
 
-## Recommended Stack Additions
+## Bibliotecas e Tecnologias Necessárias
+- **Backend (NestJS)**:
+  - `@nestjs/websockets` e `@nestjs/platform-socket.io`: Para gerenciar conexões em tempo real.
+  - `@nestjs/bull` ou `bullmq`: (Já existente) Para processamento de fila assíncrono (ex: atualizações pesadas de ETA).
+  - `@socket.io/redis-adapter`: Necessário se o backend tiver múltiplas instâncias (scale-out) para garantir que os eventos cheguem a todos os nós.
+- **Provider App (React Native / Expo)**:
+  - `expo-location`: Para rastreamento de localização, com suporte a tracking em background.
+  - `expo-task-manager`: Para manter o rastreamento rodando mesmo se o app estiver em background (crítico).
+- **Client App (Next.js)**:
+  - `socket.io-client`: Para receber as atualizações em tempo real.
+  - `react-map-gl` (Mapbox) ou Google Maps API (`@vis.gl/react-google-maps`) para renderização visual e plotagem do marcador.
 
-### 1. Payments & Transfers (Pagar.me)
-- **Recipients & Transfers API**: Use for programmatic payout execution.
-- **Idempotency Keys**: Critical for bulk operations to prevent double-charging/payouts on retry.
-- **Webhooks**: Required for real-time reconciliation of transfer statuses (pending -> success/failure).
-
-### 2. Background Processing (BullMQ + Redis)
-- **Batch Queues**: Use BullMQ to orchestrate the "batching" logic (collecting payouts over a window or processing a large list).
-- **Retry Logic**: Configurable exponential backoff for failed API calls to Pagar.me.
-
-### 3. Quality & Analytics
-- **AI Sentiment Analysis**: Optional integration (e.g., OpenAI API) to flag toxic or fraudulent reviews before they are public.
-- **PostGIS**: Continue using for geo-fenced quality analysis (e.g., "Which neighborhood has the most punctuality issues?").
-
-### 4. Database (PostgreSQL + Prisma)
-- **Advisory Locks**: Use for critical financial sections during bulk processing to ensure consistency.
-- **JSONB**: For storing granular feedback metadata and Pagar.me transfer history.
-
-## What NOT to Add
-- **New Payment Gateway**: Stay with Pagar.me to avoid operational overhead and maintain single-ledger simplicity.
-- **Complex BI Tools**: Use internal dashboards and SQL for now; avoid heavy third-party BI until scale justifies it.
+## O que NÃO adicionar
+- Polling via HTTP REST para localização (ineficiente, consome muita bateria e banda).
+- Tracking em tempo real sem debounce no app do provider.

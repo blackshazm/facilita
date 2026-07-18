@@ -1,28 +1,21 @@
-# Research Dimension: Architecture (v8.0)
+# Research: Architecture
 
-## Current Context
-- **Architecture**: Modular Hexagonal Evolutivo.
-- **Key Modules**: `Payments`, `Orders`, `Providers`, `Admin`.
+## Objetivo
+Definir como o Live Tracking se integra à arquitetura Hexagonal e de Event-Bus existente.
 
-## Integration Points
+## Integração com a Arquitetura Atual
+1. **Domain Event**: O provider envia "ProviderLocationUpdated" via WebSocket.
+2. **Gateway/Anti-Corruption Layer**: Um NestJS WebSocket Gateway autentica (usando token JWT via WS) e recebe as coordenadas.
+3. **Core Domain**: A regra de negócio valida se o provider está num despacho ativo (ordem de serviço 'In Progress'). Se não estiver, descarta o evento silenciosamente para economizar processamento.
+4. **Data Persistence (Throttled)**: As coordenadas são persistidas no PostGIS, mas *não* a cada segundo. Elas são cacheadas no Redis e enviadas em batch (ex: a cada minuto) para o DB para evitar gargalos de I/O.
+5. **Event-Bus Broadcast**: O Redis faz o Pub/Sub do evento, e os gateways disparam o evento "OrderLocationUpdate" diretamente para a sala (room) específica daquela ordem (onde o cliente está escutando).
 
-### 1. Payments Module (Payout Service)
-- **New Component**: `BatchPayoutService`.
-- **Integration**: Must listen to `PayoutRequested` events and aggregate them or provide an API for the Admin module to trigger batches.
-- **Anti-Corruption Layer (ACL)**: Map Pagar.me's Transfer response objects to internal Ledger entities.
+## Componentes Novos
+- `TrackingGateway`: Controlador WS para gerir as salas (rooms) de cada Order e receber pings dos provedores.
+- `LocationService`: Serviço de domínio que calcula o ETA via uma API de roteamento (ex: Google Directions) ou apenas distância euclidiana pelo PostGIS.
 
-### 2. Quality/Reviews Module
-- **New Bounded Context**: `Reviews`.
-- **Relationship**: 1:1 with `Order`.
-- **Dependencies**: Depends on `Order` (to verify completion) and `Media` (for evidence photos).
-
-### 3. Data Flow
-1. **Admin** triggers `CreateBatch` -> `BatchPayoutService`.
-2. `BatchPayoutService` fetches `PendingPayouts` from `Ledger`.
-3. `BatchPayoutService` spawns `BullMQ` jobs for each transfer.
-4. `BullMQ` worker calls `PagarmeAdapter` -> Pagar.me API.
-5. `PagarmeAdapter` receives webhook -> `PaymentsService` updates `Ledger`.
-
-## Architecture Decisions (Draft)
-- **Soft Delete for Reviews**: Never hard delete feedback for audit purposes.
-- **Async Review Processing**: Use BullMQ for sentiment analysis and ranking updates to keep the "Submit Review" UI fast.
+## Ordem Sugerida de Build
+1. Infrastrutura WebSocket no Backend com Redis Adapter.
+2. Expo Background Location no app do Provider.
+3. Componente de Mapa e Conexão Socket.IO no Next.js do Cliente.
+4. Integração do cálculo de ETA e notificações (Push).

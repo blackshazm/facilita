@@ -1,27 +1,19 @@
-# Research Dimension: Features (v8.0)
+# Research: Features
 
-## Feature Categories
+## Objetivo
+Mapear o comportamento esperado e as funcionalidades alvo para o sistema de Live Tracking & Dispatch.
 
-### 1. Bulk Payouts (Scalability)
-- **Batch Transfer Creation**: Admin can select multiple pending payouts and trigger a single "Process Batch" command.
-- **Idempotency Safeguards**: Each payout linked to a unique transaction ID in the ledger.
-- **Status Dashboard**: Visual representation of the batch progress (e.g., "15/100 processed").
-- **Error Handling UI**: Clear indication of *why* a specific transfer failed (invalid bank data, insufficient balance).
+## Table Stakes (Essencial)
+- Rastreamento em Background no Provider: O provider não pode precisar estar com a tela do app ativa para transmitir localização.
+- Transmissão Contínua (Debounced): O app envia a localização a cada X segundos ou X metros deslocados.
+- Visualização Ao Vivo: O cliente consegue ver o ícone do provedor movendo-se no mapa da interface web.
+- Atualização de ETA: Cálculo do tempo estimado de chegada (ETA) atualizado periodicamente para o cliente.
 
-### 2. Granular Feedback Loops (Quality)
-- **Category-Based Rating**: Separate scores for Punctuality, Technical Skill, and Cleanliness.
-- **Evidence-Linked Reviews**: Users can attach photos of the finished service directly to the review (Evidence-First).
-- **Double-Blind System**: Reviews only become visible when both parties submit or after 7 days, preventing retaliation.
-- **Provider Reply**: Allow providers to respond professionally to feedback.
+## Differentiators (Diferenciais)
+- Interpolação Suave: O ícone do veículo/provedor desliza suavemente entre as atualizações no mapa do cliente, sem pular bruscamente.
+- Alertas Baseados em Geofencing: O cliente é notificado por Push quando o provedor "Estiver chegando" (ex: raio de 500m).
+- Histórico de Rota de Despacho (Auditoria): Salvar periodicamente a rota real feita pelo provider para resolver disputas e verificar quilometragem (importante para fraudes).
 
-### 3. Service Quality Analytics
-- **Dynamic Provider Ranking**: Matching engine prioritizes providers with high "Granular Scores" in specific categories.
-- **Quality Flags**: Automatic flagging of providers whose scores drop below a threshold or who have recurring specific complaints (e.g., "Always late").
-
-## Table Stakes vs. Differentiators
-| Feature | Type | Rationale |
-|---------|------|-----------|
-| Individual Transfers | Table Stake | Already exists in v7.0. |
-| Double-Blind Reviews | Differentiator | Essential for honest feedback in service industries. |
-| Evidence in Reviews | Differentiator | Reinforces the "FACILITA" brand of trust and evidence. |
-| Bulk API Integration | Table Stake | Necessary for operational efficiency beyond 10 cities. |
+## Complexidade e Dependências
+- Alta complexidade na gestão de permissões de localização do sistema operacional móvel (iOS/Android) no app do provider.
+- Requer estabilidade severa na conexão de websockets e rotinas de reconexão automática.

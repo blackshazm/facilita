@@ -1,23 +1,14 @@
-# Research Dimension: Pitfalls (v8.0)
+# Research: Pitfalls
 
-## 1. Bulk Processing Issues
-- **Rate Limiting**: Pagar.me may have limits on concurrent Transfer API calls.
-  - *Prevention*: Implement concurrency control in BullMQ (e.g., `limiter` setting).
-- **Incomplete Batches**: System crashes mid-batch.
-  - *Prevention*: Use database transactions and check status of each item before processing. Every item must have a `batch_id`.
+## Objetivo
+Identificar erros comuns ao adicionar Live Tracking em sistemas de marketplaces e como preveni-us.
 
-## 2. Review & Feedback Risks
-- **Review Retaliation**: Providers harassing users for low scores.
-  - *Prevention*: Double-blind system + Anonymity options + Post-service contact restriction (Chat closes after D+7).
-- **Incentivized Reviews**: Fake reviews to boost ranking.
-  - *Prevention*: Only "Verified Orders" (paid and completed) can leave reviews. Pattern detection for "Review Farming".
-
-## 3. Financial Integrity
-- **Stale Balances**: Attempting a payout when the Pagar.me balance is insufficient due to other pending transfers.
-  - *Prevention*: Admin dashboard must show "Real-time Pagar.me Balance" vs "Internal Ledger Balance".
-- **Double Payout**: Retrying a failed job that actually succeeded in the gateway.
-  - *Prevention*: Mandatory use of `idempotency_key` (Internal Ledger UUID).
-
-## 4. Operational Bloat
-- **Manual Verification**: Requiring an admin to approve *every* individual transfer in a batch of 500.
-  - *Prevention*: Auto-approval for transfers below a threshold (e.g., R$ 500) if provider is "Verified".
+## Principais Pitfalls
+1. **Battery Drain (App do Provider)**: Rastrear localização via GPS com alta precisão a cada segundo queima a bateria do celular.
+   - *Prevenção*: Ajustar a precisão (`accuracy`) dependendo do estado (ex: baixa precisão se longe, alta se perto do destino). Transmitir apenas a cada 10-15s ou mudanças significativas de distância.
+2. **Zombie Connections & Event Overload**: Se milhares de provedores abrirem conexões WS que ficam "travadas" na memória, o backend trava (OOM).
+   - *Prevenção*: Timeout agresivo em WebSockets inativos. Uso estrito de Rooms (cada Order é uma room), os clientes só entram na room da sua própria order.
+3. **Inconsistência de Despacho (Fraud Tracking)**: Provedores que "fingem" movimentação usando mock location (Fake GPS) para cobrar mais, se existir cobrança por KM.
+   - *Prevenção*: No Android e iOS há APIs para detectar "Mock Location". Recusar atualizações marcadas como mock.
+4. **Perda de Pacotes e "Pulos"**: Se a conexão do provedor cair numa zona sem sinal, a localização dele para de atualizar.
+   - *Prevenção*: Armazenar os pontos localmente no dispositivo via SQLite/AsyncStorage e enviar um lote (batch sync) quando a conexão retornar. No lado do cliente, mostrar "Última atualização há X minutos" quando o sinal for perdido.
