@@ -55,12 +55,14 @@ To be the most reliable platform for domestic emergencies in Brazil, where quali
 - Focus on Escrow systems, Tiering engine and Fraud prevention.
 </details>
 
-## Next Milestone: v12.0 To Be Planned
+## Current Milestone: v12.0 App Security Audit & Hardening
 
-**Goal:** [A definir no próximo planejamento]
+**Goal:** Implementar testes de segurança e proteger o sistema por meio de uma auditoria completa na infraestrutura de dados, autenticação e autorização.
 
 **Target features:**
-- [A definir]
+- Auditoria completa de Autenticação e Autorização.
+- Validação e segurança de Dados em repouso e em trânsito.
+- Implementação de testes de segurança (Security Testing & Hardening).
 
 ## Stakeholders
 - **Users**: Customers needing urgent home repairs.

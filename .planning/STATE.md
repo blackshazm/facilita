@@ -1,12 +1,12 @@
 ---
 gsd_state_version: 1.0
-milestone: v11.0
-milestone_name: Live Tracking & Dispatch
+milestone: v12.0
+milestone_name: App Security Audit & Hardening
 status: planning
-last_updated: "2026-07-17T16:06:32.747Z"
-last_activity: 2026-07-17
+last_updated: "2026-07-21T00:45:14.685Z"
+last_activity: 2026-07-21
 progress:
-  total_phases: 3
+  total_phases: 0
   completed_phases: 0
   total_plans: 0
   completed_plans: 0
@@ -22,10 +22,10 @@ progress:
 
 ## Current Position
 
-Phase: 11.3 (Client Live Map) — COMPLETED
+Phase: Not started (defining requirements)
 Plan: —
-Status: Milestone completed
-Last activity: 2026-07-17 — Milestone v11.0 Phase 11.3 completed
+Status: Defining requirements
+Last activity: 2026-07-21 — Milestone v12.0 started
 
 ## Completed
 
