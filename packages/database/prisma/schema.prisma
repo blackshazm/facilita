@@ -50,6 +50,7 @@ model DailyMetric {
 
 model User {
   id             String           @id @default(uuid())
+  /// @encrypted
   phone          String           @unique
   name           String?
   role           Role             @default(CUSTOMER)
@@ -72,6 +73,7 @@ model User {
 model ProviderProfile {
   id                 String         @id @default(uuid())
   userId             String         @unique
+  /// @encrypted
   cpfCnpj            String         @unique
   rating             Float          @default(5.0)
   isOnline           Boolean        @default(false)
@@ -84,10 +86,15 @@ model ProviderProfile {
   tier               ProviderTier   @default(BRONZE)
   fraudReason        String?
   isFlagged          Boolean        @default(false)
+  /// @encrypted
   bankAccount        String?
+  /// @encrypted
   bankAccountDigit   String?
+  /// @encrypted
   bankAccountType    String?
+  /// @encrypted
   bankBranch         String?
+  /// @encrypted
   bankBranchDigit    String?
   bankCode           String?
   bankDataHash       String?
@@ -475,3 +482,31 @@ model Review {
   @@schema("reviews")
 }
 
+// ============================================================
+// MODULE: FRAUD
+// ============================================================
+model FraudSignal {
+  id          String              @id @default(uuid())
+  entityType  String              // USER | ORDER | PROVIDER
+  entityId    String
+  signalType  String              // VELOCITY_LIMIT_EXCEEDED | CRIMINAL_RECORD_MAJOR | KYC_FACE_MISMATCH | MEI_INACTIVE | etc.
+  severity    FraudSignalSeverity @default(MEDIUM)
+  metadata    Json
+  reviewed    Boolean             @default(false)
+  reviewedBy  String?
+  actionTaken String?
+  createdAt   DateTime            @default(now())
+
+  @@index([entityId, signalType])
+  @@index([severity, reviewed])
+  @@schema("fraud")
+}
+
+enum FraudSignalSeverity {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+
+  @@schema("fraud")
+}

@@ -1,29 +1,70 @@
-import { Injectable, Inject } from '@nestjs/common';
-import { Location } from '../core/provider-status.entity';
+import { Injectable, Inject, Logger } from '@nestjs/common';
 import { MATCHING_ENGINE_PORT, MatchingEnginePort, NearbyProvider } from '../ports/matching-engine.port';
+import { MatchingGateway } from '../adapters/matching.gateway';
+
+export interface DispatchRequest {
+  orderId: string;
+  latitude: number;
+  longitude: number;
+  categoryId: string;
+  radiusMeters?: number;
+}
 
 @Injectable()
 export class MatchProviderUseCase {
+  private readonly logger = new Logger(MatchProviderUseCase.name);
+
+  // Tiers in order of priority
+  private readonly TIERS = ['OURO', 'PRATA', 'BRONZE'];
+
   constructor(
     @Inject(MATCHING_ENGINE_PORT)
     private readonly matchingEngine: MatchingEnginePort,
+    private readonly gateway: MatchingGateway,
   ) {}
 
-  async execute(neighborhoodId: string, categoryId: string): Promise<NearbyProvider[]> {
-    console.log(`[Matching] Attempting search in neighborhood: ${neighborhoodId}`);
-    
-    const providers = await this.matchingEngine.findProvidersInNeighborhood(
-      neighborhoodId,
-      categoryId,
-      5 // Limit to top 5
-    );
+  /**
+   * Dispatches the job in waves (Ouro -> Prata -> Bronze)
+   * In a production async architecture, each wave would be separated by a BullMQ delayed job.
+   * Here we do an immediate fallback if the higher tier has no online providers nearby.
+   */
+  async execute(request: DispatchRequest): Promise<NearbyProvider[]> {
+    const radius = request.radiusMeters || 5000; // default 5km
 
-    if (providers.length > 0) {
-      console.log(`[Matching] Found ${providers.length} providers in neighborhood ${neighborhoodId}`);
-      return providers;
+    this.logger.log(`[Smart Dispatch] Order ${request.orderId} at ${request.latitude},${request.longitude}`);
+    
+    for (const tier of this.TIERS) {
+      this.logger.log(`[Wave] Searching for ${tier} providers...`);
+      
+      const providers = await this.matchingEngine.findProvidersInRadius(
+        request.latitude,
+        request.longitude,
+        radius,
+        request.categoryId,
+        tier,
+        5 // dispatch to top 5 closest
+      );
+
+      if (providers.length > 0) {
+        this.logger.log(`[Wave] Found ${providers.length} ${tier} providers. Dispatching!`);
+        
+        // Dispatch to all found providers via WebSocket
+        let dispatchedCount = 0;
+        for (const p of providers) {
+          const success = this.gateway.dispatchToProvider(p.providerId, {
+            orderId: request.orderId,
+            distance: p.distance,
+            tier: tier
+          });
+          if (success) dispatchedCount++;
+        }
+
+        this.logger.log(`[Wave] Successfully dispatched to ${dispatchedCount} active WebSocket clients.`);
+        return providers;
+      }
     }
 
-    console.warn(`[Matching] No providers found for category ${categoryId} in neighborhood ${neighborhoodId}`);
+    this.logger.warn(`[Smart Dispatch] Exhausted all waves. No online providers found within ${radius}m.`);
     return [];
   }
 }

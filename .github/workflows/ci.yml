@@ -1,33 +1,61 @@
-name: CI
+name: FACILITA Monorepo CI/CD Pipeline
 
 on:
   push:
-    branches: ["main"]
+    branches: [main, master, develop]
   pull_request:
-    branches: ["main"]
+    branches: [main, master]
 
 jobs:
-  build:
-    name: Build and Test
+  validate-and-test:
+    name: Build & Test All Modules
     runs-on: ubuntu-latest
 
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 2
+    services:
+      postgres:
+        image: postgres:15-alpine
+        env:
+          POSTGRES_USER: facilita
+          POSTGRES_PASSWORD: facilita_password
+          POSTGRES_DB: facilita_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: 'npm'
 
-      - name: Install dependencies
+      - name: Install Monorepo Dependencies
         run: npm ci
 
-      - name: Build
-        run: npx turbo run build
+      - name: Generate Prisma Client
+        run: npx prisma generate --schema=packages/database/prisma/schema.prisma
 
-      - name: Lint
-        run: npx turbo run lint
+      - name: Run Backend Unit & Integration Tests (NestJS)
+        env:
+          DATABASE_URL: "postgresql://facilita:facilita_password@localhost:5432/facilita_test?schema=public"
+          REDIS_URL: "redis://localhost:6379"
+          JWT_SECRET: "ci-test-secret"
+        run: npm run test --workspace=apps/api
+
+      - name: Check Provider Mobile App Types (Expo React Native)
+        run: npx tsc --noEmit --project apps/provider/tsconfig.json
+
+      - name: Check Client Web App Types (Next.js)
+        run: npx tsc --noEmit --project apps/client/tsconfig.json

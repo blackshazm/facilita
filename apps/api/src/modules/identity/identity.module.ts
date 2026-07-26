@@ -23,6 +23,7 @@ import { ProviderController } from './interface/provider.controller';
 import { KycService } from './application/kyc.service';
 import { StoragePort } from './ports/storage.port';
 import { MockStorageAdapter } from './infrastructure/mock-storage.adapter';
+import { FraudModule } from '../fraud/fraud.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { MockStorageAdapter } from './infrastructure/mock-storage.adapter';
     BullModule.registerQueue({
       name: 'tiering',
     }),
+    FraudModule,
   ],
   controllers: [AuthController, KycController, ProviderController],
   providers: [

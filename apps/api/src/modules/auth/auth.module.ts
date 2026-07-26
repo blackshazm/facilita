@@ -29,11 +29,14 @@ const mockUserRepo = {
   save: async () => {},
 };
 
+import { JwtStrategy } from './strategies/jwt.strategy';
+
 @Module({
   controllers: [AuthController],
   providers: [
     SendOtpUseCase,
     VerifyOtpUseCase,
+    JwtStrategy,
     { provide: AUTH_REPOSITORY, useValue: mockAuthRepo },
     { provide: SMS_SERVICE, useValue: mockSmsService },
     { provide: TOKEN_SERVICE, useValue: mockTokenService },

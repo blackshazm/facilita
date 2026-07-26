@@ -2,22 +2,28 @@
 
 import React, { useState } from 'react';
 
-const MOCK_PROVIDERS = [
+const INITIAL_PROVIDERS = [
   { id: '1', name: 'João Silva', tier: 'BRONZE', services: 45, rating: 4.6, status: 'Active' },
   { id: '2', name: 'Maria Santos', tier: 'PRATA', services: 88, rating: 4.9, status: 'Active' },
   { id: '3', name: 'Carlos Souza', tier: 'BRONZE', services: 5, rating: 4.2, status: 'Flagged' },
 ];
 
 export default function TiersPage() {
+  const [providers, setProviders] = useState(INITIAL_PROVIDERS);
   const [selectedProvider, setSelectedProvider] = useState<any>(null);
   const [overrideReason, setOverrideReason] = useState('');
+  const [newTier, setNewTier] = useState('');
 
   const handleOverride = (provider: any) => {
     setSelectedProvider(provider);
+    setNewTier(provider.tier);
   };
 
   const confirmOverride = () => {
-    console.log(`Overriding tier for ${selectedProvider.name} to PRATA. Reason: ${overrideReason}`);
+    console.log(`Overriding tier for ${selectedProvider.name} to ${newTier}. Reason: ${overrideReason}`);
+    setProviders(prev => prev.map(p => 
+      p.id === selectedProvider.id ? { ...p, tier: newTier } : p
+    ));
     setSelectedProvider(null);
     setOverrideReason('');
     alert('Tier overridden successfully. Audit log created.');
@@ -42,7 +48,7 @@ export default function TiersPage() {
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
-            {MOCK_PROVIDERS.map((p) => (
+            {providers.map((p) => (
               <tr key={p.id} className="hover:bg-slate-50 transition">
                 <td className="p-4 font-medium text-slate-900">{p.name}</td>
                 <td className="p-4">
@@ -80,7 +86,11 @@ export default function TiersPage() {
             </p>
             
             <label className="block text-sm font-medium text-slate-700 mb-1">New Tier</label>
-            <select className="w-full p-2 border border-slate-200 rounded-lg mb-4 bg-slate-50">
+            <select 
+              className="w-full p-2 border border-slate-200 rounded-lg mb-4 bg-slate-50"
+              value={newTier}
+              onChange={(e) => setNewTier(e.target.value)}
+            >
               <option value="BRONZE">BRONZE (Default)</option>
               <option value="PRATA">PRATA (Premium)</option>
               <option value="OURO">OURO (Elite)</option>

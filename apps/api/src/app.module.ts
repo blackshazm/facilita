@@ -12,12 +12,16 @@ import { NotificationsModule } from './modules/notifications/notifications.modul
 import { SharedKernelModule } from './shared-kernel/shared-kernel.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { ReviewsModule } from './modules/reviews/reviews.module';
+import { TrackingModule } from './modules/tracking/tracking.module';
+
+import { APP_GUARD } from '@nestjs/core';
+import { ThrottlerGuard } from '@nestjs/throttler';
 
 @Module({
   imports: [
     ThrottlerModule.forRoot([{
       ttl: 60000,
-      limit: 10,
+      limit: 100,
     }]),
     EventEmitterModule.forRoot(),
     IdentityModule,
@@ -31,6 +35,13 @@ import { ReviewsModule } from './modules/reviews/reviews.module';
     NotificationsModule,
     SharedKernelModule,
     ReviewsModule,
+    TrackingModule,
+  ],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
   ],
 })
 export class AppModule {}

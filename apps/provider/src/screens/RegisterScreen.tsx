@@ -16,9 +16,9 @@ export const RegisterScreen = () => {
   const [name, setName] = useState('');
 
   // Step 2 State (KYC)
-  const [selfie, setSelfie] = useState(null);
-  const [docFront, setDocFront] = useState(null);
-  const [docBack, setDocBack] = useState(null);
+  const [selfie, setSelfie] = useState<string | null>(null);
+  const [docFront, setDocFront] = useState<string | null>(null);
+  const [docBack, setDocBack] = useState<string | null>(null);
 
   const captureImage = async (type: 'selfie' | 'document_front' | 'document_back') => {
     const permission = await ImagePicker.requestCameraPermissionsAsync();
@@ -61,14 +61,16 @@ export const RegisterScreen = () => {
       await axios.put(data.url, blob, {
         headers: { 'Content-Type': 'image/jpeg' },
         onUploadProgress: (progressEvent) => {
-          const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
-          console.log(`Uploading ${type}: ${percentCompleted}%`);
-        }
+          if (progressEvent.total) {
+            const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+            console.log(`Upload ${type}: ${percentCompleted}%`);
+          }
+        },
       });
 
       return data.key;
     } catch (error) {
-      console.error('Upload error:', error);
+      console.error(`Erro no upload (${type}):`, error);
       throw error;
     }
   };
@@ -81,14 +83,14 @@ export const RegisterScreen = () => {
 
     setLoading(true);
     try {
-      const selfieKey = await uploadToS3(selfie, 'selfie');
       const docFrontKey = await uploadToS3(docFront, 'document_front');
       const docBackKey = docBack ? await uploadToS3(docBack, 'document_back') : undefined;
+      const selfieKey = await uploadToS3(selfie, 'selfie');
 
       await axios.post(`${API_URL}/identity/kyc/submit`, {
         selfieKey,
-        documentFrontKey,
-        documentBackKey,
+        documentFrontKey: docFrontKey,
+        documentBackKey: docBackKey,
       });
 
       setStep(3); // Success Step
@@ -193,7 +195,13 @@ export const RegisterScreen = () => {
   );
 };
 
-const KycButton = ({ label, captured, onPress }) => (
+interface KycButtonProps {
+  label: string;
+  captured: boolean;
+  onPress: () => void;
+}
+
+const KycButton: React.FC<KycButtonProps> = ({ label, captured, onPress }) => (
   <TouchableOpacity style={[styles.kycButton, captured && styles.kycButtonSuccess]} onPress={onPress}>
     <View style={styles.kycRow}>
       <Camera color={captured ? '#059669' : '#64748b'} size={24} />

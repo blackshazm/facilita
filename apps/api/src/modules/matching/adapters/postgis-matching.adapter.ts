@@ -1,45 +1,46 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../../shared-kernel/database/prisma.service';
-import { Location } from '../core/provider-status.entity';
 import { MatchingEnginePort, NearbyProvider } from '../ports/matching-engine.port';
 
 @Injectable()
 export class PostgisMatchingAdapter implements MatchingEnginePort {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findProvidersInNeighborhood(
-    neighborhoodId: string,
+  async findProvidersInRadius(
+    latitude: number,
+    longitude: number,
+    radiusMeters: number,
     categoryId: string,
+    tier: string,
     limit: number = 10
   ): Promise<NearbyProvider[]> {
-    // Array intersection query to find providers who have this neighborhood in their service zones
-    const providers = await this.prisma.activeProvider.findMany({
-      where: {
-        categoryId,
-        isOnline: true,
-        // Since activeProvider doesn't hold the zones, we need to query through the ProviderProfile
-        providerId: {
-          in: (
-            await this.prisma.providerProfile.findMany({
-              where: {
-                serviceZones: {
-                  some: {
-                    id: neighborhoodId
-                  }
-                }
-              },
-              select: { id: true } // ProviderProfile id is the providerId
-            })
-          ).map(p => p.id)
-        }
-      },
-      take: limit
-    });
+    // PostGIS raw query to find online providers within radius, filtered by category and tier
+    // We join ProviderLocation (matching), ActiveProvider (matching), and ProviderProfile (identity)
+    
+    const result = await this.prisma.$queryRaw`
+      SELECT 
+        ap."providerId", 
+        ST_DistanceSphere(pl.location, ST_MakePoint(${longitude}, ${latitude})) as distance
+      FROM matching."ActiveProvider" ap
+      JOIN matching."ProviderLocation" pl ON ap."providerId" = pl."providerId"
+      JOIN identity."ProviderProfile" pp ON ap."providerId" = pp."userId"
+      WHERE ap."categoryId" = ${categoryId}
+        AND ap."isOnline" = true
+        AND pp."tier"::text = ${tier}
+        AND ST_DWithin(
+          pl.location, 
+          ST_MakePoint(${longitude}, ${latitude})::geography, 
+          ${radiusMeters}
+        )
+      ORDER BY distance ASC
+      LIMIT ${limit}
+    `;
 
-    // We no longer have distance in a strict sense, so we return distance 0 or we can remove it later.
-    return providers.map(p => ({
-      providerId: p.providerId,
-      distance: 0 
+    // Map raw result to interface
+    const rows = result as Array<{ providerId: string; distance: number }>;
+    return rows.map(r => ({
+      providerId: r.providerId,
+      distance: r.distance
     }));
   }
 }

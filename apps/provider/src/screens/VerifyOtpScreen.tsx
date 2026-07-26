@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native';
 
-export default function VerifyOtpScreen() {
+export const VerifyOtpScreen: React.FC = () => {
   const [code, setCode] = useState(['', '', '', '', '', '']);
   const inputs = useRef<Array<TextInput | null>>([]);
 
@@ -28,7 +28,9 @@ export default function VerifyOtpScreen() {
           {code.map((digit, index) => (
             <TextInput
               key={index}
-              ref={(ref) => (inputs.current[index] = ref)}
+              ref={(ref) => {
+                inputs.current[index] = ref;
+              }}
               style={styles.otpInput}
               keyboardType="number-pad"
               maxLength={1}
@@ -48,7 +50,9 @@ export default function VerifyOtpScreen() {
       </View>
     </KeyboardAvoidingView>
   );
-}
+};
+
+export default VerifyOtpScreen;
 
 const styles = StyleSheet.create({
   container: {

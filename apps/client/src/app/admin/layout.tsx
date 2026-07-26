@@ -21,8 +21,8 @@ export default function AdminLayout({
           <Link href="/admin/payouts" className="block px-4 py-2 rounded hover:bg-slate-800 transition">
             💰 Payouts
           </Link>
-          <Link href="/admin/audit" className="block px-4 py-2 rounded hover:bg-slate-800 transition">
-            📋 Audit Log
+          <Link href="/admin/dashboard" className="block px-4 py-2 rounded hover:bg-slate-800 transition">
+            📊 Operational Dashboard
           </Link>
         </nav>
         <div className="mt-auto pt-6 border-t border-slate-800 text-slate-400 text-sm">

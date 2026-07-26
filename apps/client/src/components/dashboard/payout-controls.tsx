@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Button } from '@/components/ui/button';
+import { Button, buttonVariants } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -32,10 +32,8 @@ export function PayoutControls() {
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
-        <Button variant={isPaused ? "default" : "destructive"}>
-          {isPaused ? 'Resume Payouts' : 'Halt Payouts'}
-        </Button>
+      <DialogTrigger className={buttonVariants({ variant: isPaused ? "default" : "destructive" })}>
+        {isPaused ? 'Resume Payouts' : 'Halt Payouts'}
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>

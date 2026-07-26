@@ -55,7 +55,7 @@ const FormInput: React.FC<FormInputProps> = ({ icon, placeholder, value, onChang
   );
 };
 
-export const BankDataScreen = ({ navigation }) => {
+export const BankDataScreen = ({ navigation }: { navigation?: any }) => {
   const [loading, setLoading] = useState(false);
   const [fetchLoading, setFetchLoading] = useState(true);
   const [saveSuccess, setSaveSuccess] = useState(false);

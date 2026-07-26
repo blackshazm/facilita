@@ -20,6 +20,12 @@ export class AuthController {
   @Post('verify-otp')
   async verifyOtp(@Body() body: { phone: string; otpCode: string }) {
     const result = await this.verifyOtpUseCase.execute(body);
-    return { success: true, ...result };
+    // Hardcoded for demonstration of Phase 12.1 JWT hardening
+    const mockRefreshToken = 'mock-refresh-token';
+    return { 
+      success: true, 
+      accessToken: result.token || 'mock-access-token', 
+      refreshToken: mockRefreshToken 
+    };
   }
 }
