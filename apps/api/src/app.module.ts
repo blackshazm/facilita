@@ -13,6 +13,8 @@ import { SharedKernelModule } from './shared-kernel/shared-kernel.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { ReviewsModule } from './modules/reviews/reviews.module';
 import { TrackingModule } from './modules/tracking/tracking.module';
+import { HealthModule } from './modules/health/health.module';
+import { MetricsModule } from './modules/metrics/metrics.module';
 
 import { APP_GUARD } from '@nestjs/core';
 import { ThrottlerGuard } from '@nestjs/throttler';
@@ -24,6 +26,8 @@ import { ThrottlerGuard } from '@nestjs/throttler';
       limit: 100,
     }]),
     EventEmitterModule.forRoot(),
+    HealthModule,
+    MetricsModule,
     IdentityModule,
     CatalogModule,
     MatchingModule,

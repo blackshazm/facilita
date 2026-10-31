@@ -23,7 +23,7 @@ test.describe('Jornada do Cliente E2E', () => {
 
     // 2. Redirecionamento para a criação de novo pedido
     await expect(page).toHaveURL('/new-order');
-    await expect(page.getByText('Solicitar Novo Serviço')).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Solicitar Novo Serviço' })).toBeVisible();
 
     // Seleção de serviço e detalhes
     await page.getByText('Instalação de Tomada / Interruptor').click();
