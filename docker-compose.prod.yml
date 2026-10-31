@@ -1,0 +1,173 @@
+# ==============================================================================
+# FACILITA — DOCKER COMPOSE PRODUÇÃO (ENTERPRISE / CUSTO MÍNIMO)
+# ==============================================================================
+
+services:
+  # --- 1. BANCO DE DADOS (POSTGRESQL + POSTGIS) ---
+  db:
+    image: postgis/postgis:15-3.3
+    container_name: facilita-prod-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-facilita_prod}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Defina POSTGRES_PASSWORD no .env.production}
+      POSTGRES_DB: ${POSTGRES_DB:-facilita_production}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-facilita_prod} -d ${POSTGRES_DB:-facilita_production}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - facilita-internal
+
+  # --- 2. CACHE & FILAS (REDIS 7 COM PERSISTÊNCIA AOF) ---
+  redis:
+    image: redis:7-alpine
+    container_name: facilita-prod-redis
+    restart: always
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - facilita-internal
+
+  # --- 3. BACKEND API (NESTJS) ---
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    image: ${API_IMAGE:-ghcr.io/facilita/api:latest}
+    container_name: facilita-prod-api
+    restart: always
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    env_file:
+      - .env.production
+    ports:
+      - "3333:3333"
+    networks:
+      - facilita-internal
+      - facilita-public
+
+  # --- 4. CLIENT WEB (NEXT.JS 15 STANDALONE) ---
+  client:
+    build:
+      context: .
+      dockerfile: apps/client/Dockerfile
+    image: ${CLIENT_IMAGE:-ghcr.io/facilita/client:latest}
+    container_name: facilita-prod-client
+    restart: always
+    depends_on:
+      - api
+    env_file:
+      - .env.production
+    ports:
+      - "3000:3000"
+    networks:
+      - facilita-internal
+      - facilita-public
+
+  # --- 5. ROTINA DE BACKUP AUTOMÁTICO (ROTAÇÃO 7 DIAS) ---
+  backup:
+    image: alpine:3.19
+    container_name: facilita-prod-backup
+    restart: always
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./scripts/backup-postgres.sh:/usr/local/bin/backup-postgres.sh:ro
+      - backup_data:/backups
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-facilita_prod}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB:-facilita_production}
+    entrypoint: >
+      /bin/sh -c "
+        apk add --no-cache postgresql15-client &&
+        chmod +x /usr/local/bin/backup-postgres.sh &&
+        echo '0 3 * * * /usr/local/bin/backup-postgres.sh >> /var/log/backup.log 2>&1' > /etc/crontabs/root &&
+        touch /var/log/backup.log &&
+        echo '[$(date)] Serviço de Backup Diário agendado (03:00 BRT).' &&
+        crond -f -l 2
+      "
+    networks:
+      - facilita-internal
+
+  # --- 6. OBSERVABILIDADE: GLITCHTIP (SENTRY OPEN-SOURCE ALTERNATIVE) ---
+  glitchtip:
+    image: glitchtip/glitchtip:v4.1
+    container_name: facilita-prod-glitchtip
+    restart: always
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-facilita_prod}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-facilita_production}?schema=glitchtip
+      REDIS_URL: redis://redis:6379/1
+      SECRET_KEY: ${JWT_SECRET:-glitchtip-secret-change-me}
+      GLITCHTIP_DOMAIN: https://${GLITCHTIP_HOST:-glitchtip.facilita.com.br}
+      ENABLE_OPEN_USER_REGISTRATION: "false"
+    ports:
+      - "8000:8000"
+    networks:
+      - facilita-internal
+      - facilita-public
+
+  # --- 7. OBSERVABILIDADE: PROMETHEUS (COLETA DE MÉTRICAS) ---
+  prometheus:
+    image: prom/prometheus:v2.50.1
+    container_name: facilita-prod-prometheus
+    restart: always
+    volumes:
+      - ./infra/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    ports:
+      - "9090:9090"
+    networks:
+      - facilita-internal
+      - facilita-public
+
+  # --- 8. OBSERVABILIDADE: GRAFANA (DASHBOARDS) ---
+  grafana:
+    image: grafana/grafana:10.3.3
+    container_name: facilita-prod-grafana
+    restart: always
+    depends_on:
+      - prometheus
+    volumes:
+      - grafana_data:/var/lib/grafana
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD:-FacilitaAdmin2026!}
+      GF_USERS_ALLOW_SIGN_UP: "false"
+    ports:
+      - "3001:3000"
+    networks:
+      - facilita-internal
+      - facilita-public
+
+volumes:
+  postgres_data:
+  redis_data:
+  backup_data:
+  prometheus_data:
+  grafana_data:
+
+networks:
+  facilita-internal:
+    driver: bridge
+  facilita-public:
+    driver: bridge
