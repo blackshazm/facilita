@@ -43,7 +43,7 @@ test.describe('Painel do Administrador E2E', () => {
     // Valida elementos principais da página de Payouts
     await expect(page.getByText('Monitoramento de Payouts')).toBeVisible();
     await expect(page.getByText(/Aviso de Segurança/i)).toBeVisible();
-    await expect(page.getByText(/Fila de Aprovação|Histórico/i)).toBeVisible();
+    await expect(page.getByText(/Fila de Aprovação|Histórico/i).first()).toBeVisible();
   });
 
   test('deve executar alteração manual de Tier de Prestador (Tier Override)', async ({ page }) => {

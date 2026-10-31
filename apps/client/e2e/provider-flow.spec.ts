@@ -2,34 +2,33 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Provider Flow E2E', () => {
   test.beforeEach(async ({ page }) => {
-    // Assuming the provider interface runs on a specific route or same client
-    // Here we'll simulate the dashboard or a login for providers.
-    await page.goto('http://localhost:3000/provider/dashboard');
+    await page.goto('/provider/dashboard');
   });
 
-  test('should accept an urgent service request and upload evidence', async ({ page }) => {
-    // This assumes the provider route exists, if not we fall back to a 404 handler check
-    const is404 = await page.getByRole('heading', { name: '404' }).isVisible();
-    if (is404) {
-      console.log('Provider UI not yet implemented in client app, skipping full flow');
-      test.skip();
-      return;
-    }
+  test('should accept an urgent service request and complete flow', async ({ page }) => {
+    // 1. Valida elementos principais do painel do prestador
+    await expect(page.getByText('João Silva')).toBeVisible();
+    await expect(page.getByText(/ONLINE|Novo Chamado/i).first()).toBeVisible();
 
-    // Typical flow validation
-    await expect(page.getByText('Incoming Request')).toBeVisible();
-    await page.getByRole('button', { name: 'Accept Job' }).click();
+    // 2. Aceita o chamado
+    const acceptBtn = page.getByRole('button', { name: /Aceitar Chamado/i });
+    await expect(acceptBtn).toBeVisible();
+    await acceptBtn.click();
 
-    await expect(page.getByText('Job In Progress')).toBeVisible();
+    // 3. Valida transição para "A caminho / Em Deslocamento"
+    await expect(page.getByText(/Em Deslocamento|A Caminho/i).first()).toBeVisible();
 
-    // Mock file upload for evidence
-    const fileChooserPromise = page.waitForEvent('filechooser');
-    await page.getByRole('button', { name: 'Upload Evidence' }).click();
-    const fileChooser = await fileChooserPromise;
-    // We would use a mock image here:
-    // await fileChooser.setFiles('path/to/mock-image.jpg');
+    // 4. Confirma chegada no local
+    const arrivedBtn = page.getByRole('button', { name: /Cheguei/i });
+    await expect(arrivedBtn).toBeVisible();
+    await arrivedBtn.click();
 
-    await page.getByRole('button', { name: 'Complete Job' }).click();
-    await expect(page.getByText('Job Completed')).toBeVisible();
+    // 5. Conclui o serviço
+    const completeBtn = page.getByRole('button', { name: /Finalizar e Solicitar Repasse/i });
+    await expect(completeBtn).toBeVisible();
+    await completeBtn.click();
+
+    // 6. Valida estado final de serviço concluído
+    await expect(page.getByText(/Serviço Concluído com Sucesso/i)).toBeVisible();
   });
 });

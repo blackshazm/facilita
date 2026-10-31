@@ -1,7 +1,9 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, useEffect, Suspense } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { ShieldCheck, Sparkles, AlertCircle, ArrowLeft } from 'lucide-react';
+import Link from 'next/link';
 
 interface ServiceOption {
   id: string;
@@ -12,41 +14,51 @@ interface ServiceOption {
 }
 
 const SERVICES: ServiceOption[] = [
-  { id: 'srv-1', category: 'Eletricista', name: 'Instalação de Tomada / Interruptor', basePrice: 90.0, description: 'Instalação ou substituição de tomadas de 10A/20A ou interruptores.' },
-  { id: 'srv-2', category: 'Eletricista', name: 'Instalação de Chuveiro Elétrico', basePrice: 120.0, description: 'Fixação, fiação de proteção e teste de aquecimento.' },
+  { id: '1', category: 'Eletricista', name: 'Instalação de chuveiro elétrico', basePrice: 120.0, description: 'Fixação, fiação de proteção e teste de aquecimento seguro.' },
+  { id: '2', category: 'Eletricista', name: 'Troca de torneira elétrica', basePrice: 100.0, description: 'Substituição com mão de obra especializada e vedação básica.' },
+  { id: '3', category: 'Eletricista', name: 'Instalação de ventilador de teto', basePrice: 150.0, description: 'Montagem e instalação de ventilador em ponto existente.' },
+  { id: '4', category: 'Eletricista', name: 'Troca de disjuntor defeituoso', basePrice: 90.0, description: 'Substituição no quadro principal para proteção contra sobrecarga.' },
+  { id: '5', category: 'Eletricista', name: 'Instalação de Tomada / Interruptor', basePrice: 110.0, description: 'Instalação ou substituição de até 3 tomadas ou interruptores.' },
   { id: 'srv-3', category: 'Encanador', name: 'Reparo de Vazamento de Torneira/Sifão', basePrice: 110.0, description: 'Troca de vedações, reparo ou substituição do sifão.' },
   { id: 'srv-4', category: 'Encanador', name: 'Desentupimento de Pia ou Vaso', basePrice: 150.0, description: 'Desobstrução de encanamento de esgoto sanitário.' },
   { id: 'srv-5', category: 'Pequenos Reparos', name: 'Montagem de Móveis (até 2m)', basePrice: 130.0, description: 'Montagem de estantes, mesas, prateleiras ou armários pequenos.' },
   { id: 'srv-6', category: 'Pequenos Reparos', name: 'Instalação de Suporte de TV', basePrice: 100.0, description: 'Fixação segura na parede em alvenaria ou drywall.' },
 ];
 
-export default function NewOrderPage() {
+function NewOrderContent() {
   const router = useRouter();
-  const [selectedService, setSelectedService] = useState<ServiceOption | null>(SERVICES[0]);
+  const searchParams = useSearchParams();
+  const serviceIdParam = searchParams.get('serviceId');
+
+  const [selectedService, setSelectedService] = useState<ServiceOption | null>(
+    SERVICES.find(s => s.id === serviceIdParam) || SERVICES[0]
+  );
   const [urgency, setUrgency] = useState<'normal' | 'urgent'>('normal');
   const [description, setDescription] = useState('');
   const [photoUrl, setPhotoUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
+  useEffect(() => {
+    if (serviceIdParam) {
+      const match = SERVICES.find(s => s.id === serviceIdParam);
+      if (match) setSelectedService(match);
+    }
+  }, [serviceIdParam]);
+
   const totalPrice = selectedService ? (urgency === 'urgent' ? selectedService.basePrice * 1.25 : selectedService.basePrice) : 0;
 
-  const handleCreateOrder = async (e: React.FormEvent) => {
+  const handleCreateOrder = (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedService) return;
 
     setLoading(true);
+    const mockOrderId = `ord-${Date.now()}`;
 
-    try {
-      // Simula criação do pedido na API (POST /orders)
-      await new Promise((res) => setTimeout(res, 1000));
-      const mockOrderId = `ord-${Date.now()}`;
+    setTimeout(() => {
       router.push(`/checkout/${mockOrderId}`);
-    } catch (err) {
-      alert('Erro ao criar pedido. Tente novamente.');
-    } finally {
-      setLoading(false);
-    }
+    }, 400);
   };
+
 
   return (
     <div className="min-h-screen bg-slate-900 text-white p-4 md:p-8">
@@ -209,9 +221,16 @@ export default function NewOrderPage() {
               <button
                 type="submit"
                 disabled={loading || !selectedService}
-                className="w-full py-4 bg-emerald-500 hover:bg-emerald-600 font-extrabold rounded-xl text-slate-950 text-base shadow-xl transition-all"
+                className="w-full py-4 bg-emerald-500 hover:bg-emerald-400 font-extrabold rounded-xl text-slate-950 text-base shadow-xl transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-[0.99]"
               >
-                {loading ? 'Criando Pedido...' : 'Avançar para Pagamento →'}
+                {loading ? (
+                  <>
+                    <span className="inline-block w-4 h-4 border-2 border-slate-950 border-t-transparent rounded-full animate-spin"></span>
+                    <span>Criando Pedido...</span>
+                  </>
+                ) : (
+                  <span>Avançar para Pagamento →</span>
+                )}
               </button>
             </div>
           </div>
@@ -220,3 +239,12 @@ export default function NewOrderPage() {
     </div>
   );
 }
+
+export default function NewOrderPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-slate-900 flex items-center justify-center text-white">Carregando...</div>}>
+      <NewOrderContent />
+    </Suspense>
+  );
+}
+

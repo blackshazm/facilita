@@ -1,8 +1,10 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
+import { useRouter } from 'next/navigation';
 import { ServiceCard } from '../components/ServiceCard';
+import Link from 'next/link';
+import { ShieldCheck, Clock, MapPin, Sparkles } from 'lucide-react';
 
-// MOCK Data - No mundo real isso vem do GET /catalog/services
 const MOCK_SERVICES = [
   { id: '1', name: 'Instalação de chuveiro', description: 'Troca/instalação de chuveiro elétrico. Não inclui o chuveiro nem fiação nova.', price: 'R$ 120,00', time: '1h' },
   { id: '2', name: 'Troca de torneira elétrica', description: 'Substituição de torneira elétrica. Inclui mão de obra e vedação básica.', price: 'R$ 100,00', time: '45min' },
@@ -13,46 +15,107 @@ const MOCK_SERVICES = [
 ];
 
 export default function HomePage() {
+  const router = useRouter();
+
+  const handleSelectService = (service: typeof MOCK_SERVICES[0]) => {
+    router.push(`/new-order?serviceId=${service.id}&name=${encodeURIComponent(service.name)}`);
+  };
+
   return (
-    <div className="min-h-screen bg-gray-50 pb-20">
+    <div className="min-h-screen bg-slate-950 text-slate-100 pb-20">
       {/* Header */}
-      <header className="bg-blue-600 text-white px-4 pt-12 pb-6 rounded-b-3xl shadow-sm">
-        <h1 className="text-xl font-medium mb-1">Olá, Cliente!</h1>
-        <p className="text-blue-100 text-sm">Onde você precisa de ajuda hoje?</p>
+      <header className="bg-gradient-to-r from-blue-700 via-blue-600 to-indigo-700 text-white px-6 pt-12 pb-8 rounded-b-3xl shadow-xl">
+        <div className="max-w-5xl mx-auto flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div>
+            <div className="flex items-center gap-2 mb-2">
+              <span className="bg-blue-900/60 border border-blue-400/30 text-blue-200 text-xs px-3 py-1 rounded-full font-semibold flex items-center gap-1.5 backdrop-blur-sm">
+                <ShieldCheck size={14} className="text-emerald-400" /> Plataforma Segura & Garantida
+              </span>
+            </div>
+            <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight">FACILITA Serviços</h1>
+            <p className="text-blue-100 text-sm mt-1">Profissionais qualificados sob demanda na sua região em minutos.</p>
+          </div>
+          <div className="flex items-center gap-3">
+            <Link
+              href="/orders"
+              className="bg-white/10 hover:bg-white/20 text-white text-xs font-semibold px-4 py-2.5 rounded-xl border border-white/20 backdrop-blur-md transition shadow-sm"
+            >
+              Meus Pedidos
+            </Link>
+            <Link
+              href="/tracking/ord-demo-123"
+              className="bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-xs font-extrabold px-4 py-2.5 rounded-xl shadow-lg transition"
+            >
+              Acompanhar Demo
+            </Link>
+          </div>
+        </div>
       </header>
 
       {/* Main Content */}
-      <main className="px-4 mt-6">
-        
-        {/* Categories (Tabs) - Somente Elétrica ativo no MVP */}
-        <div className="flex gap-3 overflow-x-auto pb-4 mb-2 no-scrollbar">
-          <button className="px-5 py-2 bg-blue-600 text-white rounded-full font-medium text-sm whitespace-nowrap shadow-sm">
-            ⚡ Elétrica
-          </button>
-          <button className="px-5 py-2 bg-white text-gray-500 rounded-full font-medium text-sm whitespace-nowrap border border-gray-200 opacity-50">
-            💧 Hidráulica (Em breve)
-          </button>
-          <button className="px-5 py-2 bg-white text-gray-500 rounded-full font-medium text-sm whitespace-nowrap border border-gray-200 opacity-50">
-            🔨 Reparos (Em breve)
-          </button>
+      <main className="max-w-5xl mx-auto px-4 mt-8 space-y-6">
+        {/* Banner de Garantia */}
+        <div className="bg-gradient-to-r from-slate-900 to-slate-850 border border-slate-800 rounded-2xl p-4 flex items-center justify-between shadow-md">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold">
+              🛡️
+            </div>
+            <div>
+              <p className="text-xs font-bold text-slate-200">Garantia FACILITA de até R$ 5.000</p>
+              <p className="text-[11px] text-slate-400">Prestadores verificados com antecedentes criminais e seguro contra danos.</p>
+            </div>
+          </div>
+          <Link
+            href="/new-order"
+            className="hidden sm:inline-flex bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold px-4 py-2 rounded-xl transition shadow-md"
+          >
+            Novo Pedido →
+          </Link>
+        </div>
+
+        {/* Categories (Tabs) */}
+        <div>
+          <h2 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">Categorias de Serviços</h2>
+          <div className="flex gap-3 overflow-x-auto pb-2 no-scrollbar">
+            <button className="px-5 py-2.5 bg-blue-600 text-white rounded-full font-bold text-xs whitespace-nowrap shadow-md flex items-center gap-1.5">
+              ⚡ Elétrica
+            </button>
+            <button className="px-5 py-2.5 bg-slate-900 text-slate-400 rounded-full font-medium text-xs whitespace-nowrap border border-slate-800 opacity-70">
+              💧 Hidráulica (Em breve)
+            </button>
+            <button className="px-5 py-2.5 bg-slate-900 text-slate-400 rounded-full font-medium text-xs whitespace-nowrap border border-slate-800 opacity-70">
+              🔨 Pequenos Reparos (Em breve)
+            </button>
+            <button className="px-5 py-2.5 bg-slate-900 text-slate-400 rounded-full font-medium text-xs whitespace-nowrap border border-slate-800 opacity-70">
+              🧹 Limpeza Pós-Obra (Em breve)
+            </button>
+          </div>
         </div>
 
         {/* Services List */}
-        <h2 className="text-lg font-bold text-gray-900 mb-4 mt-2">Serviços Disponíveis</h2>
-        
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {MOCK_SERVICES.map(service => (
-            <ServiceCard
-              key={service.id}
-              name={service.name}
-              description={service.description}
-              price={service.price}
-              time={service.time}
-              onSelect={() => alert(`Iniciando triagem para: ${service.name}`)}
-            />
-          ))}
+        <div>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-bold text-white flex items-center gap-2">
+              <Sparkles size={18} className="text-amber-400" /> Serviços Disponíveis
+            </h2>
+            <span className="text-xs text-slate-400">Preços tabelados e transparentes</span>
+          </div>
+          
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {MOCK_SERVICES.map(service => (
+              <ServiceCard
+                key={service.id}
+                name={service.name}
+                description={service.description}
+                price={service.price}
+                time={service.time}
+                onSelect={() => handleSelectService(service)}
+              />
+            ))}
+          </div>
         </div>
       </main>
     </div>
   );
 }
+

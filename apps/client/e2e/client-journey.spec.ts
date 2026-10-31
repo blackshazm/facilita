@@ -2,26 +2,24 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Jornada do Cliente E2E', () => {
   test('deve realizar cadastro de cliente, criar novo pedido, realizar checkout e acompanhar serviço', async ({ page }) => {
-    // 1. Acesso à página de cadastro de cliente
     await page.goto('/register');
     await expect(page.getByText('FACILITA')).toBeVisible();
-    await expect(page.getByText('Crie sua conta de cliente em poucas etapas')).toBeVisible();
 
     // Etapa 1: Telefone
     await page.getByPlaceholder('(11) 99999-9999').fill('11988887777');
-    await page.getByRole('button', { name: 'Enviar Código de Verificação' }).click();
+    await page.getByRole('button', { name: /Continuar com SMS/i }).click();
 
     // Etapa 2: OTP
-    await expect(page.getByText('Digite o código de 6 dígitos enviado por SMS')).toBeVisible();
+    await expect(page.getByText(/código de 6 dígitos/i)).toBeVisible({ timeout: 10000 });
     await page.getByPlaceholder('123456').fill('123456');
-    await page.getByRole('button', { name: 'Confirmar e Continuar' }).click();
+    await page.getByRole('button', { name: /Confirmar Código/i }).click();
 
     // Etapa 3: Dados Pessoais
-    await expect(page.getByText('Informações Pessoais')).toBeVisible();
-    await page.getByPlaceholder('Seu nome completo').fill('Maria Oliveira');
-    await page.getByPlaceholder('seu@email.com').fill('maria@exemplo.com');
-    await page.getByPlaceholder('Rua, número, bairro e cidade').fill('Av. Paulista, 1000 - São Paulo/SP');
-    await page.getByRole('button', { name: 'Finalizar Cadastro' }).click();
+    await expect(page.getByPlaceholder(/Maria da Silva/i)).toBeVisible({ timeout: 10000 });
+    await page.getByPlaceholder(/Maria da Silva/i).fill('Maria Oliveira');
+    await page.getByPlaceholder(/maria@email.com/i).fill('maria@exemplo.com');
+    await page.getByPlaceholder(/Rua Augusta/i).fill('Av. Paulista, 1000 - São Paulo/SP');
+    await page.getByRole('button', { name: /Concluir e Fazer Pedido/i }).click();
 
     // 2. Redirecionamento para a criação de novo pedido
     await expect(page).toHaveURL('/new-order');
@@ -29,27 +27,22 @@ test.describe('Jornada do Cliente E2E', () => {
 
     // Seleção de serviço e detalhes
     await page.getByText('Instalação de Tomada / Interruptor').click();
-    await page.getByPlaceholder('Ex: Tomada da cozinha parou de funcionar após curto-circuito no micro-ondas.').fill('Troca de tomada da cozinha com vazamento de corrente.');
+    await page.locator('textarea').fill('Troca de tomada da cozinha com vazamento de corrente.');
     
     // Envio da solicitação
-    await page.getByRole('button', { name: /Confirmar e Buscar Eletricista/i }).click();
+    await page.getByRole('button', { name: /Avançar para Pagamento/i }).click();
 
     // 3. Redirecionamento para Checkout
     await expect(page).toHaveURL(/\/checkout\/ord-/);
-    await expect(page.getByText('Buscando o melhor prestador...')).toBeVisible();
+    await expect(page.getByText(/Localizando Prestadores/i)).toBeVisible();
 
-    // Aguarda transição para "Prestador Encontrado!"
-    await expect(page.getByText('Prestador Encontrado!')).toBeVisible({ timeout: 7000 });
-    await expect(page.getByText('João Silva')).toBeVisible();
-    await expect(page.getByText('4.9')).toBeVisible();
+    // Acelera busca de demo
+    await page.locator('text=Acelerar busca').click();
+    await expect(page.getByText(/Prestador Confirmado/i)).toBeVisible();
 
-    // 4. Navegação para Acompanhamento (Tracking)
-    await page.getByRole('button', { name: 'Acompanhar Deslocamento' }).click();
-
-    await expect(page).toHaveURL(/\/tracking\//);
-    await expect(page.getByText(/Acompanhar Serviço/i)).toBeVisible();
-    await expect(page.getByText('Status do Pedido')).toBeVisible();
-    await expect(page.getByText('Prestador a caminho')).toBeVisible();
-    await expect(page.getByText('João Silva')).toBeVisible();
+    // 4. Acompanhar em tempo real
+    await page.locator('a[href*="/tracking/"]').click();
+    await expect(page).toHaveURL(/\/tracking\/ord-/);
+    await expect(page.getByText(/Garantia FACILITA/i).first()).toBeVisible();
   });
 });

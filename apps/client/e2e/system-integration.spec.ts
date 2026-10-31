@@ -1,13 +1,8 @@
 import { test, expect } from '@playwright/test';
 
-/**
- * MEGA-TESTE E2E INTEGRADO (Cross-Platform / Cross-Persona)
- * Simula a interação simultânea entre Cliente, Prestador e Administrador em sessões isoladas.
- */
 test.describe('Mega-Teste: Integração do Sistema Completo (Cliente, Prestador e Admin)', () => {
   
   test('Fluxo Ponta a Ponta Integrado', async ({ browser }) => {
-    // Cria 3 contextos de navegador independentes para simular dispositivos e privilégios distintos
     const clientContext = await browser.newContext();
     const providerContext = await browser.newContext();
     const adminContext = await browser.newContext();
@@ -22,22 +17,22 @@ test.describe('Mega-Teste: Integração do Sistema Completo (Cliente, Prestador 
       await expect(clientPage.getByText('Solicitar Novo Serviço')).toBeVisible();
 
       await clientPage.getByText('Instalação de Tomada / Interruptor').click();
-      await clientPage.getByPlaceholder('Ex: Tomada da cozinha parou de funcionar após curto-circuito no micro-ondas.').fill('Troca urgente de fiação e disjuntor.');
+      await clientPage.locator('textarea').fill('Troca urgente de fiação e disjuntor.');
       
-      await clientPage.getByRole('button', { name: /Confirmar e Buscar Eletricista/i }).click();
+      await clientPage.getByRole('button', { name: /Avançar para Pagamento/i }).click();
       await expect(clientPage).toHaveURL(/\/checkout\/ord-/);
+      await expect(clientPage.getByText(/Localizando Prestadores/i)).toBeVisible();
     });
 
     // 2. Prestador acessa seu painel e verifica chamados recebidos
     await test.step('Prestador: Verificar Painel de Atendimento', async () => {
       await providerPage.goto('/provider/dashboard');
+      await expect(providerPage.getByText('João Silva')).toBeVisible();
       
-      const acceptJobBtn = providerPage.getByRole('button', { name: /accept job/i });
+      const acceptJobBtn = providerPage.getByRole('button', { name: /Aceitar Chamado/i });
       if (await acceptJobBtn.isVisible()) {
         await acceptJobBtn.click();
-        await expect(providerPage.getByText('Job In Progress')).toBeVisible();
-      } else {
-        console.log('Painel de atendimento do prestador verificado.');
+        await expect(providerPage.getByText(/Em Deslocamento|A Caminho/i).first()).toBeVisible();
       }
     });
 
@@ -51,7 +46,6 @@ test.describe('Mega-Teste: Integração do Sistema Completo (Cliente, Prestador 
       await expect(adminPage.getByText('Monitoramento de Payouts')).toBeVisible();
     });
 
-    // Encerra contextos isolados
     await clientContext.close();
     await providerContext.close();
     await adminContext.close();
