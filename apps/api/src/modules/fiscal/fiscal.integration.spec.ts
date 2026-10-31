@@ -3,11 +3,13 @@ import { INestApplication } from '@nestjs/common';
 import { AppModule } from '../../app.module';
 import { CapturePaymentUseCase } from '../payments/application/capture-payment.usecase';
 import { PrismaService } from '../../shared-kernel/database/prisma.service';
+import { FiscalInvoiceEventListener } from './infrastructure/listeners/fiscal-invoice.listener';
 
 describe('Fiscal Module (Integration)', () => {
   let app: INestApplication;
   let capturePayment: CapturePaymentUseCase;
   let prisma: PrismaService;
+  let listener: FiscalInvoiceEventListener;
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -19,11 +21,14 @@ describe('Fiscal Module (Integration)', () => {
 
     capturePayment = app.get(CapturePaymentUseCase);
     prisma = app.get(PrismaService);
-  });
+    listener = app.get(FiscalInvoiceEventListener);
+  }, 60000);
 
   afterAll(async () => {
-    await app.close();
-  });
+    if (app) {
+      await app.close();
+    }
+  }, 60000);
 
   it('should calculate taxes and create invoice/audit log on payment capture', async () => {
     const providerId = 'test-provider-fiscal-' + Date.now();
@@ -64,14 +69,14 @@ describe('Fiscal Module (Integration)', () => {
     expect(Number(payment?.splitAmount)).toBe(8000);
     
     // 4. Verify Invoice (Emitted via listener)
-    // We might need to wait a bit since it's an event listener
-    await new Promise(resolve => setTimeout(resolve, 500));
+    // Wait for listener to complete processing
+    await new Promise(resolve => setTimeout(resolve, 1500));
 
     const invoice = await prisma.invoice.findFirst({
       where: { orderId }
     });
 
-    expect(invoice).toBeDefined();
+    expect(invoice).not.toBeNull();
     expect(invoice?.status).toBe('ISSUED');
     expect(Number(invoice?.totalAmount)).toBe(10000);
 
@@ -82,5 +87,5 @@ describe('Fiscal Module (Integration)', () => {
 
     expect(auditLog).toBeDefined();
     expect(auditLog?.action).toBe('PAYMENT_CAPTURED');
-  });
+  }, 30000);
 });

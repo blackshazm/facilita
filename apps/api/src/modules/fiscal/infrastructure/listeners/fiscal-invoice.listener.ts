@@ -1,16 +1,20 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 import { ENotasGatewayAdapter } from '../enotas-gateway.adapter';
 import { PrismaService } from '../../../../shared-kernel/database/prisma.service';
 
 @Injectable()
-export class FiscalInvoiceEventListener {
+export class FiscalInvoiceEventListener implements OnModuleInit {
   private readonly logger = new Logger(FiscalInvoiceEventListener.name);
 
   constructor(
     private readonly enotas: ENotasGatewayAdapter,
     private readonly prisma: PrismaService,
   ) {}
+
+  onModuleInit() {
+    this.logger.log('FiscalInvoiceEventListener initialized and listening to events');
+  }
 
   @OnEvent('payment.captured')
   async handlePaymentCaptured(event: any) {
@@ -43,7 +47,7 @@ export class FiscalInvoiceEventListener {
       });
 
       // 3. Save Invoice record in DB
-      await this.prisma.invoice.create({
+      const invoice = await this.prisma.invoice.create({
         data: {
           orderId: event.orderId,
           externalId: invoiceResponse.externalId,
@@ -58,11 +62,11 @@ export class FiscalInvoiceEventListener {
       // 4. Link Invoice to Payment
       await this.prisma.payment.update({
         where: { id: event.paymentId },
-        data: { invoiceId: invoiceResponse.externalId },
+        data: { invoiceId: invoice.id },
       });
 
       this.logger.log(`Invoice successfully issued and recorded: ${invoiceResponse.externalId}`);
-    } catch (error) {
+    } catch (error: any) {
       this.logger.error(`Failed to issue invoice for order ${event.orderId}: ${error.message}`);
     }
   }
