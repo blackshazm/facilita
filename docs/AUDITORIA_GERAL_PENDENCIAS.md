@@ -53,11 +53,8 @@ Este documento cataloga exaustivamente **cada item faltante**, organizado por m�
 #### 3. [P1] Histórico Paginado e Download de Comprovante / NFS-e (`/orders`) — ✅ CONCLUÍDO
 - **Situação Atual:** Implementado na API (`OrderController` e `OrderService` com rotas `GET /orders` paginada por cursor e com filtros de status, e `GET /orders/:id/receipt` com discriminação de valores, taxa da plataforma 15%, retenções fiscais e hash SHA-256). Interface web em `/orders` com filtros de status, busca por texto, modal oficial de comprovante fiscal com impressão/download de PDF (`window.print()`), acionamento de garantia de 90 dias e suíte E2E automatizada (`orders-history.spec.ts`).
 
-#### 4. [P1] Fluxo de Cancelamento Assistido pelo Cliente
-- **Situação Atual:** O cliente acompanha a tela de tracking, mas não há botão interativo de cancelamento caso o prestador demore excessivamente.
-- **O que falta:**
-  - Botão "Cancelar Pedido" no `/tracking/[id]`.
-  - Regra de negócio: Se o cancelamento ocorrer dentro de 5 minutos da aceitação, reembolso total imediato. Se após a chegada do prestador, aplicar retenção da taxa de deslocamento mínima (R$ 35,00) para cobrir o custo do profissional autônomo.
+#### 4. [P1] Fluxo de Cancelamento Assistido pelo Cliente — ✅ CONCLUÍDO
+- **Situação Atual:** Implementado na Entidade de Domínio (`Order.cancel()` em `order.entity.ts`), na camada de aplicação (`OrderService.cancelOrder()`) e interface (`POST /orders/:id/cancel` no `OrderController`). Regra estrita de negócio em vigor: cancelamento dentro de 5 minutos do despacho garante estorno integral de 100%; cancelamento após 5 minutos ou com prestador no local aplica retenção da taxa de deslocamento (R$ 35,00) revertida para compensação do profissional autônomo. Interface interativa com modal e seleção de motivos no `/tracking/[id]` com suíte E2E automatizada (`order-cancellation.spec.ts`).
 
 ---
 

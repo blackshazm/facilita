@@ -48,4 +48,13 @@ describe('OrderController', () => {
     expect(orderService.getOrderReceipt).toHaveBeenCalledWith('ord-1', 'user-1', 'CUSTOMER');
     expect(receipt).toEqual({ receiptNumber: 'REC-123' });
   });
+
+  it('should call orderService.cancelOrder with reason and user context', async () => {
+    orderService.cancelOrder = jest.fn().mockResolvedValue({ status: 'CANCELED', refundAmount: 140 });
+    const req = { user: { id: 'user-1', role: 'CUSTOMER' } };
+    const result = await controller.cancelOrder('ord-1', req, { reason: 'Demorou muito' });
+
+    expect(orderService.cancelOrder).toHaveBeenCalledWith('ord-1', 'user-1', 'Demorou muito');
+    expect(result.status).toBe('CANCELED');
+  });
 });

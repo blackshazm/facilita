@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import * as crypto from 'crypto';
 import { ORDER_REPOSITORY_PORT, OrderRepositoryPort } from '../ports/order-repository.port';
-import { OrderStatus } from '../core/order.entity';
+import { Order, OrderStatus } from '../core/order.entity';
 import { PrismaService } from '../../../shared-kernel/database/prisma.service';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 
@@ -438,6 +438,76 @@ export class OrderService {
         cnpj: '48.123.456/0001-99',
         address: 'Av. Paulista, 1000 - Bela Vista, São Paulo - SP',
       },
+    };
+  }
+
+  /**
+   * Cancelamento assistido pelo cliente ou prestador com cálculo de retenção da taxa de deslocamento
+   * // PRD: 4.4.2 Cancelamento Assistido e Taxa de Deslocamento
+   */
+  async cancelOrder(
+    orderId: string,
+    userId: string,
+    reason: string,
+    currentTime: Date = new Date(),
+  ) {
+    const raw = await this.prisma.order.findUnique({ where: { id: orderId } });
+    if (!raw) throw new NotFoundException('Pedido não encontrado');
+
+    // Validação de permissão: somente cliente titular ou prestador ou admin
+    if (raw.userId !== userId && raw.providerId !== userId) {
+      throw new ForbiddenException('Apenas o solicitante ou o prestador vinculado podem cancelar este atendimento');
+    }
+
+    const domainOrder = new Order({
+      id: raw.id,
+      userId: raw.userId,
+      providerId: raw.providerId ?? undefined,
+      status: raw.status as OrderStatus,
+      totalAmount: Number(raw.totalAmount),
+      createdAt: raw.createdAt,
+      updatedAt: raw.updatedAt,
+    });
+
+    let cancellationResult;
+    try {
+      cancellationResult = domainOrder.cancel(reason, currentTime);
+    } catch (err: any) {
+      throw new BadRequestException(err.message);
+    }
+
+    await this.prisma.order.update({
+      where: { id: orderId },
+      data: {
+        status: 'CANCELED',
+        updatedAt: currentTime,
+      },
+    });
+
+    this.logger.warn(
+      `Pedido ${orderId} cancelado por ${userId}. Taxa de deslocamento: R$ ${cancellationResult.displacementFee}, Estorno: R$ ${cancellationResult.refundAmount}`,
+    );
+
+    this.eventEmitter.emit('order.canceled', {
+      orderId,
+      userId,
+      providerId: raw.providerId,
+      displacementFee: cancellationResult.displacementFee,
+      refundAmount: cancellationResult.refundAmount,
+      isWithinFreeGracePeriod: cancellationResult.isWithinFreeGracePeriod,
+      reason,
+      canceledAt: currentTime,
+    });
+
+    return {
+      orderId,
+      status: 'CANCELED',
+      displacementFee: cancellationResult.displacementFee,
+      refundAmount: cancellationResult.refundAmount,
+      isWithinFreeGracePeriod: cancellationResult.isWithinFreeGracePeriod,
+      message: cancellationResult.isWithinFreeGracePeriod
+        ? 'Cancelamento realizado com sucesso. Estorno integral efetuado.'
+        : `Cancelamento realizado. Taxa de deslocamento de R$ ${cancellationResult.displacementFee.toFixed(2)} retida para compensação do prestador. Estorno de R$ ${cancellationResult.refundAmount.toFixed(2)} processado.`,
     };
   }
 }

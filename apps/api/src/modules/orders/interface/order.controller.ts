@@ -123,6 +123,20 @@ export class OrderController {
   }
 
   /**
+   * POST /orders/:id/cancel — Cancelar pedido com cálculo de taxa de deslocamento
+   * // PRD: 4.4.2 Cancelamento Assistido e Taxa de Deslocamento
+   */
+  @Post(':id/cancel')
+  @HttpCode(HttpStatus.OK)
+  async cancelOrder(
+    @Param('id') id: string,
+    @Request() req,
+    @Body() body: { reason: string },
+  ) {
+    return this.orderService.cancelOrder(id, req.user.id, body?.reason || 'Cancelado pelo solicitante');
+  }
+
+  /**
    * POST /orders/:id/approve — Cliente aprova conclusão do serviço
    */
   @Post(':id/approve')

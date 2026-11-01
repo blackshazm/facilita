@@ -191,4 +191,73 @@ describe('OrderService', () => {
       expect(receipt.orderId).toBe('ord-test-receipt-12345');
     });
   });
+
+  describe('cancelOrder()', () => {
+    it('should cancel with 100% refund when canceled within 5 minutes', async () => {
+      const fixedTime = new Date('2026-11-01T10:00:00Z');
+      const cancelTime = new Date('2026-11-01T10:02:00Z');
+      const mockOrder = {
+        id: 'ord-cancel-1',
+        userId: 'user-cust-1',
+        providerId: 'user-prov-1',
+        status: 'MATCHED',
+        totalAmount: 140.0,
+        createdAt: fixedTime,
+        updatedAt: fixedTime,
+      };
+      mockPrisma.order.findUnique.mockResolvedValue(mockOrder);
+      mockPrisma.order.update.mockResolvedValue({ ...mockOrder, status: 'CANCELED' });
+
+      const result = await service.cancelOrder('ord-cancel-1', 'user-cust-1', 'Mudança de planos', cancelTime);
+
+      expect(result.status).toBe('CANCELED');
+      expect(result.displacementFee).toBe(0);
+      expect(result.refundAmount).toBe(140.0);
+      expect(result.isWithinFreeGracePeriod).toBe(true);
+      expect(mockPrisma.order.update).toHaveBeenCalledWith({
+        where: { id: 'ord-cancel-1' },
+        data: { status: 'CANCELED', updatedAt: cancelTime },
+      });
+    });
+
+    it('should retain displacement fee of R$ 35 when canceling after 5 minutes', async () => {
+      const fixedTime = new Date('2026-11-01T10:00:00Z');
+      const cancelTime = new Date('2026-11-01T10:10:00Z'); // 10 min
+      const mockOrder = {
+        id: 'ord-cancel-2',
+        userId: 'user-cust-1',
+        providerId: 'user-prov-1',
+        status: 'EN_ROUTE',
+        totalAmount: 140.0,
+        createdAt: fixedTime,
+        updatedAt: fixedTime,
+      };
+      mockPrisma.order.findUnique.mockResolvedValue(mockOrder);
+      mockPrisma.order.update.mockResolvedValue({ ...mockOrder, status: 'CANCELED' });
+
+      const result = await service.cancelOrder('ord-cancel-2', 'user-cust-1', 'Demora', cancelTime);
+
+      expect(result.status).toBe('CANCELED');
+      expect(result.displacementFee).toBe(35.0);
+      expect(result.refundAmount).toBe(105.0);
+      expect(result.isWithinFreeGracePeriod).toBe(false);
+    });
+
+    it('should throw ForbiddenException if canceling user is not titular customer or provider', async () => {
+      const mockOrder = {
+        id: 'ord-cancel-3',
+        userId: 'user-cust-1',
+        providerId: 'user-prov-1',
+        status: 'MATCHED',
+        totalAmount: 140.0,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+      mockPrisma.order.findUnique.mockResolvedValue(mockOrder);
+
+      await expect(
+        service.cancelOrder('ord-cancel-3', 'user-hacker', 'Tentativa não autorizada'),
+      ).rejects.toThrow(ForbiddenException);
+    });
+  });
 });

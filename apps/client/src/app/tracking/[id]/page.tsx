@@ -1,7 +1,22 @@
 'use client';
 import React, { useState, useEffect, useRef, Suspense } from 'react';
-import { useParams } from 'next/navigation';
-import { MapPin, Wrench, CheckCircle, PhoneCall, Star, AlertTriangle, MessageSquare, Send, ShieldAlert, X, ShieldCheck, ArrowLeft } from 'lucide-react';
+import { useParams, useRouter } from 'next/navigation';
+import { 
+  MapPin, 
+  Wrench, 
+  CheckCircle, 
+  PhoneCall, 
+  Star, 
+  AlertTriangle, 
+  MessageSquare, 
+  Send, 
+  ShieldAlert, 
+  X, 
+  ShieldCheck, 
+  ArrowLeft,
+  XCircle,
+  AlertCircle
+} from 'lucide-react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { socket } from '@/lib/socket';
@@ -24,6 +39,7 @@ interface ChatMessage {
 }
 
 function TrackingContent() {
+  const router = useRouter();
   const params = useParams();
   const id = (params?.id as string) || 'ord-123';
   const [jobStatus, setJobStatus] = useState<'A Caminho' | 'Em Andamento' | 'Concluído'>('A Caminho');
@@ -31,6 +47,12 @@ function TrackingContent() {
   const [location, setLocation] = useState<{ lat: number; lng: number }>({ lat: -23.561684, lng: -46.655981 });
   const [signalLost, setSignalLost] = useState(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Cancelamento State
+  const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
+  const [cancelReason, setCancelReason] = useState('Demora excessiva do prestador');
+  const [isCanceling, setIsCanceling] = useState(false);
+  const [isCanceledSuccess, setIsCanceledSuccess] = useState(false);
 
   // Chat State
   const [isChatOpen, setIsChatOpen] = useState(false);
@@ -40,6 +62,23 @@ function TrackingContent() {
   ]);
   const [inputMessage, setInputMessage] = useState('');
   const [chatWarning, setChatWarning] = useState<string | null>(null);
+
+  // Regra de negócio: se o prestador já estiver no local ('Em Andamento'), retém taxa de deslocamento de R$ 35
+  const hasDisplacementFee = jobStatus === 'Em Andamento';
+  const orderTotalAmount = 140.0;
+  const displacementFee = hasDisplacementFee ? 35.0 : 0.0;
+  const refundAmount = Math.max(0, orderTotalAmount - displacementFee);
+
+  const handleConfirmCancel = () => {
+    setIsCanceling(true);
+    setTimeout(() => {
+      setIsCanceling(false);
+      setIsCanceledSuccess(true);
+      setTimeout(() => {
+        router.push('/orders');
+      }, 1200);
+    }, 500);
+  };
 
   useEffect(() => {
     try {
@@ -296,6 +335,20 @@ function TrackingContent() {
             </button>
           </div>
         </div>
+
+        {/* Botão de Cancelamento Assistido */}
+        {jobStatus !== 'Concluído' && (
+          <div className="text-center pt-1 pb-4">
+            <button
+              type="button"
+              onClick={() => setIsCancelModalOpen(true)}
+              className="text-xs font-bold text-rose-400 hover:text-rose-300 hover:underline inline-flex items-center gap-1.5 transition cursor-pointer"
+              data-testid="btn-cancel-service"
+            >
+              <XCircle size={15} /> Cancelar Ordem de Serviço
+            </button>
+          </div>
+        )}
       </main>
 
       {/* Modal do Chat Protegido em Tempo Real */}
@@ -384,6 +437,137 @@ function TrackingContent() {
                 <Send size={16} />
               </button>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de Cancelamento com Retenção da Taxa de Deslocamento */}
+      {isCancelModalOpen && (
+        <div 
+          className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in"
+          data-testid="cancel-modal"
+        >
+          <div className="w-full max-w-md bg-slate-900 border border-slate-700 text-white rounded-3xl p-6 shadow-2xl space-y-5 animate-in zoom-in-95">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+              <div className="flex items-center gap-2">
+                <AlertCircle size={20} className="text-rose-400" />
+                <h3 className="font-extrabold text-base text-white">Cancelar Atendimento</h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsCancelModalOpen(false)}
+                className="text-slate-400 hover:text-white cursor-pointer"
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            {isCanceledSuccess ? (
+              <div className="py-6 text-center space-y-3" data-testid="cancel-success-message">
+                <CheckCircle size={44} className="text-emerald-400 mx-auto" />
+                <h4 className="text-lg font-bold text-white">Atendimento Cancelado</h4>
+                <p className="text-xs text-slate-300">
+                  {hasDisplacementFee
+                    ? `Taxa de deslocamento de R$ 35,00 retida para o parceiro. Estorno de R$ ${refundAmount.toFixed(2)} solicitado com sucesso.`
+                    : 'Cancelamento gratuito confirmado. O valor total de R$ 140,00 foi estornado.'}
+                </p>
+                <p className="text-[11px] text-slate-400">Redirecionando para seus pedidos...</p>
+              </div>
+            ) : (
+              <div className="space-y-4 text-xs">
+                {/* Resumo da Regra Financeira de Deslocamento */}
+                {hasDisplacementFee ? (
+                  <div className="bg-amber-950/40 border border-amber-500/40 p-3.5 rounded-2xl text-amber-200 space-y-1">
+                    <p className="font-bold flex items-center gap-1.5 text-amber-300">
+                      ⚠️ Retenção da Taxa de Deslocamento (R$ 35,00)
+                    </p>
+                    <p className="text-[11px] text-slate-300 leading-relaxed">
+                      O prestador já chegou ao local ou iniciou o atendimento. Conforme os termos da plataforma, 
+                      será retido R$ 35,00 para remunerar o tempo e combustível do profissional autônomo.
+                    </p>
+                    <div className="pt-2 border-t border-amber-500/20 flex justify-between font-bold text-xs text-white">
+                      <span>Valor a Estornar (PIX/Cartão):</span>
+                      <span className="text-emerald-400 font-mono">R$ {refundAmount.toFixed(2)}</span>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="bg-emerald-950/40 border border-emerald-500/40 p-3.5 rounded-2xl text-emerald-200 space-y-1">
+                    <p className="font-bold flex items-center gap-1.5 text-emerald-300">
+                      🟢 Cancelamento Gratuito (Estorno de 100%)
+                    </p>
+                    <p className="text-[11px] text-slate-300 leading-relaxed">
+                      Atendimento cancelado dentro do prazo de tolerância inicial. Nenhum valor será retido.
+                    </p>
+                    <div className="pt-2 border-t border-emerald-500/20 flex justify-between font-bold text-xs text-white">
+                      <span>Estorno Integral:</span>
+                      <span className="text-emerald-400 font-mono">R$ {orderTotalAmount.toFixed(2)}</span>
+                    </div>
+                  </div>
+                )}
+
+                {/* Seleção do Motivo */}
+                <div className="space-y-2">
+                  <label className="font-bold text-slate-300 block">
+                    Por que você deseja cancelar?
+                  </label>
+                  <div className="space-y-1.5">
+                    {[
+                      'Demora excessiva do prestador',
+                      'Emergência resolvida / Desisti do serviço',
+                      'Endereço informado incorreto',
+                      'Problema com o valor ou adicionais',
+                      'Outro motivo'
+                    ].map((reason) => (
+                      <label
+                        key={reason}
+                        className={`flex items-center gap-2.5 p-2.5 rounded-xl border cursor-pointer transition ${
+                          cancelReason === reason
+                            ? 'bg-rose-950/40 border-rose-500/60 text-white'
+                            : 'bg-slate-950 border-slate-800 text-slate-300 hover:border-slate-700'
+                        }`}
+                      >
+                        <input
+                          type="radio"
+                          name="cancelReason"
+                          value={reason}
+                          checked={cancelReason === reason}
+                          onChange={() => setCancelReason(reason)}
+                          className="text-rose-500 focus:ring-rose-500 bg-slate-900 border-slate-700"
+                        />
+                        <span className="text-xs">{reason}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Ações */}
+                <div className="flex items-center justify-end gap-2.5 pt-2 border-t border-slate-800">
+                  <button
+                    type="button"
+                    onClick={() => setIsCancelModalOpen(false)}
+                    className="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-bold transition cursor-pointer"
+                  >
+                    Voltar
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleConfirmCancel}
+                    disabled={isCanceling}
+                    className="px-4 py-2.5 bg-rose-600 hover:bg-rose-500 text-white rounded-xl text-xs font-bold transition shadow-lg flex items-center gap-2 cursor-pointer disabled:opacity-50"
+                    data-testid="btn-confirm-cancel"
+                  >
+                    {isCanceling ? (
+                      <>
+                        <span className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                        <span>Processando...</span>
+                      </>
+                    ) : (
+                      <span>Confirmar Cancelamento</span>
+                    )}
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       )}

@@ -76,6 +76,91 @@ describe('Order Entity', () => {
     });
   });
 
+  describe('cancel()', () => {
+    it('should allow free cancellation if status is PENDING', () => {
+      const order = makeOrder({ status: OrderStatus.PENDING });
+      const result = order.cancel('Cliente desistiu antes do aceite');
+
+      expect(order.status).toBe(OrderStatus.CANCELED);
+      expect(result.displacementFee).toBe(0);
+      expect(result.refundAmount).toBe(12000);
+      expect(result.isWithinFreeGracePeriod).toBe(true);
+    });
+
+    it('should allow free cancellation within 5 minutes of matching', () => {
+      const matchedAt = new Date('2026-11-01T10:00:00Z');
+      const cancelAt = new Date('2026-11-01T10:03:00Z'); // 3 minutes later (< 5 min)
+      const order = new Order({
+        id: 'ord-1',
+        userId: 'user-1',
+        providerId: 'prov-1',
+        status: OrderStatus.MATCHED,
+        totalAmount: 120,
+        createdAt: matchedAt,
+        updatedAt: matchedAt,
+      });
+
+      const result = order.cancel('Mudança de planos', cancelAt);
+
+      expect(order.status).toBe(OrderStatus.CANCELED);
+      expect(result.displacementFee).toBe(0);
+      expect(result.refundAmount).toBe(120);
+      expect(result.isWithinFreeGracePeriod).toBe(true);
+    });
+
+    it('should retain displacement fee of R$ 35 when canceling after 5 minutes of dispatch', () => {
+      const matchedAt = new Date('2026-11-01T10:00:00Z');
+      const cancelAt = new Date('2026-11-01T10:08:00Z'); // 8 minutes later (> 5 min)
+      const order = new Order({
+        id: 'ord-1',
+        userId: 'user-1',
+        providerId: 'prov-1',
+        status: OrderStatus.EN_ROUTE,
+        totalAmount: 140,
+        createdAt: matchedAt,
+        updatedAt: matchedAt,
+      });
+
+      const result = order.cancel('Demora do prestador', cancelAt);
+
+      expect(order.status).toBe(OrderStatus.CANCELED);
+      expect(result.displacementFee).toBe(35);
+      expect(result.refundAmount).toBe(105); // 140 - 35 = 105
+      expect(result.isWithinFreeGracePeriod).toBe(false);
+    });
+
+    it('should retain displacement fee if provider has ARRIVED regardless of time', () => {
+      const arrivedAt = new Date('2026-11-01T10:00:00Z');
+      const cancelAt = new Date('2026-11-01T10:02:00Z');
+      const order = new Order({
+        id: 'ord-1',
+        userId: 'user-1',
+        providerId: 'prov-1',
+        status: OrderStatus.ARRIVED,
+        totalAmount: 100,
+        createdAt: arrivedAt,
+        updatedAt: arrivedAt,
+      });
+
+      const result = order.cancel('Cliente precisou sair', cancelAt);
+
+      expect(order.status).toBe(OrderStatus.CANCELED);
+      expect(result.displacementFee).toBe(35);
+      expect(result.refundAmount).toBe(65);
+      expect(result.isWithinFreeGracePeriod).toBe(false);
+    });
+
+    it('should throw an error when attempting to cancel an already completed order', () => {
+      const order = makeOrder({ status: OrderStatus.DONE });
+      expect(() => order.cancel('Tarde demais')).toThrow('Não é possível cancelar uma ordem de serviço já concluída');
+    });
+
+    it('should throw an error when attempting to cancel an already canceled order', () => {
+      const order = makeOrder({ status: OrderStatus.CANCELED });
+      expect(() => order.cancel('Cancelando novamente')).toThrow('Esta ordem de serviço já se encontra cancelada');
+    });
+  });
+
   describe('toJSON()', () => {
     it('should return a complete snapshot of order properties', () => {
       const order = makeOrder({ latitude: -23.55, longitude: -46.63 });
