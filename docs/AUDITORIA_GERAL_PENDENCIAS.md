@@ -47,11 +47,8 @@ Este documento cataloga exaustivamente **cada item faltante**, organizado por m�
   - Implementar rate limiting estrito por número (máximo 3 envios a cada 10 minutos para evitar custos abusivos de SMS causados por bots).
   - Tratar falha de entrega com fallback para WhatsApp se o SMS falhar em 60 segundos.
 
-#### 2. [P1] Gestão de Múltiplos Endereços no Perfil (`/profile`)
-- **Situação Atual:** O cliente digita o endereço manualmente a cada novo pedido via input de texto.
-- **O que falta:**
-  - Tabela `UserAddress` no Prisma (`id`, `userId`, `label` [Casa/Trabalho/Outro], `street`, `number`, `complement`, `neighborhood`, `city`, `state`, `lat`, `lng`, `isDefault`).
-  - Interface no perfil e seletor dropdown com 1 clique na tela de novo pedido.
+#### 2. [P1] Gestão de Múltiplos Endereços no Perfil (`/profile`) — ✅ CONCLUÍDO
+- **Situação Atual:** Implementado na API (`AddressController` com rotas `GET /identity/addresses`, `POST /identity/addresses`, `DELETE /identity/addresses/:id`), com interface completa no `/profile` (cards 🏠 Casa, 💼 Trabalho, 📍 Outro, modal de cadastro e exclusão) e seletor rápido de 1-clique em `/new-order`, com persistência e suíte E2E automatizada (`client-addresses.spec.ts`).
 
 #### 3. [P1] Histórico Paginado e Download de Comprovante / NFS-e (`/orders`)
 - **Situação Atual:** A rota exibe lista simples de pedidos.
@@ -266,3 +263,4 @@ As pendências restantes dividem-se em duas categorias bem delimitadas:
 2. **Refinamentos de Hardware Mobile:** (Som contínuo de alarme para chamados e trava de foto obrigatória antes/depois).
 
 Este documento serve como mapa de bordo final para guiar as próximas decisões até a estreia comercial do sistema.
+
