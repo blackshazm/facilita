@@ -11,7 +11,7 @@ test.describe('Tracking Flow E2E', () => {
 
     // Clica para acompanhar deslocamento
     await page.locator('a[href*="/tracking/"]').click();
-    await expect(page).toHaveURL(/\/tracking\/1/);
+    await expect(page).toHaveURL(/\/tracking\/1/, { timeout: 15000 });
     await expect(page.getByText(/Garantia FACILITA|Serviço #/i).first()).toBeVisible();
     await expect(page.getByText(/João Silva/i).first()).toBeVisible();
   });

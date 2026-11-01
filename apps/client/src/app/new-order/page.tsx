@@ -2,7 +2,17 @@
 
 import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { ShieldCheck, Sparkles, AlertCircle, ArrowLeft } from 'lucide-react';
+import { 
+  ShieldCheck, 
+  Sparkles, 
+  AlertCircle, 
+  ArrowLeft, 
+  MapPin, 
+  Home, 
+  Briefcase, 
+  Plus, 
+  CheckCircle2 
+} from 'lucide-react';
 import Link from 'next/link';
 
 interface ServiceOption {
@@ -12,6 +22,46 @@ interface ServiceOption {
   basePrice: number;
   description: string;
 }
+
+interface AddressItem {
+  id: string;
+  label: 'CASA' | 'TRABALHO' | 'OUTRO';
+  street: string;
+  number: string;
+  complement?: string;
+  neighborhood: string;
+  city: string;
+  state: string;
+  cep: string;
+  isDefault?: boolean;
+}
+
+const DEFAULT_ADDRESSES: AddressItem[] = [
+  {
+    id: 'addr-1',
+    label: 'CASA',
+    street: 'Av. Paulista',
+    number: '1000',
+    complement: 'Apto 42',
+    neighborhood: 'Bela Vista',
+    city: 'São Paulo',
+    state: 'SP',
+    cep: '01310-100',
+    isDefault: true,
+  },
+  {
+    id: 'addr-2',
+    label: 'TRABALHO',
+    street: 'Rua Funchal',
+    number: '418',
+    complement: '10º Andar',
+    neighborhood: 'Vila Olímpia',
+    city: 'São Paulo',
+    state: 'SP',
+    cep: '04551-060',
+    isDefault: false,
+  },
+];
 
 const SERVICES: ServiceOption[] = [
   { id: '1', category: 'Eletricista', name: 'Instalação de chuveiro elétrico', basePrice: 120.0, description: 'Fixação, fiação de proteção e teste de aquecimento seguro.' },
@@ -38,6 +88,17 @@ function NewOrderContent() {
   const [photoUrl, setPhotoUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
+  // Endereços salvos e seleção
+  const [addresses, setAddresses] = useState<AddressItem[]>(DEFAULT_ADDRESSES);
+  const [selectedAddressId, setSelectedAddressId] = useState<string>('addr-1');
+  const [isCustomAddress, setIsCustomAddress] = useState(false);
+  const [customStreet, setCustomStreet] = useState('');
+  const [customNumber, setCustomNumber] = useState('');
+  const [customComplement, setCustomComplement] = useState('');
+  const [customNeighborhood, setCustomNeighborhood] = useState('');
+  const [customCity, setCustomCity] = useState('São Paulo');
+  const [saveCustomToProfile, setSaveCustomToProfile] = useState(true);
+
   useEffect(() => {
     if (serviceIdParam) {
       const match = SERVICES.find(s => s.id === serviceIdParam);
@@ -45,26 +106,83 @@ function NewOrderContent() {
     }
   }, [serviceIdParam]);
 
+  // Carrega endereços do localStorage
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem('facilita_user_addresses');
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          setAddresses(parsed);
+          const defaultAddr = parsed.find((a: AddressItem) => a.isDefault) || parsed[0];
+          setSelectedAddressId(defaultAddr.id);
+        }
+      }
+    } catch {}
+  }, []);
+
   const totalPrice = selectedService ? (urgency === 'urgent' ? selectedService.basePrice * 1.25 : selectedService.basePrice) : 0;
+
+  // Objeto de endereço ativo formatado
+  const activeSelectedAddress = addresses.find(a => a.id === selectedAddressId);
+  const formattedAddressText = isCustomAddress 
+    ? (customStreet ? `${customStreet}, ${customNumber || 'S/N'} - ${customNeighborhood || 'Centro'}, ${customCity}` : 'Endereço personalizado a preencher')
+    : activeSelectedAddress 
+      ? `${activeSelectedAddress.street}, ${activeSelectedAddress.number}${activeSelectedAddress.complement ? ` (${activeSelectedAddress.complement})` : ''} - ${activeSelectedAddress.neighborhood}, ${activeSelectedAddress.city}`
+      : 'Endereço não selecionado';
 
   const handleCreateOrder = (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedService) return;
 
+    if (isCustomAddress && (!customStreet || !customNeighborhood)) {
+      alert('Por favor, informe a rua e o bairro do atendimento.');
+      return;
+    }
+
     setLoading(true);
     const mockOrderId = `ord-${Date.now()}`;
+
+    // Se criou endereço customizado e marcou para salvar, persiste no perfil
+    if (isCustomAddress && saveCustomToProfile && customStreet) {
+      const newAddr: AddressItem = {
+        id: `addr-${Date.now()}`,
+        label: 'OUTRO',
+        street: customStreet,
+        number: customNumber || 'S/N',
+        complement: customComplement,
+        neighborhood: customNeighborhood,
+        city: customCity,
+        state: 'SP',
+        cep: '01000-000',
+        isDefault: false,
+      };
+      const updatedList = [newAddr, ...addresses];
+      try {
+        localStorage.setItem('facilita_user_addresses', JSON.stringify(updatedList));
+      } catch {}
+    }
+
+    // Salva o endereço deste pedido para consulta nas próximas etapas
+    try {
+      localStorage.setItem('facilita_last_order_address', formattedAddressText);
+    } catch {}
 
     setTimeout(() => {
       router.push(`/checkout/${mockOrderId}`);
     }, 400);
   };
 
-
   return (
     <div className="min-h-screen bg-slate-900 text-white p-4 md:p-8">
       <div className="max-w-4xl mx-auto space-y-8">
         <header className="border-b border-slate-800 pb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
+            <div className="flex items-center gap-3 mb-2">
+              <Link href="/" className="text-slate-400 hover:text-white transition flex items-center gap-1 text-xs">
+                <ArrowLeft size={14} /> Voltar ao início
+              </Link>
+            </div>
             <h1 className="text-3xl font-extrabold text-emerald-400">Solicitar Novo Serviço</h1>
             <p className="text-slate-400 text-sm mt-1">Preço fixo garantido • Prestadores verificados com seguro de até R$ 5.000</p>
           </div>
@@ -77,10 +195,11 @@ function NewOrderContent() {
         <form onSubmit={handleCreateOrder} className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Coluna 1 & 2: Seleção e Triagem */}
           <div className="md:col-span-2 space-y-6">
-            {/* Seleção de Serviço */}
+            {/* 1. Seleção de Serviço */}
             <div className="bg-slate-800 border border-slate-700 rounded-2xl p-6">
               <h2 className="text-lg font-bold text-slate-200 mb-4 flex items-center gap-2">
-                <span>1.</span> Escolha o Serviço
+                <span className="w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 text-xs flex items-center justify-center font-bold">1</span>
+                <span>Escolha o Serviço</span>
               </h2>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -93,7 +212,7 @@ function NewOrderContent() {
                       onClick={() => setSelectedService(srv)}
                       className={`p-4 rounded-xl border cursor-pointer transition-all ${
                         isSelected
-                          ? 'border-emerald-500 bg-emerald-950/30'
+                          ? 'border-emerald-500 bg-emerald-950/30 ring-1 ring-emerald-500'
                           : 'border-slate-700 bg-slate-900 hover:border-slate-600'
                       }`}
                     >
@@ -111,10 +230,167 @@ function NewOrderContent() {
               </div>
             </div>
 
-            {/* Detalhes e Fotos */}
+            {/* 2. Endereço do Atendimento */}
+            <div className="bg-slate-800 border border-slate-700 rounded-2xl p-6 space-y-4">
+              <div className="flex items-center justify-between">
+                <h2 className="text-lg font-bold text-slate-200 flex items-center gap-2">
+                  <span className="w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 text-xs flex items-center justify-center font-bold">2</span>
+                  <span>Endereço do Atendimento</span>
+                </h2>
+                <Link href="/profile" className="text-xs text-emerald-400 hover:underline flex items-center gap-1">
+                  Gerenciar endereços
+                </Link>
+              </div>
+
+              {/* Lista de Endereços Salvos */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3" data-testid="saved-addresses-list">
+                {addresses.map((addr) => {
+                  const isSelected = !isCustomAddress && selectedAddressId === addr.id;
+
+                  return (
+                    <div
+                      key={addr.id}
+                      onClick={() => {
+                        setIsCustomAddress(false);
+                        setSelectedAddressId(addr.id);
+                      }}
+                      className={`p-3.5 rounded-xl border cursor-pointer transition-all flex flex-col justify-between ${
+                        isSelected
+                          ? 'border-emerald-500 bg-emerald-950/30 ring-1 ring-emerald-500'
+                          : 'border-slate-700 bg-slate-900 hover:border-slate-600'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between mb-1.5">
+                        <div className="flex items-center gap-1.5">
+                          {addr.label === 'CASA' ? (
+                            <Home size={14} className="text-emerald-400" />
+                          ) : addr.label === 'TRABALHO' ? (
+                            <Briefcase size={14} className="text-blue-400" />
+                          ) : (
+                            <MapPin size={14} className="text-purple-400" />
+                          )}
+                          <span className="text-xs font-bold uppercase tracking-wider text-slate-300">
+                            {addr.label}
+                          </span>
+                          {addr.isDefault && (
+                            <span className="text-[10px] bg-slate-800 text-slate-400 px-1.5 py-0.5 rounded border border-slate-700">
+                              Padrão
+                            </span>
+                          )}
+                        </div>
+                        {isSelected && (
+                          <CheckCircle2 size={16} className="text-emerald-400" />
+                        )}
+                      </div>
+                      <p className="text-xs font-medium text-slate-200 line-clamp-1">
+                        {addr.street}, {addr.number} {addr.complement && `(${addr.complement})`}
+                      </p>
+                      <p className="text-[11px] text-slate-400 mt-0.5">
+                        {addr.neighborhood} - {addr.city}/{addr.state}
+                      </p>
+                    </div>
+                  );
+                })}
+
+                {/* Opção para informar outro endereço */}
+                <div
+                  onClick={() => setIsCustomAddress(true)}
+                  className={`p-3.5 rounded-xl border border-dashed cursor-pointer transition-all flex items-center justify-center gap-2 ${
+                    isCustomAddress
+                      ? 'border-emerald-500 bg-emerald-950/30 ring-1 ring-emerald-500 text-emerald-400'
+                      : 'border-slate-700 bg-slate-900/60 hover:border-slate-500 text-slate-400'
+                  }`}
+                  data-testid="btn-custom-address"
+                >
+                  <Plus size={16} />
+                  <span className="text-xs font-bold">Usar outro endereço</span>
+                </div>
+              </div>
+
+              {/* Formulário de Endereço Personalizado */}
+              {isCustomAddress && (
+                <div className="mt-4 p-4 rounded-xl bg-slate-900 border border-slate-700 space-y-3 animate-in fade-in">
+                  <h3 className="text-xs font-bold text-slate-300 uppercase tracking-wider">
+                    Informar endereço do atendimento
+                  </h3>
+                  <div className="grid grid-cols-3 gap-3">
+                    <div className="col-span-2">
+                      <label className="block text-[11px] text-slate-400 mb-1">Rua / Logradouro *</label>
+                      <input
+                        type="text"
+                        placeholder="Ex: Rua Oscar Freire"
+                        value={customStreet}
+                        onChange={(e) => setCustomStreet(e.target.value)}
+                        className="w-full bg-slate-800 border border-slate-700 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-emerald-500"
+                        required={isCustomAddress}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[11px] text-slate-400 mb-1">Número *</label>
+                      <input
+                        type="text"
+                        placeholder="123"
+                        value={customNumber}
+                        onChange={(e) => setCustomNumber(e.target.value)}
+                        className="w-full bg-slate-800 border border-slate-700 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-emerald-500"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-3 gap-3">
+                    <div>
+                      <label className="block text-[11px] text-slate-400 mb-1">Complemento</label>
+                      <input
+                        type="text"
+                        placeholder="Apto 12B"
+                        value={customComplement}
+                        onChange={(e) => setCustomComplement(e.target.value)}
+                        className="w-full bg-slate-800 border border-slate-700 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-emerald-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[11px] text-slate-400 mb-1">Bairro *</label>
+                      <input
+                        type="text"
+                        placeholder="Pinheiros"
+                        value={customNeighborhood}
+                        onChange={(e) => setCustomNeighborhood(e.target.value)}
+                        className="w-full bg-slate-800 border border-slate-700 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-emerald-500"
+                        required={isCustomAddress}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[11px] text-slate-400 mb-1">Cidade</label>
+                      <input
+                        type="text"
+                        value={customCity}
+                        onChange={(e) => setCustomCity(e.target.value)}
+                        className="w-full bg-slate-800 border border-slate-700 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-emerald-500"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2 pt-1">
+                    <input
+                      type="checkbox"
+                      id="saveToProfile"
+                      checked={saveCustomToProfile}
+                      onChange={(e) => setSaveCustomToProfile(e.target.checked)}
+                      className="rounded border-slate-700 bg-slate-800 text-emerald-500 focus:ring-emerald-500 cursor-pointer"
+                    />
+                    <label htmlFor="saveToProfile" className="text-xs text-slate-300 cursor-pointer">
+                      Salvar este endereço para futuros pedidos
+                    </label>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* 3. Detalhes e Fotos */}
             <div className="bg-slate-800 border border-slate-700 rounded-2xl p-6 space-y-4">
               <h2 className="text-lg font-bold text-slate-200 flex items-center gap-2">
-                <span>2.</span> Detalhe o problema
+                <span className="w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 text-xs flex items-center justify-center font-bold">3</span>
+                <span>Detalhe o problema</span>
               </h2>
 
               <div>
@@ -152,10 +428,11 @@ function NewOrderContent() {
               </div>
             </div>
 
-            {/* Urgência */}
+            {/* 4. Urgência */}
             <div className="bg-slate-800 border border-slate-700 rounded-2xl p-6">
               <h2 className="text-lg font-bold text-slate-200 mb-4 flex items-center gap-2">
-                <span>3.</span> Urgência do Atendimento
+                <span className="w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 text-xs flex items-center justify-center font-bold">4</span>
+                <span>Urgência do Atendimento</span>
               </h2>
 
               <div className="grid grid-cols-2 gap-4">
@@ -192,17 +469,25 @@ function NewOrderContent() {
               <h3 className="text-lg font-bold text-slate-100 border-b border-slate-700 pb-3">Resumo da Ordem</h3>
 
               {selectedService && (
-                <div className="space-y-2 text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-slate-400">Serviço:</span>
-                    <span className="font-semibold text-slate-200 text-right">{selectedService.name}</span>
+                <div className="space-y-3 text-sm">
+                  <div className="flex justify-between items-start">
+                    <span className="text-slate-400 text-xs">Serviço:</span>
+                    <span className="font-semibold text-slate-200 text-right text-xs max-w-[180px]">{selectedService.name}</span>
                   </div>
-                  <div className="flex justify-between">
+                  
+                  <div className="flex justify-between items-start">
+                    <span className="text-slate-400 text-xs">Local:</span>
+                    <span className="font-medium text-emerald-400 text-right text-xs max-w-[180px] line-clamp-2" data-testid="summary-address">
+                      {formattedAddressText}
+                    </span>
+                  </div>
+
+                  <div className="flex justify-between text-xs">
                     <span className="text-slate-400">Valor Base:</span>
                     <span className="font-semibold text-slate-200">R$ {selectedService.basePrice.toFixed(2)}</span>
                   </div>
                   {urgency === 'urgent' && (
-                    <div className="flex justify-between text-emerald-400">
+                    <div className="flex justify-between text-xs text-emerald-400">
                       <span>Taxa de Urgência (25%):</span>
                       <span>R$ {(selectedService.basePrice * 0.25).toFixed(2)}</span>
                     </div>
@@ -247,4 +532,3 @@ export default function NewOrderPage() {
     </Suspense>
   );
 }
-

@@ -20,6 +20,7 @@ import { UpdateProviderRatingListener } from './infrastructure/listeners/update-
 import { TieringSchedulerService } from './application/tiering-scheduler.service';
 import { KycController } from './interface/kyc.controller';
 import { ProviderController } from './interface/provider.controller';
+import { AddressController } from './interface/address.controller';
 import { KycService } from './application/kyc.service';
 import { StoragePort } from './ports/storage.port';
 import { MockStorageAdapter } from './infrastructure/mock-storage.adapter';
@@ -37,7 +38,7 @@ import { FraudModule } from '../fraud/fraud.module';
     }),
     FraudModule,
   ],
-  controllers: [AuthController, KycController, ProviderController],
+  controllers: [AuthController, KycController, ProviderController, AddressController],
   providers: [
     AuthService,
     JwtStrategy,

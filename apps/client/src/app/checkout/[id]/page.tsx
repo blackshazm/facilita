@@ -6,10 +6,15 @@ import { useParams } from 'next/navigation';
 
 function CheckoutContent() {
   const [isSearching, setIsSearching] = useState(true);
+  const [orderAddress, setOrderAddress] = useState<string | null>(null);
   const params = useParams();
   const orderId = (params?.id as string) || 'ord-123';
 
   useEffect(() => {
+    try {
+      const stored = localStorage.getItem('facilita_last_order_address');
+      if (stored) setOrderAddress(stored);
+    } catch {}
     const timer = setTimeout(() => setIsSearching(false), 3000);
     return () => clearTimeout(timer);
   }, []);
@@ -34,6 +39,12 @@ function CheckoutContent() {
               <span>Pedido:</span>
               <span className="font-mono text-slate-200">#{orderId.slice(0, 12)}</span>
             </div>
+            {orderAddress && (
+              <div className="flex items-center justify-between text-xs text-slate-400">
+                <span>Destino:</span>
+                <span className="text-emerald-400 font-medium truncate max-w-[200px]" title={orderAddress}>{orderAddress}</span>
+              </div>
+            )}
             <div className="flex items-center justify-between text-xs text-slate-400">
               <span>Algoritmo:</span>
               <span className="text-emerald-400 font-semibold">Matching Inteligente Geo</span>

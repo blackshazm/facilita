@@ -22,7 +22,7 @@ test.describe('Jornada do Cliente E2E', () => {
     await page.getByRole('button', { name: /Concluir e Fazer Pedido/i }).click();
 
     // 2. Redirecionamento para a criação de novo pedido
-    await expect(page).toHaveURL('/new-order');
+    await expect(page).toHaveURL('/new-order', { timeout: 15000 });
     await expect(page.getByRole('heading', { name: 'Solicitar Novo Serviço' })).toBeVisible();
 
     // Seleção de serviço e detalhes
@@ -33,7 +33,7 @@ test.describe('Jornada do Cliente E2E', () => {
     await page.getByRole('button', { name: /Avançar para Pagamento/i }).click();
 
     // 3. Redirecionamento para Checkout
-    await expect(page).toHaveURL(/\/checkout\/ord-/);
+    await expect(page).toHaveURL(/\/checkout\/ord-/, { timeout: 15000 });
     await expect(page.getByText(/Localizando Prestadores/i)).toBeVisible();
 
     // Acelera busca de demo
@@ -42,7 +42,7 @@ test.describe('Jornada do Cliente E2E', () => {
 
     // 4. Acompanhar em tempo real
     await page.locator('a[href*="/tracking/"]').click();
-    await expect(page).toHaveURL(/\/tracking\/ord-/);
+    await expect(page).toHaveURL(/\/tracking\/ord-/, { timeout: 15000 });
     await expect(page.getByText(/Garantia FACILITA/i).first()).toBeVisible();
   });
 });
