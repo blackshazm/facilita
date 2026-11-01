@@ -11,6 +11,9 @@
     "preview": {
       "distribution": "internal",
       "channel": "preview",
+      "android": {
+        "buildType": "apk"
+      },
       "ios": {
         "buildConfiguration": "Release"
       }
@@ -18,6 +21,9 @@
     "production": {
       "channel": "production",
       "autoIncrement": true,
+      "android": {
+        "buildType": "app-bundle"
+      },
       "ios": {
         "buildConfiguration": "Release"
       }

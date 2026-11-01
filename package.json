@@ -9,6 +9,9 @@
     "lint": "turbo run lint",
     "test": "turbo run test --continue",
     "test:e2e": "turbo run test:e2e",
+    "verify:prod": "node scripts/verify-production-readiness.js",
+    "build:mobile:preview": "cd apps/provider && eas build --platform android --profile preview",
+    "build:mobile:prod": "cd apps/provider && eas build --platform android --profile production",
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
   "devDependencies": {

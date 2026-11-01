@@ -23,8 +23,15 @@
       "infoPlist": {
         "NSCameraUsageDescription": "O FACILITA precisa da câmera para capturar evidências do serviço e realizar a verificação de identidade (KYC).",
         "NSLocationWhenInUseUsageDescription": "O FACILITA utiliza sua localização para calcular o deslocamento até o cliente e garantir a segurança do atendimento.",
-        "NSPhotoLibraryUsageDescription": "O FACILITA acessa sua galeria para que você possa enviar fotos de documentos salvos.",
-        "NSUserTrackingUsageDescription": "O FACILITA utiliza identificadores para melhorar a entrega de notificações e prevenir fraudes."
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "O FACILITA precisa de sua localização em segundo plano para que o cliente acompanhe seu deslocamento em tempo real enquanto você dirige até o atendimento.",
+        "NSLocationAlwaysUsageDescription": "O FACILITA utiliza sua localização para o cálculo preciso de deslocamento e segurança.",
+        "NSPhotoLibraryUsageDescription": "O FACILITA acessa sua galeria para envio de comprovantes e documentos.",
+        "NSUserTrackingUsageDescription": "O FACILITA utiliza identificadores para melhorar a entrega de notificações críticas e prevenir fraudes.",
+        "UIBackgroundModes": [
+          "location",
+          "fetch",
+          "remote-notification"
+        ]
       }
     },
     "android": {
@@ -37,7 +44,12 @@
         "CAMERA",
         "ACCESS_COARSE_LOCATION",
         "ACCESS_FINE_LOCATION",
-        "NOTIFICATIONS"
+        "ACCESS_BACKGROUND_LOCATION",
+        "FOREGROUND_SERVICE",
+        "FOREGROUND_SERVICE_LOCATION",
+        "POST_NOTIFICATIONS",
+        "VIBRATE",
+        "WAKE_LOCK"
       ]
     },
     "web": {

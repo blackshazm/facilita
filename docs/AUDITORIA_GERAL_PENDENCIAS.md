@@ -180,46 +180,27 @@ Este documento cataloga exaustivamente **cada item faltante**, organizado por m�
 
 ## ☁️ 7. Infraestrutura, Segurança & Publicação nas Lojas
 
-### O que já está 100% implementado:
-- Dockerfiles multi-stage de produção (`apps/api` e `apps/client`).
-- `docker-compose.prod.yml` com Postgres, Redis, Prometheus, Grafana e GlitchTip.
-- Script de backup diário com rotação de 7 dias (`scripts/backup-postgres.sh`).
+### O que já está 100% implementado e pronto:
+- Dockerfiles multi-stage de produção (`apps/api` e `apps/client`) com usuários sem privilégios (`nestjs:nodejs`, `nextjs:nodejs`).
+- `docker-compose.prod.yml` com Postgres PostGIS, Redis 7 AOF, Prometheus, Grafana, GlitchTip e serviço de backup automático de 7 dias (`scripts/backup-postgres.sh`).
 - Pipeline de deploy contínuo via GitHub Actions (`.github/workflows/deploy.yml`).
-- Páginas de Termos de Uso e Política de Privacidade compatíveis com a LGPD.
+- Páginas de Termos de Uso e Política de Privacidade compatíveis com a LGPD ativas no ar.
+- **Preparação Mobile (Expo/EAS):** `apps/provider/app.json` configurado com permissões de GPS em segundo plano (`ACCESS_BACKGROUND_LOCATION`, `FOREGROUND_SERVICE_LOCATION`), canal de alarme `urgency_dispatch_channel`, e `eas.json` com perfil `production` configurado para gerar Android App Bundle (`.aab`) e `preview` para APK direto.
+- **Scripts de Automação de Build e Pré-Voo:** `scripts/verify-production-readiness.js`, `scripts/build-mobile.sh` e `scripts/build-mobile.ps1`.
+- **Manual Completo de Go-Live:** Guia passo a passo detalhado em [`docs/GUIA_DEPLOY_PRODUCAO_E_PUBLICACAO.md`](file:///d:/Desktop/facilita/docs/GUIA_DEPLOY_PRODUCAO_E_PUBLICACAO.md).
 
-### 🔴 O que ESTÁ FALTANDO na Infraestrutura e Lojas:
+### 🔴 O que RESTA no Servidor Físico e Contas de Terceiros:
 
-#### 1. [P0] Provisionamento do Servidor de Produção (VPS)
-- **Situação Atual:** A infraestrutura roda em localhost no seu computador de desenvolvimento.
-- **O que falta:**
-  - Contratação de VPS (Hetzner Cloud CPX21 com 3 vCPUs e 4 GB RAM — aprox. €4 a €7/mês).
-  - Execução do script de inicialização do Docker Swarm ou Coolify.
-  - Configuração do Firewall da VPS (`ufw`): liberar apenas portas 80, 443 e 22 (SSH). Fechar acesso externo direto às portas 5432 (Postgres), 6379 (Redis) e 9090 (Prometheus).
+#### 1. [P0] Subida e Execução do Docker Compose no Servidor Remoto (VPS)
+- Executar os comandos documentados no guia operacional no servidor VPS (Hetzner ou DigitalOcean).
+- Configuração do Firewall da VPS (`ufw`): liberar apenas portas 80, 443 e 22 (SSH).
 
-#### 2. [P0] Domínio e Proteção Anti-DDoS (Cloudflare)
-- **Situação Atual:** URLs apontam para `localhost`.
-- **O que falta:**
-  - Aquisição/apontamento de domínio (ex: `facilita.com.br`).
-  - Configuração de DNS na Cloudflare com proxy ativo (nuvem laranja):
-    - `app.facilita.com.br` ➔ Next.js Client
-    - `api.facilita.com.br` ➔ NestJS API
-    - `grafana.facilita.com.br` ➔ Painel de Métricas (com senha restrita)
-  - Certificado SSL Full (Strict) habilitado.
+#### 2. [P0] Apontamento de DNS e Preenchimento das Chaves no `.env.production`
+- Apontar o domínio DNS (`api.facilita.com.br`, `app.facilita.com.br`).
+- Preencher as chaves de API reais de pagamento (Pagar.me Stone/Asaas) e SMS (Twilio/Z-API).
 
-#### 3. [P0] Contas e Assets para Publicação nas Lojas de Aplicativos
-- **Situação Atual:** O app mobile está no código-fonte em Expo.
-- **O que falta para estar no celular dos prestadores:**
-  - **Google Play Store:**
-    - Cadastro da conta de desenvolvedor Google Play Console (taxa única de \$25).
-    - Ícone de alta resolução (512x512 PNG sem transparência).
-    - Imagem de destaque (1024x500 PNG).
-    - Pelo menos 4 capturas de tela reais do app em funcionamento.
-    - Questionário de Classificação Indicativa (Livre) preenchido.
-    - Declaração de Permissão de Localização em Segundo Plano (justificando que o prestador precisa ser rastreado para receber chamados enquanto desloca).
-  - **Apple App Store:**
-    - Cadastro no Apple Developer Program (\$99 anuais).
-    - Descrição do uso da chave `NSLocationAlwaysAndWhenInUseUsageDescription` no `app.json`.
-    - Conta de teste para os revisores da Apple (com usuário e senha de prestador pré-criados com saldo e chamados fictícios).
+#### 3. [P0] Envio do Pacote .aab na Google Play Console
+- Executar `npm run build:mobile:prod` ou `./scripts/build-mobile.sh android production` e submeter o arquivo na Google Play Console.
 
 ---
 
