@@ -5,6 +5,7 @@ import {
   Put,
   Param,
   Body,
+  Query,
   UseGuards,
   Request,
   HttpCode,
@@ -22,6 +23,23 @@ export class OrderController {
     private readonly orderService: OrderService,
     @Inject(CHAT_SERVICE_PORT) private readonly chatService: ChatServicePort,
   ) {}
+
+  /**
+   * GET /orders — Listar histórico paginado de pedidos
+   */
+  @Get()
+  async listOrders(
+    @Request() req,
+    @Query('cursor') cursor?: string,
+    @Query('limit') limit?: number,
+    @Query('status') status?: string,
+  ) {
+    return this.orderService.listOrders(req.user.id, req.user.role, {
+      cursor,
+      limit: limit ? Number(limit) : 10,
+      status,
+    });
+  }
 
   /**
    * POST /orders — Criar novo pedido
@@ -124,6 +142,14 @@ export class OrderController {
     @Body() body: { reason: string },
   ) {
     return this.orderService.claimWarranty(id, req.user.id, body.reason);
+  }
+
+  /**
+   * GET /orders/:id/receipt — Obter recibo detalhado e garantia do pedido
+   */
+  @Get(':id/receipt')
+  async getReceipt(@Param('id') id: string, @Request() req) {
+    return this.orderService.getOrderReceipt(id, req.user.id, req.user.role);
   }
 
   /**

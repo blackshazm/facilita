@@ -194,12 +194,20 @@ export default function ClientProfilePage() {
             <h1 className="text-3xl font-extrabold text-slate-100">Meu Perfil</h1>
             <p className="text-slate-400 text-sm mt-1">Maria da Silva • maria@email.com • (11) 99999-9999</p>
           </div>
-          <Link
-            href="/new-order"
-            className="px-5 py-3 bg-emerald-500 hover:bg-emerald-600 font-bold rounded-xl text-slate-950 text-sm transition-colors text-center shadow-lg shadow-emerald-950/40"
-          >
-            + Solicitar Novo Serviço
-          </Link>
+          <div className="flex items-center gap-3">
+            <Link
+              href="/orders"
+              className="px-4 py-3 bg-slate-800 hover:bg-slate-700 border border-slate-700 font-bold rounded-xl text-slate-200 text-sm transition-colors text-center"
+            >
+              Meus Pedidos
+            </Link>
+            <Link
+              href="/new-order"
+              className="px-5 py-3 bg-emerald-500 hover:bg-emerald-600 font-bold rounded-xl text-slate-950 text-sm transition-colors text-center shadow-lg shadow-emerald-950/40"
+            >
+              + Solicitar Novo Serviço
+            </Link>
+          </div>
         </header>
 
         {notification && (
