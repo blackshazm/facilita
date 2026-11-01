@@ -40,12 +40,8 @@ Este documento cataloga exaustivamente **cada item faltante**, organizado por m�
 
 ### 🔴 O que ESTÁ FALTANDO implementar no Cliente:
 
-#### 1. [P0] Conector Real de Envio de SMS / WhatsApp no Login OTP
-- **Situação Atual:** A rota `POST /auth/send-otp` gera o código de 6 dígitos aleatório, salva a sessão no Redis/Banco e imprime `[DEV OTP] Code: XXXXXX` no console do terminal.
-- **O que falta:**
-  - Criar o adapter de envio real via **Twilio SMS** ou **Z-API (WhatsApp)**.
-  - Implementar rate limiting estrito por número (máximo 3 envios a cada 10 minutos para evitar custos abusivos de SMS causados por bots).
-  - Tratar falha de entrega com fallback para WhatsApp se o SMS falhar em 60 segundos.
+#### 1. [P0] Conector Real de Envio de SMS / WhatsApp no Login OTP — ✅ CONCLUÍDO
+- **Situação Atual:** Implementado seguindo a Arquitetura Hexagonal com porta `SmsServicePort` e adapter `TwilioSmsAdapter` em `apps/api/src/modules/auth/adapters/twilio-sms.adapter.ts`. Suporta envio real via Twilio SMS REST API e Z-API (WhatsApp), normalização estrita de números para o padrão internacional E.164 (`+55...`), e fallback resiliente em modo Dev/Mock sem vazamento de segredos. Protegido com porta `OtpRateLimiterPort` e adapter `RedisOtpRateLimiterAdapter` (sliding-window com Redis ou memória) que limita a 3 solicitações a cada 10 minutos por telefone, lançando HTTP 429 Too Many Requests contra ataques de bots. Suíte completa com 29/29 testes unitários aprovados (`send-otp.use-case.spec.ts`, `twilio-sms.adapter.spec.ts`, `redis-otp-rate-limiter.adapter.spec.ts`).
 
 #### 2. [P1] Gestão de Múltiplos Endereços no Perfil (`/profile`) — ✅ CONCLUÍDO
 - **Situação Atual:** Implementado na API (`AddressController` com rotas `GET /identity/addresses`, `POST /identity/addresses`, `DELETE /identity/addresses/:id`), com interface completa no `/profile` (cards 🏠 Casa, 💼 Trabalho, 📍 Outro, modal de cadastro e exclusão) e seletor rápido de 1-clique em `/new-order`, com persistência e suíte E2E automatizada (`client-addresses.spec.ts`).
