@@ -50,13 +50,8 @@ Este documento cataloga exaustivamente **cada item faltante**, organizado por m�
 #### 2. [P1] Gestão de Múltiplos Endereços no Perfil (`/profile`) — ✅ CONCLUÍDO
 - **Situação Atual:** Implementado na API (`AddressController` com rotas `GET /identity/addresses`, `POST /identity/addresses`, `DELETE /identity/addresses/:id`), com interface completa no `/profile` (cards 🏠 Casa, 💼 Trabalho, 📍 Outro, modal de cadastro e exclusão) e seletor rápido de 1-clique em `/new-order`, com persistência e suíte E2E automatizada (`client-addresses.spec.ts`).
 
-#### 3. [P1] Histórico Paginado e Download de Comprovante / NFS-e (`/orders`)
-- **Situação Atual:** A rota exibe lista simples de pedidos.
-- **O que falta:**
-  - Paginação por cursor no backend (`GET /orders?cursor=...&limit=10`).
-  - Filtro por status (`Em andamento`, `Concluídos`, `Cancelados`).
-  - Botão de **"Baixar Recibo de Pagamento"** (PDF com discriminação do serviço, taxa da plataforma e tributos retidos).
-  - Link para visualização do espelho da Nota Fiscal de Serviço (NFS-e) emitida pelo módulo fiscal.
+#### 3. [P1] Histórico Paginado e Download de Comprovante / NFS-e (`/orders`) — ✅ CONCLUÍDO
+- **Situação Atual:** Implementado na API (`OrderController` e `OrderService` com rotas `GET /orders` paginada por cursor e com filtros de status, e `GET /orders/:id/receipt` com discriminação de valores, taxa da plataforma 15%, retenções fiscais e hash SHA-256). Interface web em `/orders` com filtros de status, busca por texto, modal oficial de comprovante fiscal com impressão/download de PDF (`window.print()`), acionamento de garantia de 90 dias e suíte E2E automatizada (`orders-history.spec.ts`).
 
 #### 4. [P1] Fluxo de Cancelamento Assistido pelo Cliente
 - **Situação Atual:** O cliente acompanha a tela de tracking, mas não há botão interativo de cancelamento caso o prestador demore excessivamente.
