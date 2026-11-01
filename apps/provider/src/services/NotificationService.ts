@@ -3,9 +3,28 @@ import * as Device from 'expo-device';
 import { Platform } from 'react-native';
 import axios from 'axios';
 
-const API_URL = 'https://api.facilita.com.br';
+const API_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3333';
+
+export const setupUrgentNotificationChannel = async () => {
+  if (Platform.OS === 'android') {
+    await Notifications.setNotificationChannelAsync('urgency_dispatch_channel', {
+      name: 'Chamados Urgentes FACILITA',
+      importance: Notifications.AndroidImportance.MAX,
+      vibrationPattern: [0, 500, 250, 500, 250, 500],
+      lightColor: '#10B981',
+      sound: 'default',
+      enableVibrate: true,
+      audioAttributes: {
+        usage: Notifications.AndroidAudioUsage.ALARM,
+        contentType: Notifications.AndroidAudioContentType.SONIFICATION,
+      },
+    });
+  }
+};
 
 export const registerForPushNotificationsAsync = async (userId: string) => {
+  await setupUrgentNotificationChannel();
+
   if (!Device.isDevice) {
     console.log('Must use physical device for Push Notifications');
     return null;
@@ -26,7 +45,7 @@ export const registerForPushNotificationsAsync = async (userId: string) => {
 
   // V2 Hardening: Passagem explícita do ProjectId para evitar erros em prod
   const token = (await Notifications.getExpoPushTokenAsync({
-    projectId: 'your-expo-project-id', // Substituir pelo ID real do projeto Expo
+    projectId: 'facilita-provider-mobile',
   })).data;
 
   console.log('Expo Push Token:', token);

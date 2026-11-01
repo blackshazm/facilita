@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
-import { PrismaService } from '../../../../shared-kernel/database/prisma.service';
-import { ChatServicePort, CHAT_SERVICE_PORT } from '../../ports/chat-service.port';
+import { PrismaService } from '../../../shared-kernel/database/prisma.service';
+import { ChatServicePort, CHAT_SERVICE_PORT } from '../ports/chat-service.port';
 import { Inject } from '@nestjs/common';
 
 interface ContactAttemptEvent {

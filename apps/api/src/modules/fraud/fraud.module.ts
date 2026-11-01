@@ -8,8 +8,10 @@ import { RunProviderVerificationUseCase } from './application/run-provider-verif
 import { BACKGROUND_CHECK_PORT } from './ports/background-check.port';
 import { KYC_VERIFICATION_PORT } from './ports/kyc-verification.port';
 import { MEI_VALIDATION_PORT } from './ports/mei-validation.port';
+import { AdminKycController } from './interface/admin-kyc.controller';
 
 @Module({
+  controllers: [AdminKycController],
   providers: [
     PrismaService,
     VelocityDetectorListener,

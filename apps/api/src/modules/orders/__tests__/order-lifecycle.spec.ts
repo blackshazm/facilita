@@ -3,7 +3,7 @@ import { EventEmitter2, EventEmitterModule } from '@nestjs/event-emitter';
 import { OrderService } from '../application/order.service';
 import { ORDER_REPOSITORY_PORT } from '../ports/order-repository.port';
 import { PrismaService } from '../../../shared-kernel/database/prisma.service';
-import { BadRequestException, NotFoundException } from '@nestjs/common';
+import { BadRequestException, NotFoundException, ConflictException } from '@nestjs/common';
 
 describe('OrderService — Lifecycle & Rules', () => {
   let service: OrderService;
@@ -23,11 +23,13 @@ describe('OrderService — Lifecycle & Rules', () => {
             providerId: null,
             status: 'PENDING',
             totalAmount: 100.0,
+            version: 1,
           }),
         ),
         update: jest.fn().mockImplementation(({ where, data }) =>
           Promise.resolve({ id: where.id, ...data }),
         ),
+        updateMany: jest.fn().mockResolvedValue({ count: 1 }),
       },
       evidence: {
         create: jest.fn().mockResolvedValue({}),
@@ -84,6 +86,25 @@ describe('OrderService — Lifecycle & Rules', () => {
     it('deve alterar status para MATCHED e disparar evento order.accepted', async () => {
       const emitSpy = jest.spyOn(eventEmitter, 'emit');
 
+      // Configura o retorno para as duas chamadas de findUnique em acceptOrder
+      prisma.order.findUnique
+        .mockResolvedValueOnce({
+          id: 'ord-123',
+          userId: 'cust-1',
+          providerId: null,
+          status: 'PENDING',
+          totalAmount: 100.0,
+          version: 1,
+        })
+        .mockResolvedValueOnce({
+          id: 'ord-123',
+          userId: 'cust-1',
+          providerId: 'prov-1',
+          status: 'MATCHED',
+          totalAmount: 100.0,
+          version: 2,
+        });
+
       const result = await service.acceptOrder('ord-123', 'prov-1');
 
       expect(result.status).toBe('MATCHED');
@@ -94,6 +115,14 @@ describe('OrderService — Lifecycle & Rules', () => {
           customerId: 'cust-1',
           providerId: 'prov-1',
         }),
+      );
+    });
+
+    it('deve lançar ConflictException se o pedido já foi aceito em paralelo (Optimistic Locking)', async () => {
+      prisma.order.updateMany.mockResolvedValueOnce({ count: 0 });
+
+      await expect(service.acceptOrder('ord-123', 'prov-2')).rejects.toThrow(
+        ConflictException,
       );
     });
   });

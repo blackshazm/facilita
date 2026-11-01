@@ -4,6 +4,7 @@ import {
   ForbiddenException,
   NotFoundException,
   BadRequestException,
+  ConflictException,
   Logger,
 } from '@nestjs/common';
 import { ORDER_REPOSITORY_PORT, OrderRepositoryPort } from '../ports/order-repository.port';
@@ -69,10 +70,26 @@ export class OrderService {
     if (!order) throw new NotFoundException('Pedido não encontrado');
     if (order.status !== 'PENDING') throw new BadRequestException('Pedido não está disponível para aceite');
 
-    const updated = await this.prisma.order.update({
-      where: { id: orderId },
-      data: { providerId, status: 'MATCHED' },
+    // Otimistic Locking: garante que a ordem não foi aceita por outro em paralelo
+    const { count } = await this.prisma.order.updateMany({
+      where: { 
+        id: orderId, 
+        status: 'PENDING', 
+        version: order.version 
+      },
+      data: { 
+        providerId, 
+        status: 'MATCHED',
+        version: { increment: 1 } 
+      },
     });
+
+    if (count === 0) {
+      throw new ConflictException('Pedido já aceito por outro prestador ou versão desatualizada');
+    }
+
+    // Busca o pedido atualizado para retorno
+    const updated = await this.prisma.order.findUnique({ where: { id: orderId } });
 
     this.logger.log(`Pedido ${orderId} aceito pelo prestador ${providerId}`);
 
@@ -119,7 +136,31 @@ export class OrderService {
   }
 
   /**
-   * Finalizar execução pelo prestador com envio de fotos de evidência
+   * Registrar evidência fotográfica vinculada ao pedido
+   */
+  async addEvidence(
+    orderId: string,
+    type: 'BEFORE' | 'AFTER' | 'DISPUTE',
+    url: string,
+    metadata?: any,
+  ) {
+    const order = await this.prisma.order.findUnique({ where: { id: orderId } });
+    if (!order) throw new NotFoundException('Pedido não encontrado');
+
+    const evidence = await this.prisma.evidence.create({
+      data: {
+        orderId,
+        type,
+        url,
+      },
+    });
+
+    this.logger.log(`Evidência [${type}] registrada para pedido ${orderId}`);
+    return evidence;
+  }
+
+  /**
+   * Finalizar execução pelo prestador com envio obrigatório de fotos de evidência
    */
   async completeOrder(
     orderId: string,
@@ -128,6 +169,15 @@ export class OrderService {
   ) {
     const order = await this.prisma.order.findUnique({ where: { id: orderId } });
     if (!order) throw new NotFoundException('Pedido não encontrado');
+
+    const existingEvidences = await this.prisma.evidence.count({ where: { orderId } });
+    const hasEvidencePayload = Boolean(evidenceUrls?.beforeUrl || evidenceUrls?.afterUrl);
+
+    if (existingEvidences === 0 && !hasEvidencePayload) {
+      throw new BadRequestException(
+        'Trava de Segurança: Não é possível concluir o atendimento sem fotos comprobatórias do reparo (Antes/Depois).',
+      );
+    }
 
     // Registrar evidência antes/depois se fornecido
     if (evidenceUrls?.beforeUrl) {
@@ -146,7 +196,7 @@ export class OrderService {
       data: { status: 'DONE' },
     });
 
-    this.logger.log(`Pedido ${orderId} concluído pelo prestador ${providerId}`);
+    this.logger.log(`Pedido ${orderId} concluído com comprovação fotográfica pelo prestador ${providerId}`);
 
     // Emite evento para encerrar chat e disparar repasse/notificação
     this.eventEmitter.emit('order.completed', { orderId });

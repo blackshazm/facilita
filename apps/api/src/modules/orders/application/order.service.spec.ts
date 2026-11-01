@@ -14,7 +14,10 @@ describe('OrderService', () => {
       calculateDistance: jest.fn(),
     };
 
-    service = new OrderService(orderRepo);
+    const mockPrisma = {} as any;
+    const mockEventEmitter = { emit: jest.fn() } as any;
+
+    service = new OrderService(orderRepo, mockPrisma, mockEventEmitter);
   });
 
   describe('checkIn()', () => {

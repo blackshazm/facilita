@@ -1,8 +1,9 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { MetricsChart } from './components/metrics-chart';
-import { Download, TrendingUp, ShoppingBag, Users, ShieldAlert } from 'lucide-react';
+import { Download, TrendingUp, ShoppingBag, Users, ShieldAlert, Award, CreditCard } from 'lucide-react';
 
 const MOCK_ALERTS = [
   { id: '1', provider: 'João Silva', reason: 'VELOCITY_LIMIT_EXCEEDED', date: '2026-05-03', severity: 'High', status: 'Flagged' },
@@ -40,13 +41,33 @@ export default function AdminPage() {
             <h1 className="text-5xl font-black text-white tracking-tight leading-none">Painel de Gestão</h1>
             <p className="text-slate-400 mt-4 text-xl max-w-xl">Milestone 6.0 — Infraestrutura Analítica & BI operacional de alta fidelidade.</p>
           </div>
-          <button 
-            onClick={handleExport}
-            className="group flex items-center gap-3 bg-emerald-500 hover:bg-emerald-400 text-slate-950 px-8 py-4 rounded-2xl font-black shadow-2xl shadow-emerald-500/20 transition-all active:scale-95 hover:-translate-y-1"
-          >
-            <Download size={24} className="group-hover:bounce" />
-            EXPORTAR BI (CSV)
-          </button>
+          <div className="flex flex-wrap items-center gap-3">
+            <Link
+              href="/admin/kyc"
+              className="bg-slate-900 hover:bg-slate-850 text-emerald-400 border border-emerald-500/30 px-5 py-3 rounded-2xl font-bold text-xs flex items-center gap-2 transition shadow-md"
+            >
+              <ShieldAlert size={16} /> Moderação KYC
+            </Link>
+            <Link
+              href="/admin/payouts"
+              className="bg-slate-900 hover:bg-slate-850 text-slate-200 border border-slate-700 px-5 py-3 rounded-2xl font-bold text-xs flex items-center gap-2 transition shadow-md"
+            >
+              <CreditCard size={16} /> Payouts
+            </Link>
+            <Link
+              href="/admin/tiers"
+              className="bg-slate-900 hover:bg-slate-850 text-slate-200 border border-slate-700 px-5 py-3 rounded-2xl font-bold text-xs flex items-center gap-2 transition shadow-md"
+            >
+              <Award size={16} /> Tiers
+            </Link>
+            <button 
+              onClick={handleExport}
+              className="group flex items-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-slate-950 px-6 py-3 rounded-2xl font-black shadow-xl shadow-emerald-500/20 transition-all text-xs"
+            >
+              <Download size={16} className="group-hover:bounce" />
+              EXPORTAR BI
+            </button>
+          </div>
         </header>
 
         {/* KPI Cards */}

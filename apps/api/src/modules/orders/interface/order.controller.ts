@@ -67,6 +67,18 @@ export class OrderController {
   }
 
   /**
+   * POST /orders/:id/evidence — Prestador anexa foto de evidência
+   */
+  @Post(':id/evidence')
+  @HttpCode(HttpStatus.CREATED)
+  async addEvidence(
+    @Param('id') id: string,
+    @Body() body: { type: 'BEFORE' | 'AFTER' | 'DISPUTE'; url: string; metadata?: any },
+  ) {
+    return this.orderService.addEvidence(id, body.type, body.url, body.metadata);
+  }
+
+  /**
    * POST /orders/:id/complete — Prestador sinaliza conclusão com fotos
    */
   @Post(':id/complete')
