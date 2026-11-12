@@ -2,6 +2,7 @@
 import { Module } from '@nestjs/common';
 import { ListServicesUseCase } from './application/list-services.use-case';
 import { CatalogController } from './application/catalog.controller';
+import { CatalogCacheService } from './infrastructure/catalog-cache.service';
 import { CATALOG_REPOSITORY } from './ports/catalog.repository.port';
 import { ServiceItem, ServiceCategory } from './core/service.entity';
 
@@ -25,7 +26,9 @@ const mockCatalogRepo = {
   controllers: [CatalogController],
   providers: [
     ListServicesUseCase,
+    CatalogCacheService,
     { provide: CATALOG_REPOSITORY, useValue: mockCatalogRepo },
   ],
+  exports: [ListServicesUseCase, CatalogCacheService],
 })
 export class CatalogModule {}

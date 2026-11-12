@@ -20,6 +20,7 @@ import {
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { socket } from '@/lib/socket';
+import { TrackingSkeleton } from '@/components/skeletons/TrackingSkeleton';
 
 const LiveMap = dynamic(() => import('@/components/LiveMap'), { 
   ssr: false,
@@ -577,7 +578,7 @@ function TrackingContent() {
 
 export default function TrackingPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-slate-950 flex items-center justify-center text-white">Carregando rastreamento...</div>}>
+    <Suspense fallback={<TrackingSkeleton />}>
       <TrackingContent />
     </Suspense>
   );

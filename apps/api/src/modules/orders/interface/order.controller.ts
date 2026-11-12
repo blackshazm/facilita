@@ -7,17 +7,20 @@ import {
   Body,
   Query,
   UseGuards,
+  UseInterceptors,
   Request,
   HttpCode,
   HttpStatus,
 } from '@nestjs/common';
 import { OrderService, CreateOrderDto, RequestAdditionalDto } from '../application/order.service';
 import { JwtAuthGuard } from '../../../shared-kernel/guards/jwt-auth.guard';
+import { IdempotencyInterceptor } from '../../../shared-kernel/interceptors/idempotency.interceptor';
 import { ChatServicePort, CHAT_SERVICE_PORT } from '../ports/chat-service.port';
 import { Inject } from '@nestjs/common';
 
 @Controller('orders')
 @UseGuards(JwtAuthGuard)
+@UseInterceptors(IdempotencyInterceptor)
 export class OrderController {
   constructor(
     private readonly orderService: OrderService,

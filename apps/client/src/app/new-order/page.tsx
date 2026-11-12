@@ -142,6 +142,9 @@ function NewOrderContent() {
 
     setLoading(true);
     const mockOrderId = `ord-${Date.now()}`;
+    const idempotencyKey = typeof crypto !== 'undefined' && crypto.randomUUID 
+      ? crypto.randomUUID() 
+      : `idemp-${Date.now()}-${Math.random().toString(36).substring(7)}`;
 
     // Se criou endereço customizado e marcou para salvar, persiste no perfil
     if (isCustomAddress && saveCustomToProfile && customStreet) {
@@ -163,9 +166,10 @@ function NewOrderContent() {
       } catch {}
     }
 
-    // Salva o endereço deste pedido para consulta nas próximas etapas
+    // Salva o endereço deste pedido e chave de idempotência para consulta nas próximas etapas
     try {
       localStorage.setItem('facilita_last_order_address', formattedAddressText);
+      localStorage.setItem('facilita_order_idempotency_key', idempotencyKey);
     } catch {}
 
     setTimeout(() => {
