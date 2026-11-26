@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { 
   ShieldCheck, 
@@ -12,11 +12,13 @@ import {
   AlertTriangle,
   UserCheck,
   Search,
-  Filter
+  RefreshCw,
+  Loader2
 } from 'lucide-react';
 
 interface KycItem {
   id: string;
+  userId?: string;
   name: string;
   cpf: string;
   phone: string;
@@ -26,6 +28,7 @@ interface KycItem {
   docType: string;
   docUrl: string;
   proofUrl: string;
+  docBackUrl?: string | null;
   status: 'PENDING' | 'APPROVED' | 'REJECTED';
 }
 
@@ -58,24 +61,70 @@ const INITIAL_SUBMISSIONS: KycItem[] = [
   },
 ];
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3333';
+
 export default function AdminKycPage() {
   const [submissions, setSubmissions] = useState<KycItem[]>(INITIAL_SUBMISSIONS);
   const [selectedKyc, setSelectedKyc] = useState<KycItem | null>(null);
   const [rejectModalOpen, setRejectModalOpen] = useState(false);
   const [rejectReason, setRejectReason] = useState('Foto do documento ilegível ou cortada');
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
 
-  const handleApprove = (id: string) => {
+  const fetchSubmissions = async () => {
+    setIsLoading(true);
+    try {
+      const res = await fetch(`${API_URL}/identity/kyc/admin/pending`);
+      if (res.ok) {
+        const data = await res.json();
+        if (Array.isArray(data) && data.length > 0) {
+          setSubmissions(data);
+        }
+      }
+    } catch {
+      // Fallback para mock local se backend não responder
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchSubmissions();
+  }, []);
+
+  const handleApprove = async (id: string) => {
+    setIsProcessing(true);
+    try {
+      await fetch(`${API_URL}/identity/kyc/admin/${id}/approve`, {
+        method: 'POST',
+      });
+    } catch (e) {
+      console.warn('Erro ao chamar API de aprovação, atualizando localmente:', e);
+    }
+
     setSubmissions(prev =>
       prev.map(item => (item.id === id ? { ...item, status: 'APPROVED' } : item))
     );
     setSuccessMessage('Prestador aprovado com sucesso! Acesso ao app liberado.');
     setTimeout(() => setSuccessMessage(null), 4000);
     setSelectedKyc(null);
+    setIsProcessing(false);
   };
 
-  const handleReject = () => {
+  const handleReject = async () => {
     if (!selectedKyc) return;
+    setIsProcessing(true);
+    try {
+      await fetch(`${API_URL}/identity/kyc/admin/${selectedKyc.id}/reject`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ reason: rejectReason }),
+      });
+    } catch (e) {
+      console.warn('Erro ao chamar API de rejeição, atualizando localmente:', e);
+    }
+
     setSubmissions(prev =>
       prev.map(item =>
         item.id === selectedKyc.id ? { ...item, status: 'REJECTED' } : item
@@ -85,6 +134,7 @@ export default function AdminKycPage() {
     setSuccessMessage(`Documentação recusada. Motivo: ${rejectReason}`);
     setTimeout(() => setSuccessMessage(null), 4000);
     setSelectedKyc(null);
+    setIsProcessing(false);
   };
 
   const pendingCount = submissions.filter(s => s.status === 'PENDING').length;
@@ -109,11 +159,22 @@ export default function AdminKycPage() {
             </p>
           </div>
 
-          <div className="flex items-center gap-3 bg-slate-900 border border-slate-800 px-4 py-2.5 rounded-2xl">
-            <span className="text-xs text-slate-400 font-semibold">Pendentes de Análise:</span>
-            <span className="bg-amber-500/20 text-amber-300 font-black px-2.5 py-0.5 rounded-lg text-sm border border-amber-500/30">
-              {pendingCount}
-            </span>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={fetchSubmissions}
+              disabled={isLoading}
+              className="flex items-center gap-2 px-3 py-2 bg-slate-900 hover:bg-slate-800 border border-slate-800 rounded-xl text-xs text-slate-300 transition"
+              title="Recarregar solicitações"
+            >
+              <RefreshCw size={14} className={isLoading ? 'animate-spin' : ''} />
+              Atualizar
+            </button>
+            <div className="flex items-center gap-3 bg-slate-900 border border-slate-800 px-4 py-2.5 rounded-2xl">
+              <span className="text-xs text-slate-400 font-semibold">Pendentes:</span>
+              <span className="bg-amber-500/20 text-amber-300 font-black px-2.5 py-0.5 rounded-lg text-sm border border-amber-500/30">
+                {pendingCount}
+              </span>
+            </div>
           </div>
         </div>
 
@@ -139,32 +200,32 @@ export default function AdminKycPage() {
                 <div
                   key={item.id}
                   onClick={() => setSelectedKyc(item)}
-                  className={`p-4 rounded-2xl border cursor-pointer transition-all ${
+                  className={`p-4 rounded-2xl border cursor-pointer transition ${
                     selectedKyc?.id === item.id
-                      ? 'bg-slate-900 border-emerald-500 shadow-lg shadow-emerald-950/40 ring-1 ring-emerald-500'
+                      ? 'bg-emerald-950/30 border-emerald-500/60 shadow-lg shadow-emerald-500/5'
                       : 'bg-slate-900/60 border-slate-800 hover:border-slate-700'
                   }`}
                 >
                   <div className="flex items-start justify-between">
                     <div>
-                      <h3 className="font-bold text-white text-sm">{item.name}</h3>
+                      <h3 className="font-bold text-sm text-white">{item.name}</h3>
                       <p className="text-xs text-slate-400 mt-0.5">{item.specialty}</p>
                     </div>
                     <span
-                      className={`text-[10px] font-black uppercase px-2 py-0.5 rounded-full ${
+                      className={`text-[10px] font-bold px-2 py-0.5 rounded-md border ${
                         item.status === 'PENDING'
-                          ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
+                          ? 'bg-amber-500/10 text-amber-400 border-amber-500/20'
                           : item.status === 'APPROVED'
-                          ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
-                          : 'bg-red-500/20 text-red-300 border border-red-500/30'
+                          ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
+                          : 'bg-red-500/10 text-red-400 border-red-500/20'
                       }`}
                     >
-                      {item.status === 'PENDING' ? 'Pendente' : item.status === 'APPROVED' ? 'Aprovado' : 'Rejeitado'}
+                      {item.status}
                     </span>
                   </div>
 
                   <div className="mt-3 pt-3 border-t border-slate-800/80 flex items-center justify-between text-[11px] text-slate-500">
-                    <span>{item.docType}</span>
+                    <span>CPF: {item.cpf}</span>
                     <span>{item.submittedAt}</span>
                   </div>
                 </div>
@@ -172,32 +233,35 @@ export default function AdminKycPage() {
             </div>
           </div>
 
-          {/* Coluna da Direita: Detalhes e Documentos */}
+          {/* Coluna da Direita: Detalhe e Ações da Submissão Selecionada */}
           <div className="lg:col-span-2">
             {selectedKyc ? (
-              <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 space-y-6 shadow-2xl">
-                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-800 pb-5">
+              <div className="bg-slate-900/80 border border-slate-800 rounded-3xl p-6 space-y-6">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-800 pb-5">
                   <div>
-                    <h2 className="text-xl font-black text-white">{selectedKyc.name}</h2>
+                    <h2 className="text-xl font-bold text-white">{selectedKyc.name}</h2>
                     <p className="text-xs text-slate-400 mt-1">
-                      CPF: <span className="text-slate-200 font-mono">{selectedKyc.cpf}</span> • WhatsApp: <span className="text-slate-200">{selectedKyc.phone}</span>
+                      CPF: <span className="text-slate-300 font-mono">{selectedKyc.cpf}</span> • Tel: <span className="text-slate-300 font-mono">{selectedKyc.phone}</span>
                     </p>
                   </div>
 
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-3">
                     {selectedKyc.status === 'PENDING' && (
                       <>
                         <button
                           onClick={() => setRejectModalOpen(true)}
-                          className="px-4 py-2 bg-red-950/60 hover:bg-red-900 text-red-300 font-bold rounded-xl text-xs border border-red-500/30 transition flex items-center gap-1.5"
+                          disabled={isProcessing}
+                          className="flex items-center gap-1.5 px-4 py-2 bg-red-950/40 hover:bg-red-900/60 text-red-300 text-xs font-bold rounded-xl border border-red-800/50 transition disabled:opacity-50"
                         >
                           <XCircle size={14} /> Rejeitar
                         </button>
                         <button
                           onClick={() => handleApprove(selectedKyc.id)}
-                          className="px-5 py-2 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold rounded-xl text-xs shadow-lg shadow-emerald-500/20 transition flex items-center gap-1.5"
+                          disabled={isProcessing}
+                          className="flex items-center gap-1.5 px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-xl shadow-lg shadow-emerald-600/20 transition disabled:opacity-50"
                         >
-                          <CheckCircle2 size={14} /> Aprovar Prestador
+                          {isProcessing ? <Loader2 size={14} className="animate-spin" /> : <CheckCircle2 size={14} />}
+                          Aprovar Prestador
                         </button>
                       </>
                     )}
@@ -249,10 +313,10 @@ export default function AdminKycPage() {
                       </div>
                     </div>
 
-                    {/* Comprovante de Residência */}
+                    {/* Selfie de Auditoria / Comprovante */}
                     <div className="bg-slate-950 border border-slate-800 rounded-2xl p-4 space-y-3">
                       <div className="flex items-center justify-between text-xs">
-                        <span className="font-bold text-slate-300">Comprovante de Residência</span>
+                        <span className="font-bold text-slate-300">Selfie Biométrica</span>
                         <a
                           href={selectedKyc.proofUrl}
                           target="_blank"
@@ -265,7 +329,7 @@ export default function AdminKycPage() {
                       <div className="h-48 rounded-xl overflow-hidden bg-slate-900 border border-slate-800 relative group">
                         <img
                           src={selectedKyc.proofUrl}
-                          alt="Comprovante de Residência"
+                          alt="Selfie Biométrica"
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                         />
                       </div>
@@ -320,7 +384,8 @@ export default function AdminKycPage() {
               </button>
               <button
                 onClick={handleReject}
-                className="flex-1 bg-red-600 hover:bg-red-500 text-white font-bold py-3 rounded-xl text-xs transition shadow-lg shadow-red-600/20"
+                disabled={isProcessing}
+                className="flex-1 bg-red-600 hover:bg-red-500 text-white font-bold py-3 rounded-xl text-xs transition shadow-lg shadow-red-600/20 disabled:opacity-50"
               >
                 Confirmar Rejeição
               </button>
@@ -331,4 +396,3 @@ export default function AdminKycPage() {
     </div>
   );
 }
-

@@ -23,3 +23,4 @@ echo "[$(date)] Aplicando política de retenção (7 dias)..."
 find "$BACKUP_DIR" -type f -name "facilita_db_*.sql.gz" -mtime +7 -print -delete
 echo "[$(date)] Rotação finalizada. Backups ativos:"
 ls -lh "$BACKUP_DIR"
+

@@ -13,6 +13,7 @@ describe('Application CatalogController', () => {
     cacheService = {
       get: jest.fn().mockResolvedValue(null),
       set: jest.fn().mockResolvedValue(undefined),
+      clear: jest.fn().mockResolvedValue(undefined),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -82,6 +83,25 @@ describe('Application CatalogController', () => {
       expect(listServicesUseCase.execute).not.toHaveBeenCalled();
       expect(mockRes.setHeader).toHaveBeenCalledWith('X-Cache', 'HIT');
       expect(result).toEqual(cachedData);
+    });
+  });
+
+  describe('invalidateCache', () => {
+    it('should clear all cache when category is not specified', async () => {
+      const res = await controller.invalidateCache();
+
+      expect(cacheService.clear).toHaveBeenCalledWith(undefined);
+      expect(res.success).toBe(true);
+      expect(res.invalidatedCategory).toBe('all');
+      expect(res.timestamp).toBeDefined();
+    });
+
+    it('should clear only specific category cache when specified', async () => {
+      const res = await controller.invalidateCache('ELETRICA');
+
+      expect(cacheService.clear).toHaveBeenCalledWith('ELETRICA');
+      expect(res.success).toBe(true);
+      expect(res.invalidatedCategory).toBe('ELETRICA');
     });
   });
 });

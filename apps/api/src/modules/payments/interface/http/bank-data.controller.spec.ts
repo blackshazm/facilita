@@ -1,5 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { BankDataController } from './bank-data.controller';
+import { PROVIDER_REPOSITORY_PORT } from '../../../identity/ports/provider-repository.port';
+import { SecurityService } from '../../../../shared-kernel/services/security.service';
 
 describe('BankDataController', () => {
   let provider: BankDataController;
@@ -8,7 +10,14 @@ describe('BankDataController', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         BankDataController,
-        // TODO: Add mocked dependencies here
+        {
+          provide: PROVIDER_REPOSITORY_PORT,
+          useValue: { findById: jest.fn(), save: jest.fn() },
+        },
+        {
+          provide: SecurityService,
+          useValue: { encrypt: jest.fn(), decrypt: jest.fn(), hash: jest.fn() },
+        },
       ],
     }).compile();
 

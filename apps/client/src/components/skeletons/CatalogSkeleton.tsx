@@ -34,3 +34,4 @@ export function CatalogSkeleton() {
   );
 }
 export default CatalogSkeleton;
+

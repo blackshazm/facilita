@@ -1,0 +1,68 @@
+Carregamento e Interface (Frontend)
+Adicionar skeleton de carregamento — Exibir estruturas visuais cinzas/animadas enquanto o conteúdo real está carregando para melhorar a percepção de velocidade.
+
+Servir imagens em WebP ou AVIF — Utilizar formatos de imagem modernos e altamente compactados em vez de PNG ou JPEG pesados.
+
+Usar Lazy Loading nas imagens fora da tela — Carregar as imagens apenas quando o usuário rolar a página até elas (lazy load).
+
+Dividir o JavaScript por página (Code Splitting) — Enviar apenas o código necessário para a página atual, em vez de carregar a aplicação inteira de uma só vez.
+
+Virtualizar listas longas — Renderizar apenas os itens visíveis na tela em listas gigantescas, economizando memória e processamento do navegador.
+
+Carregar scripts de terceiros depois da página — Adicionar scripts externos (como pixels de rastreamento ou analíticas) de forma assíncrona ou com atraso para não travar o carregamento inicial.
+
+Hospedar fontes localmente e limitar os pesos — Evitar requisições externas para fontes (como Google Fonts) e carregar apenas os pesos/estilos estritamente necessários.
+
+Atualizar a tela sem esperar o servidor (Otimismo de interface) — Modificar a interface imediatamente após a ação do usuário, sincronizando com o backend em segundo plano.
+
+Requisições e Comunicação com a API
+Evitar chamadas duplicadas na API — Impedir que o app faça a mesma requisição várias vezes simultaneamente por cliques múltiplos ou re-renderizações desnecessárias.
+
+Colocar debounce na busca e no autocompletar — Aguardar o usuário terminar de digitar antes de disparar a busca no servidor.
+
+Paginar os resultados da API — Dividir grandes volumes de dados em páginas ou rolagem infinita em vez de carregar tudo de uma vez.
+
+Transmitir a resposta da IA token por token (Streaming) — Exibir a resposta de inteligências artificiais à medida que é gerada, reduzindo a sensação de espera.
+
+Disparar em paralelo as requisições independentes — Executar chamadas de API que não dependem umas das outras ao mesmo tempo (com Promise.all, por exemplo).
+
+Colocar timeout nas APIs externas — Definir um tempo limite para requisições a serviços de terceiros para que uma falha externa não trave o sistema inteiro.
+
+Infraestrutura e Redes
+Servir os arquivos estáticos por uma CDN — Distribuir imagens, estilos e scripts em servidores globais geograficamente próximos dos usuários.
+
+Ativar compressão Brotli ou Gzip — Compactar os arquivos enviados pelo servidor para reduzir drasticamente o tamanho do tráfego de rede.
+
+Fazer cache no Redis dos dados mais consultados — Guardar em memória os resultados de consultas frequentes ao banco de dados para resposta instantânea.
+
+Mandar tarefas lentas para uma fila — Processar tarefas pesadas (como envio de e-mails ou processamento de vídeos) em segundo plano (background jobs).
+
+Colocar o servidor perto do banco de dados — Reduzir a latência de rede hospedando a API e o banco na mesma região ou provedor de nuvem.
+
+Distribuir o tráfego entre várias instâncias (Load Balancer) — Dividir a carga de acessos entre múltiplos servidores para evitar quedas por sobrecarga.
+
+Fazer cache dos estáticos no navegador — Configurar os cabeçalhos HTTP para que o navegador do usuário reutilize arquivos que não mudaram.
+
+Banco de Dados e Consultas
+Corrigir as consultas N+1 — Otimizar buscas ao banco de dados para evitar múltiplas requisições em loop quando um único comando otimizado resolveria.
+
+Criar índices para as consultas mais comuns — Acelerar a busca de dados no banco criando índices nas colunas mais filtradas ou ordenadas.
+
+Arquitetura e Código
+Remover as dependências que você não usa — Fazer uma limpeza em pacotes e bibliotecas desnecessários para diminuir o peso geral do código (bundle size).
+
+Renderizar no servidor ou no build (SSR / SSG) — Gerar o HTML previamente no servidor ou na compilação, entregando a página pronta de forma ultrarrápida.
+
+Monitoramento e Testes
+Rastrear as requisições lentas com OpenTelemetry — Monitorar e identificar gargalos e pontos de lentidão em tempo real no sistema.
+
+Monitorar a velocidade dos usuários reais (RUM) — Acompanhar a performance real que os usuários experimentam nos dispositivos deles.
+
+Testar no celular — Garantir que o desempenho seja fluido em smartphones e dispositivos móveis.
+
+Testar em rede lenta — Simular conexões ruins (como 3G ou 4G instável) para ver como o app se comporta.
+
+Outras Otimizações Citadas
+Otimização geral de Vibe Coding — Manter o fluxo de desenvolvimento ágil mantendo a base de código limpa e responsiva.
+
+Estratégia de engajamento — O gancho final do vídeo mencionando o envio do kit completo de performance, checklist e prompts.

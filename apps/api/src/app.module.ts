@@ -11,10 +11,12 @@ import { FiscalModule } from './modules/fiscal/fiscal.module';
 import { NotificationsModule } from './modules/notifications/notifications.module';
 import { SharedKernelModule } from './shared-kernel/shared-kernel.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { ScheduleModule } from '@nestjs/schedule';
 import { ReviewsModule } from './modules/reviews/reviews.module';
 import { TrackingModule } from './modules/tracking/tracking.module';
 import { HealthModule } from './modules/health/health.module';
 import { MetricsModule } from './modules/metrics/metrics.module';
+import { DisputesModule } from './modules/disputes/disputes.module';
 
 import { APP_GUARD } from '@nestjs/core';
 import { ThrottlerGuard } from '@nestjs/throttler';
@@ -25,9 +27,11 @@ import { ThrottlerGuard } from '@nestjs/throttler';
       ttl: 60000,
       limit: 100,
     }]),
+    ScheduleModule.forRoot(),
     EventEmitterModule.forRoot(),
     HealthModule,
     MetricsModule,
+    DisputesModule,
     IdentityModule,
     CatalogModule,
     MatchingModule,

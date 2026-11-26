@@ -1,6 +1,8 @@
 import {
   Controller,
+  Get,
   Post,
+  Param,
   Body,
   UseGuards,
   Request,
@@ -41,14 +43,32 @@ export class KycController {
     return this.kycService.submit(req.user.id, body);
   }
 
+  @Get('admin/pending')
+  async listPending() {
+    return this.kycService.listPendingSubmissions();
+  }
+
+  @Post('admin/:id/approve')
+  @HttpCode(HttpStatus.OK)
+  async approve(@Param('id') id: string, @Request() req) {
+    const adminId = req?.user?.id ?? 'admin-system';
+    return this.kycService.approveSubmission(id, adminId);
+  }
+
+  @Post('admin/:id/reject')
+  @HttpCode(HttpStatus.OK)
+  async reject(
+    @Param('id') id: string,
+    @Body() body: { reason?: string },
+    @Request() req,
+  ) {
+    const adminId = req?.user?.id ?? 'admin-system';
+    return this.kycService.rejectSubmission(id, body?.reason ?? '', adminId);
+  }
+
   /**
    * Endpoint para iniciar a verificação completa de segurança do prestador.
    * Deve ser chamado após o upload dos documentos via /upload-url.
-   *
-   * Executa em paralelo:
-   *   1. Validação de MEI na Receita Federal
-   *   2. Background Check (Checagem.com)
-   *   3. KYC Biométrico (Truora)
    */
   @Post('verify-provider')
   @HttpCode(HttpStatus.ACCEPTED)

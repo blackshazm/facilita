@@ -60,3 +60,4 @@ describe('RedisOtpRateLimiterAdapter', () => {
     expect(phoneBAllowed.remainingAttempts).toBe(2);
   });
 });
+

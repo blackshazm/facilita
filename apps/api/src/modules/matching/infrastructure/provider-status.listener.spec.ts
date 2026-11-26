@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ProviderStatusListener } from './provider-status.listener';
+import { PrismaService } from '../../../shared-kernel/database/prisma.service';
 
 describe('ProviderStatusListener', () => {
   let provider: ProviderStatusListener;
@@ -8,7 +9,10 @@ describe('ProviderStatusListener', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         ProviderStatusListener,
-        // TODO: Add mocked dependencies here
+        {
+          provide: PrismaService,
+          useValue: { activeProvider: { upsert: jest.fn(), update: jest.fn() } },
+        },
       ],
     }).compile();
 

@@ -1,4 +1,4 @@
-import { Injectable, BadRequestException, Logger } from '@nestjs/common';
+import { Injectable, BadRequestException, NotFoundException, Logger } from '@nestjs/common';
 import { StoragePort } from '../ports/storage.port';
 import { PrismaService } from '../../../shared-kernel/database/prisma.service';
 
@@ -56,9 +56,135 @@ export class KycService {
       },
     });
 
-    // Em um fluxo real, aqui poderíamos disparar um evento para revisão humana ou IA
-    // Por enquanto, apenas registramos no banco.
-
     return submission;
+  }
+
+  async listPendingSubmissions() {
+    this.logger.log('Buscando submissões de KYC pendentes de moderação');
+
+    const submissions = await this.prisma.kycSubmission.findMany({
+      where: { status: 'PENDING' },
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            phone: true,
+            profile: {
+              select: {
+                cpfCnpj: true,
+                tier: true,
+              },
+            },
+          },
+        },
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+
+    return Promise.all(
+      submissions.map(async (sub) => {
+        const docUrl = await this.storage.generatePresignedDownloadUrl(sub.documentFrontUrl, 900);
+        const proofUrl = await this.storage.generatePresignedDownloadUrl(sub.selfieUrl, 900);
+        const docBackUrl = sub.documentBackUrl
+          ? await this.storage.generatePresignedDownloadUrl(sub.documentBackUrl, 900)
+          : null;
+
+        return {
+          id: sub.id,
+          userId: sub.userId,
+          name: sub.user?.name ?? 'Prestador Sem Nome',
+          cpf: sub.user?.profile?.cpfCnpj ?? 'Não informado',
+          phone: sub.user?.phone ?? 'Não informado',
+          specialty: 'Prestador Verificado',
+          pixKey: sub.user?.profile?.cpfCnpj ?? 'Não cadastrada',
+          submittedAt: sub.createdAt.toISOString(),
+          docType: 'Documento de Identidade Oficial',
+          docUrl,
+          proofUrl,
+          docBackUrl,
+          status: sub.status,
+          rejectionReason: sub.rejectionReason,
+        };
+      }),
+    );
+  }
+
+  async approveSubmission(submissionId: string, adminId?: string) {
+    this.logger.log(`Aprovando submissão de KYC ${submissionId} por admin ${adminId ?? 'system'}`);
+
+    const submission = await this.prisma.kycSubmission.findUnique({
+      where: { id: submissionId },
+    });
+
+    if (!submission) {
+      throw new NotFoundException(`Submissão KYC ID ${submissionId} não encontrada`);
+    }
+
+    const updated = await this.prisma.kycSubmission.update({
+      where: { id: submissionId },
+      data: {
+        status: 'APPROVED',
+        rejectionReason: null,
+      },
+    });
+
+    await this.prisma.user.update({
+      where: { id: submission.userId },
+      data: { isVerified: true },
+    });
+
+    if (adminId) {
+      await this.prisma.auditLog.create({
+        data: {
+          adminId,
+          targetId: submission.userId,
+          action: 'KYC_APPROVED',
+          reason: 'Aprovado via Central de Moderação Administrativa',
+        },
+      });
+    }
+
+    return updated;
+  }
+
+  async rejectSubmission(submissionId: string, reason: string, adminId?: string) {
+    this.logger.log(`Rejeitando submissão de KYC ${submissionId}. Motivo: ${reason}`);
+
+    const submission = await this.prisma.kycSubmission.findUnique({
+      where: { id: submissionId },
+    });
+
+    if (!submission) {
+      throw new NotFoundException(`Submissão KYC ID ${submissionId} não encontrada`);
+    }
+
+    const rejectionReason = reason || 'Documento ilegível, cortado ou divergente dos dados cadastrais';
+
+    const updated = await this.prisma.kycSubmission.update({
+      where: { id: submissionId },
+      data: {
+        status: 'REJECTED',
+        rejectionReason,
+      },
+    });
+
+    await this.prisma.user.update({
+      where: { id: submission.userId },
+      data: { isVerified: false },
+    });
+
+    if (adminId) {
+      await this.prisma.auditLog.create({
+        data: {
+          adminId,
+          targetId: submission.userId,
+          action: 'KYC_REJECTED',
+          reason: rejectionReason,
+        },
+      });
+    }
+
+    return updated;
   }
 }

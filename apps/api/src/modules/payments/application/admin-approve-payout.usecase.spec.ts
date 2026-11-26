@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AdminApprovePayoutUseCase } from './admin-approve-payout.usecase';
+import { FinancialAuditService } from '../../../shared-kernel/services/financial-audit.service';
 
 describe('AdminApprovePayoutUseCase', () => {
   let provider: AdminApprovePayoutUseCase;
@@ -8,7 +9,14 @@ describe('AdminApprovePayoutUseCase', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         AdminApprovePayoutUseCase,
-        // TODO: Add mocked dependencies here
+        {
+          provide: 'PayoutRepositoryPort',
+          useValue: { findById: jest.fn(), save: jest.fn() },
+        },
+        {
+          provide: FinancialAuditService,
+          useValue: { log: jest.fn() },
+        },
       ],
     }).compile();
 

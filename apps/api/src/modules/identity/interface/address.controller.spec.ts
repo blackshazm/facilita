@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AddressController, UserAddressDto } from './address.controller';
+import { BadRequestException } from '@nestjs/common';
 
 describe('AddressController', () => {
   let controller: AddressController;
@@ -26,8 +27,8 @@ describe('AddressController', () => {
   });
 
   describe('saveAddress', () => {
-    it('should save a new address and prepend it to list', async () => {
-      const newDto: UserAddressDto = {
+    it('should throw BadRequestException when complement is missing or empty string', async () => {
+      const invalidDto: any = {
         label: 'CASA',
         street: 'Rua Augusta',
         number: '1500',
@@ -35,16 +36,36 @@ describe('AddressController', () => {
         city: 'São Paulo',
         state: 'SP',
         cep: '01305-100',
+        complement: '   ',
+      };
+
+      await expect(
+        controller.saveAddress({ user: { id: 'test-user' } }, invalidDto),
+      ).rejects.toThrow(BadRequestException);
+    });
+
+    it('should save a new address and prepend it to list when complement is provided', async () => {
+      const validDto: UserAddressDto = {
+        label: 'CASA',
+        street: 'Rua Augusta',
+        number: '1500',
+        complement: 'Apto 101 Bloco B',
+        neighborhood: 'Consolação',
+        city: 'São Paulo',
+        state: 'SP',
+        cep: '01305-100',
         isDefault: true,
       };
 
-      const saved = await controller.saveAddress({ user: { id: 'test-user' } }, newDto);
+      const saved = await controller.saveAddress({ user: { id: 'test-user' } }, validDto);
       expect(saved.id).toBeDefined();
       expect(saved.street).toBe('Rua Augusta');
+      expect(saved.complement).toBe('Apto 101 Bloco B');
       expect(saved.isDefault).toBe(true);
 
       const list = await controller.getAddresses({ user: { id: 'test-user' } });
       expect(list[0].street).toBe('Rua Augusta');
+      expect(list[0].complement).toBe('Apto 101 Bloco B');
     });
   });
 

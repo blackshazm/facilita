@@ -2,7 +2,7 @@ import React from 'react';
 
 export function TrackingSkeleton() {
   return (
-    <div className="min-h-screen bg-slate-950 text-white flex flex-col animate-pulse">
+    <div data-testid="tracking-skeleton" className="min-h-screen bg-slate-950 text-white flex flex-col animate-pulse">
       {/* Top Bar Skeleton */}
       <div className="bg-slate-900 border-b border-slate-800 px-6 py-4 flex items-center justify-between">
         <div className="flex items-center gap-3">
@@ -68,3 +68,4 @@ export function TrackingSkeleton() {
   );
 }
 export default TrackingSkeleton;
+

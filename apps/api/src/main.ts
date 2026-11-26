@@ -5,6 +5,9 @@ import { RedisIoAdapter } from './shared-kernel/adapters/redis-io.adapter';
 
 import { ValidationPipe } from '@nestjs/common';
 import { SanitizeInterceptor } from './shared-kernel/interceptors/sanitize.interceptor';
+import { SecurityAuditExceptionFilter } from './shared-kernel/filters/security-audit-exception.filter';
+import { GlobalExceptionFilter } from './shared-kernel/filters/global-exception.filter';
+import { PrismaService } from './shared-kernel/database/prisma.service';
 
 import helmet from 'helmet';
 
@@ -24,6 +27,10 @@ async function bootstrap() {
     transform: true,
   }));
   app.useGlobalInterceptors(new SanitizeInterceptor());
+  app.useGlobalFilters(
+    new GlobalExceptionFilter(),
+    new SecurityAuditExceptionFilter(app.get(PrismaService)),
+  );
 
   const redisIoAdapter = new RedisIoAdapter(app);
   await redisIoAdapter.connectToRedis();

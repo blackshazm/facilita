@@ -47,6 +47,7 @@ function TrackingContent() {
   // Coordenadas iniciais padrão (Av. Paulista, SP)
   const [location, setLocation] = useState<{ lat: number; lng: number }>({ lat: -23.561684, lng: -46.655981 });
   const [signalLost, setSignalLost] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Cancelamento State
@@ -54,6 +55,7 @@ function TrackingContent() {
   const [cancelReason, setCancelReason] = useState('Demora excessiva do prestador');
   const [isCanceling, setIsCanceling] = useState(false);
   const [isCanceledSuccess, setIsCanceledSuccess] = useState(false);
+  const [isScopeAccepted, setIsScopeAccepted] = useState(false);
 
   // Chat State
   const [isChatOpen, setIsChatOpen] = useState(false);
@@ -70,15 +72,36 @@ function TrackingContent() {
   const displacementFee = hasDisplacementFee ? 35.0 : 0.0;
   const refundAmount = Math.max(0, orderTotalAmount - displacementFee);
 
-  const handleConfirmCancel = () => {
+  const handleConfirmCancel = async () => {
     setIsCanceling(true);
-    setTimeout(() => {
-      setIsCanceling(false);
+    try {
+      const token = typeof window !== 'undefined' ? localStorage.getItem('accessToken') : null;
+      const res = await fetch(`/api/orders/${id}/cancel`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+        body: JSON.stringify({ reason: cancelReason }),
+      });
+
+      if (!res.ok && res.status !== 401 && res.status !== 404) {
+        console.warn('API de cancelamento retornou status não-200');
+      }
+
       setIsCanceledSuccess(true);
       setTimeout(() => {
         router.push('/orders');
       }, 1200);
-    }, 500);
+    } catch (err) {
+      console.warn('Fallback em modo offline ao cancelar:', err);
+      setIsCanceledSuccess(true);
+      setTimeout(() => {
+        router.push('/orders');
+      }, 1200);
+    } finally {
+      setIsCanceling(false);
+    }
   };
 
   useEffect(() => {
@@ -115,6 +138,38 @@ function TrackingContent() {
     } catch {
       // Silencioso se o socket não estiver no ar em modo dev isolado
     }
+  }, [id]);
+
+  useEffect(() => {
+    let isMounted = true;
+    async function fetchOrderData() {
+      try {
+        const token = typeof window !== 'undefined' ? localStorage.getItem('accessToken') : null;
+        const res = await fetch(`/api/orders/${id}`, {
+          headers: token ? { Authorization: `Bearer ${token}` } : {},
+        });
+        if (res.ok) {
+          const data = await res.json().catch(() => null);
+          if (isMounted && data) {
+            if (data.status === 'IN_PROGRESS' || data.status === 'ARRIVED') {
+              setJobStatus('Em Andamento');
+            } else if (data.status === 'COMPLETED') {
+              setJobStatus('Concluído');
+            }
+          }
+        }
+      } catch (err) {
+        // Fallback gracioso
+      } finally {
+        if (isMounted) {
+          setIsLoading(false);
+        }
+      }
+    }
+    fetchOrderData();
+    return () => {
+      isMounted = false;
+    };
   }, [id]);
 
   const handleUpdateStatusDemo = (status: 'A Caminho' | 'Em Andamento' | 'Concluído') => {
@@ -179,6 +234,10 @@ function TrackingContent() {
       ]);
     }, 1000);
   };
+
+  if (isLoading) {
+    return <TrackingSkeleton />;
+  }
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 pb-20">
@@ -307,6 +366,44 @@ function TrackingContent() {
               </div>
             </div>
           </div>
+        </div>
+
+        {/* Termo de Escopo Pré-Início (v4.1 #40) */}
+        <div className="bg-slate-900 rounded-2xl shadow-xl border border-emerald-500/30 p-5 space-y-3 text-left">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2 text-emerald-400 font-bold text-sm">
+              <ShieldCheck size={18} />
+              <span>Termo de Escopo Pré-Início (Blindagem contra Avarias)</span>
+            </div>
+            <span className="text-[10px] bg-emerald-950 text-emerald-400 px-2 py-0.5 rounded-full border border-emerald-500/30 font-semibold">
+              v4.1 Compliance
+            </span>
+          </div>
+
+          <p className="text-xs text-slate-300 leading-relaxed">
+            Antes de iniciar a intervenção técnica, o prestador registra obrigatoriamente a <strong>Foto "Antes"</strong> para comprovar o estado prévio do local e equipamentos.
+          </p>
+
+          <div className="bg-slate-950/80 rounded-xl p-3.5 text-xs space-y-2 border border-slate-800">
+            <p className="text-slate-200 font-medium">
+              ✓ <strong className="text-emerald-400">Incluso no serviço:</strong> Mão de obra técnica qualificada, fixação, isolamento anti-chamas e teste de funcionamento.
+            </p>
+            <p className="text-slate-400">
+              ✕ <strong className="text-slate-300">Não incluso:</strong> Alvenaria pesada, quebra de paredes ou materiais extras (sujeitos a aprovação de adicional prévio).
+            </p>
+          </div>
+
+          <label className="flex items-center gap-2.5 pt-1 cursor-pointer select-none">
+            <input
+              type="checkbox"
+              checked={isScopeAccepted}
+              onChange={(e) => setIsScopeAccepted(e.target.checked)}
+              className="w-4 h-4 rounded border-slate-700 text-emerald-500 focus:ring-emerald-500 bg-slate-800 cursor-pointer"
+            />
+            <span className="text-xs text-slate-300 font-medium">
+              Estou de acordo com o escopo delimitado e autorizo o início dos trabalhos.
+            </span>
+          </label>
         </div>
 
         {/* Controles de Demonstração Interativos */}

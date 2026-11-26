@@ -44,8 +44,8 @@ test.describe('Histórico de Pedidos, Recibo Fiscal e Garantia 90d E2E', () => {
     // Valida dados fiscais e garantia no recibo
     await expect(receiptModal.getByText('FACILITA TECNOLOGIA E SERVIÇOS LTDA')).toBeVisible();
     await expect(receiptModal.getByText('48.123.456/0001-99')).toBeVisible();
-    await expect(receiptModal.getByText(/Taxa de Intermediação e Seguro Garantia Facilita \(15%\)/i)).toBeVisible();
-    await expect(receiptModal.getByText(/Garantia Legal & Contratual Facilita \(90 Dias\)/i)).toBeVisible();
+    await expect(receiptModal.getByText(/Taxa de Intermediação da Plataforma \(20%\)/i)).toBeVisible();
+    await expect(receiptModal.getByText(/Garantia Legal de Satisfação Facilita \(90 Dias/i)).toBeVisible();
     await expect(receiptModal.getByText(/Autenticação Digital SHA-256/i)).toBeVisible();
     await expect(receiptModal.getByRole('button', { name: /Imprimir \/ Salvar PDF/i })).toBeVisible();
 
@@ -64,3 +64,4 @@ test.describe('Histórico de Pedidos, Recibo Fiscal e Garantia 90d E2E', () => {
     await expect(page.getByText(/Garantia acionada para o pedido/i)).toBeVisible();
   });
 });
+

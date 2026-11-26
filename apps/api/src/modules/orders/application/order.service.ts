@@ -86,8 +86,8 @@ export class OrderService {
    * Criar um novo pedido de serviço
    */
   async createOrder(dto: CreateOrderDto) {
-    // Taxa de urgência (+25%) se urgente
-    const finalAmount = dto.urgency === 'urgent' ? dto.totalAmount * 1.25 : dto.totalAmount;
+    // Resolução v4.1 (#36): Taxa de urgência fixa de R$ 40,00 (não percentual)
+    const finalAmount = dto.urgency === 'urgent' ? dto.totalAmount + 40.0 : dto.totalAmount;
 
     const order = await this.prisma.order.create({
       data: {
@@ -168,6 +168,16 @@ export class OrderService {
   async startOrder(orderId: string, providerId: string) {
     const order = await this.prisma.order.findUnique({ where: { id: orderId } });
     if (!order) throw new NotFoundException('Pedido não encontrado');
+
+    // Resolução v4.1 (#39): Trava de Segurança - Foto Antes é obrigatória para iniciar
+    const beforeEvidenceCount = await this.prisma.evidence.count({
+      where: { orderId, type: 'BEFORE' },
+    });
+    if (beforeEvidenceCount === 0) {
+      throw new BadRequestException(
+        'Trava de Segurança: É obrigatório registrar pelo menos 1 foto do estado inicial (Antes) para iniciar o atendimento.',
+      );
+    }
 
     const updated = await this.prisma.order.update({
       where: { id: orderId },
@@ -251,13 +261,11 @@ export class OrderService {
    * Solicitar adicional de custo (materiais ou serviço extra)
    * Regra 1: Máximo 3 adicionais por atendimento
    * Regra 2: Materiais até R$ 30,00 aprovados automaticamente
+   * Regra 3 (v4.1): Adicional > 100% do valor do pedido trava para PENDING_ADMIN_AUDIT (trava contra extorsão presencial)
    */
   async requestAdditional(orderId: string, providerId: string, dto: RequestAdditionalDto) {
     const order = await this.prisma.order.findUnique({ where: { id: orderId } });
     if (!order) throw new NotFoundException('Pedido não encontrado');
-
-    // Regra: até R$ 30,00 auto-aprovado
-    const isAutoApproved = dto.amount <= 30.0;
 
     const additionalsCount = await this.prisma.evidence.count({
       where: { orderId, type: 'DISPUTE' }, // Reusando tabela ou metadados
@@ -265,6 +273,70 @@ export class OrderService {
 
     if (additionalsCount >= 3) {
       throw new BadRequestException('Limite máximo de 3 adicionais por pedido atingido');
+    }
+
+    const orderAmount = Number(order.totalAmount);
+    const isAbusive = dto.amount > orderAmount;
+
+    if (isAbusive) {
+      this.logger.warn(
+        `Adicional abusivo detectado (> 100% do pedido). Pedido: ${orderId}, Base: R$ ${orderAmount}, Adicional: R$ ${dto.amount}. Encaminhado para auditoria humana.`,
+      );
+
+      const createdEvidence = await this.prisma.evidence.create({
+        data: {
+          orderId,
+          providerId,
+          url: dto.receiptUrl || 'https://placeholder.co/material.png',
+          type: 'DISPUTE',
+          metadata: {
+            amount: dto.amount,
+            description: dto.description,
+            status: 'PENDING_ADMIN_AUDIT',
+          },
+        },
+      });
+
+      this.eventEmitter.emit('order.additional_audit_required', {
+        orderId,
+        providerId,
+        orderAmount,
+        additionalAmount: dto.amount,
+        description: dto.description,
+      });
+
+      return {
+        id: createdEvidence.id,
+        orderId,
+        amount: dto.amount,
+        description: dto.description,
+        status: 'PENDING_ADMIN_AUDIT',
+      };
+    }
+
+    // Regra: até R$ 30,00 auto-aprovado
+    const isAutoApproved = dto.amount <= 30.0;
+
+    const createdEvidence = await this.prisma.evidence.create({
+      data: {
+        orderId,
+        providerId,
+        url: dto.receiptUrl || 'https://placeholder.co/material.png',
+        type: 'DISPUTE',
+        metadata: {
+          amount: dto.amount,
+          description: dto.description,
+          status: isAutoApproved ? 'APPROVED' : 'PENDING_CUSTOMER_APPROVAL',
+        },
+      },
+    });
+
+    if (isAutoApproved) {
+      const newTotal = orderAmount + dto.amount;
+      await this.prisma.order.update({
+        where: { id: orderId },
+        data: { totalAmount: newTotal },
+      });
     }
 
     this.logger.log(
@@ -279,10 +351,65 @@ export class OrderService {
     });
 
     return {
+      id: createdEvidence.id,
       orderId,
       amount: dto.amount,
       description: dto.description,
       status: isAutoApproved ? 'APPROVED' : 'PENDING_CUSTOMER_APPROVAL',
+    };
+  }
+
+  /**
+   * Cliente aprova ou recusa um adicional solicitado pelo prestador
+   */
+  async respondAdditional(orderId: string, additionalId: string, userId: string, decision: 'APPROVED' | 'REJECTED') {
+    const order = await this.prisma.order.findUnique({ where: { id: orderId } });
+    if (!order) throw new NotFoundException('Pedido não encontrado');
+    if (order.userId !== userId) throw new ForbiddenException('Apenas o cliente titular pode responder ao adicional');
+
+    const additional = await this.prisma.evidence.findUnique({ where: { id: additionalId } });
+    if (!additional || additional.orderId !== orderId) {
+      throw new NotFoundException('Adicional não encontrado para este pedido');
+    }
+
+    const currentMetadata: any = (additional.metadata as any) || {};
+    if (currentMetadata.status && currentMetadata.status !== 'PENDING_CUSTOMER_APPROVAL') {
+      throw new BadRequestException(`Adicional já se encontra no status ${currentMetadata.status}`);
+    }
+
+    const updatedMetadata = {
+      ...currentMetadata,
+      status: decision,
+      respondedAt: new Date().toISOString(),
+    };
+
+    await this.prisma.evidence.update({
+      where: { id: additionalId },
+      data: { metadata: updatedMetadata },
+    });
+
+    if (decision === 'APPROVED') {
+      const addedAmount = Number(currentMetadata.amount || 0);
+      const newTotal = Number(order.totalAmount) + addedAmount;
+      await this.prisma.order.update({
+        where: { id: orderId },
+        data: { totalAmount: newTotal },
+      });
+      this.logger.log(`Adicional de R$ ${addedAmount} aprovado para o pedido ${orderId}. Novo total: R$ ${newTotal}`);
+    }
+
+    this.eventEmitter.emit('order.additional_responded', {
+      orderId,
+      additionalId,
+      userId,
+      decision,
+    });
+
+    return {
+      orderId,
+      additionalId,
+      status: decision,
+      message: decision === 'APPROVED' ? 'Adicional aprovado com sucesso' : 'Adicional recusado',
     };
   }
 
@@ -374,6 +501,63 @@ export class OrderService {
   }
 
   /**
+   * Buscar detalhes do pedido com mascaramento de dados sensíveis (LGPD) e call proxy
+   * Resolução v4.1 (#35): Mascaramento de telefone para prestadores
+   */
+  async getOrderById(orderId: string, requestingUserId: string, requestingRole: string) {
+    const order = await this.prisma.order.findUnique({
+      where: { id: orderId },
+    });
+
+    if (!order) throw new NotFoundException('Pedido não encontrado');
+
+    const isCustomer = order.userId === requestingUserId;
+    const isProvider = order.providerId === requestingUserId;
+    const isAdmin = requestingRole === 'ADMIN';
+
+    if (!isCustomer && !isProvider && !isAdmin) {
+      throw new ForbiddenException('Acesso negado aos detalhes deste atendimento');
+    }
+
+    const customerUser = await this.prisma.user.findUnique({
+      where: { id: order.userId },
+      select: { id: true, name: true, phone: true },
+    });
+
+    const rawPhone = customerUser?.phone || '';
+    let maskedPhone = rawPhone;
+
+    if (requestingRole === 'PROVIDER' || (isProvider && !isAdmin && !isCustomer)) {
+      if (rawPhone.length >= 8) {
+        const ddd = rawPhone.length >= 10 ? `(${rawPhone.slice(0, 2)}) ` : '';
+        const lastDigits = rawPhone.slice(-4);
+        maskedPhone = `${ddd}9****-${lastDigits}`;
+      } else {
+        maskedPhone = 'Telefone Mascarado';
+      }
+    }
+
+    return {
+      id: order.id,
+      userId: order.userId,
+      providerId: order.providerId,
+      status: order.status,
+      totalAmount: Number(order.totalAmount),
+      latitude: order.latitude,
+      longitude: order.longitude,
+      createdAt: order.createdAt,
+      updatedAt: order.updatedAt,
+      customer: {
+        id: customerUser?.id || order.userId,
+        name: customerUser?.name || 'Cliente Facilita',
+        phone: maskedPhone,
+      },
+      callProxyAvailable: true,
+      chatChannelId: `order-${order.id}`,
+    };
+  }
+
+  /**
    * Gerar e retornar espelho de recibo / comprovante oficial de pagamento
    */
   async getOrderReceipt(
@@ -394,11 +578,12 @@ export class OrderService {
     }
 
     const grossAmount = Number(order.totalAmount);
-    const platformFee = Number((grossAmount * 0.15).toFixed(2));
+    // Comissão Canônica v4.1: 20% padrão (Bronze/Prata) ou 18% (Ouro)
+    const platformFee = Number((grossAmount * 0.20).toFixed(2));
     const providerNetAmount = Number((grossAmount - platformFee).toFixed(2));
     const taxRetention = Number((grossAmount * 0.05).toFixed(2)); // IBS / CBS estimado
 
-    // Validade da garantia legal + contratual de 90 dias
+    // Validade da garantia legal de 90 dias (Art. 26, II do CDC)
     const validUntilDate = new Date(order.createdAt.getTime() + 90 * 24 * 60 * 60 * 1000);
 
     // Hash criptográfico SHA256 para autenticação e verificação anti-fraude
@@ -430,7 +615,7 @@ export class OrderService {
       warranty: {
         periodDays: 90,
         validUntil: validUntilDate.toISOString(),
-        coverage: 'Garantia de Qualidade e Execução FACILITA (Cobertura até R$ 5.000,00)',
+        coverage: 'Garantia Legal de Qualidade e Reexecução FACILITA (CDC Art. 26)',
       },
       securityHash,
       issuer: {

@@ -12,7 +12,8 @@ export interface MatchingEnginePort {
     radiusMeters: number,
     categoryId: string,
     tier: string,
-    limit?: number
+    limit?: number,
+    requiresNr10?: boolean, // Resolução v4.1 (#42 & #96): Gate de NR-10 para disjuntor/painel elétrico
   ): Promise<NearbyProvider[]>;
 }
 

@@ -14,6 +14,11 @@
     "payments": "Pagar.me",
     "chat": "Stream.io"
   },
+  "graphify": {
+    "enabled": true,
+    "output_dir": "graphify-out",
+    "cache_dir": ".planning/graphs"
+  },
   "directories": {
     "backend": "apps/api",
     "client": "apps/web-client",

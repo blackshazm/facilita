@@ -1,17 +1,17 @@
 # Plan: Production Monitoring, Healthchecks and Legal Compliance
 
 ## Summary
-Implement enterprise-grade production healthchecks (`/health`, `/health/ready`, `/health/live`) and Prometheus metrics (`/metrics`) in NestJS, alongside essential legal compliance pages (`/termos`, `/privacidade` under LGPD guidelines) and fallback UX error boundaries (`not-found.tsx`, `error.tsx`) in Next.js. This ensures automated orchestrator recovery, APM observability, and store approval readiness (Google Play and Apple App Store).
+Implement enterprise-grade production healthchecks (`/health`, `/health/ready`, `/health/live`) and Prometheus metrics (`/metrics`) in NestJS, alongside essential legal compliance pages (`/termos`, `/privacidade` under LGPD guidelines) and fallback UX error boundaries (`not-found.tsx`, `error.tsx`) in Next.js. This ensures automated orchestrator recovery, APM observability, and complete compliance.
 
 ## User Story
 As a platform operator and user,
 I want automated health probes, metric scrapers, standard legal terms, and clear error recovery pages,
-So that the cluster can self-heal on failures, Prometheus can track performance, stores can approve mobile apps, and users never encounter unhandled crashes.
+So that the cluster can self-heal on failures, Prometheus can track performance, compliance is guaranteed, and users never encounter unhandled crashes.
 
 ## Problem → Solution
 - **Problem**:
   1. NestJS lacks `/health` and `/metrics` routes, causing `docker-compose.prod.yml` Prometheus scraping and container health checks to fail or return 404.
-  2. Next.js does not have Terms of Service and Privacy Policy pages, which is an immediate rejection blocker for Google Play & App Store app submissions and violates LGPD requirements.
+  2. Next.js does not have Terms of Service and Privacy Policy pages, which violates Brazilian compliance and LGPD requirements.
   3. No custom 404 or 500 error boundaries exist in `apps/client/src/app`, risking unstyled white-screen errors on route typos or unexpected frontend runtime exceptions.
 - **Solution**:
   1. Build a zero-dependency `HealthModule` in `apps/api` validating PostgreSQL (Prisma) and Redis connectivity, plus a `MetricsModule` exposing standard Prometheus metrics via `prom-client`.

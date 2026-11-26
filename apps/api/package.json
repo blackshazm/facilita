@@ -13,6 +13,8 @@
     "pre-merge": "npm run lint:boundary && npm run test:contracts && npm run build"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.1178.0",
+    "@aws-sdk/s3-request-presigner": "^3.1178.0",
     "@facilita/contracts": "*",
     "@nestjs/bull": "^11.0.4",
     "@nestjs/bullmq": "^11.0.4",
@@ -23,6 +25,7 @@
     "@nestjs/passport": "^10.0.0",
     "@nestjs/platform-express": "^10.0.0",
     "@nestjs/platform-socket.io": "^10.4.22",
+    "@nestjs/schedule": "^4.1.2",
     "@nestjs/throttler": "^5.2.0",
     "@nestjs/websockets": "^10.4.22",
     "@socket.io/redis-adapter": "^8.3.0",

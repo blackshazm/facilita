@@ -9,6 +9,9 @@ export interface PaymentAuthorizeProps {
 export interface PaymentResult {
   externalId: string;
   status: 'AUTHORIZED' | 'PAID' | 'FAILED' | 'PENDING' | 'REFUNDED';
+  pixQrCode?: string;
+  pixCopiaECola?: string;
+  invoiceUrl?: string;
   rawResponse?: any;
 }
 
@@ -16,4 +19,5 @@ export interface PaymentGatewayPort {
   authorize(props: PaymentAuthorizeProps): Promise<PaymentResult>;
   capture(externalId: string, amount?: number): Promise<PaymentResult>;
   refund(externalId: string, amount?: number): Promise<PaymentResult>;
+  getPayment?(externalId: string): Promise<PaymentResult>;
 }

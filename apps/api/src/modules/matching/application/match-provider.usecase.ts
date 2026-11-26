@@ -8,6 +8,7 @@ export interface DispatchRequest {
   longitude: number;
   categoryId: string;
   radiusMeters?: number;
+  requiresNr10?: boolean; // Resolução v4.1 (#42 & #96): Gate de segurança elétrica NR-10
 }
 
 @Injectable()
@@ -36,14 +37,24 @@ export class MatchProviderUseCase {
     for (const tier of this.TIERS) {
       this.logger.log(`[Wave] Searching for ${tier} providers...`);
       
-      const providers = await this.matchingEngine.findProvidersInRadius(
-        request.latitude,
-        request.longitude,
-        radius,
-        request.categoryId,
-        tier,
-        5 // dispatch to top 5 closest
-      );
+      const providers = request.requiresNr10 !== undefined
+        ? await this.matchingEngine.findProvidersInRadius(
+            request.latitude,
+            request.longitude,
+            radius,
+            request.categoryId,
+            tier,
+            5, // dispatch to top 5 closest
+            request.requiresNr10,
+          )
+        : await this.matchingEngine.findProvidersInRadius(
+            request.latitude,
+            request.longitude,
+            radius,
+            request.categoryId,
+            tier,
+            5, // dispatch to top 5 closest
+          );
 
       if (providers.length > 0) {
         this.logger.log(`[Wave] Found ${providers.length} ${tier} providers. Dispatching!`);

@@ -12,7 +12,7 @@ export const setupUrgentNotificationChannel = async () => {
       importance: Notifications.AndroidImportance.MAX,
       vibrationPattern: [0, 500, 250, 500, 250, 500],
       lightColor: '#10B981',
-      sound: 'default',
+      sound: 'alert_siren.wav',
       enableVibrate: true,
       audioAttributes: {
         usage: Notifications.AndroidAudioUsage.ALARM,

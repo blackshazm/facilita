@@ -1,5 +1,5 @@
 // PRD: 4.1 Catálogo de Serviços
-import { Controller, Get, Query, Optional, Inject, Res } from '@nestjs/common';
+import { Controller, Get, Post, Query, Optional, Inject, Res, HttpCode, HttpStatus } from '@nestjs/common';
 import { Response } from 'express';
 import { ListServicesUseCase } from './list-services.use-case';
 import { ServiceCategory } from '../core/service.entity';
@@ -49,5 +49,22 @@ export class CatalogController {
     }
 
     return formatted;
+  }
+
+  /**
+   * Invalidação ativa de cache para o painel de administração ou hooks de atualização de serviços
+   * Diretriz: sugestoes app.md (Item 3 - Invalidação automática)
+   */
+  @Post('admin/invalidate')
+  @HttpCode(HttpStatus.OK)
+  async invalidateCache(@Query('category') category?: string) {
+    if (this.cacheService) {
+      await this.cacheService.clear(category);
+    }
+    return {
+      success: true,
+      invalidatedCategory: category || 'all',
+      timestamp: new Date().toISOString(),
+    };
   }
 }

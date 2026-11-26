@@ -5,6 +5,9 @@ import { PrismaPaymentRepository } from './adapters/prisma-payment-repository.ad
 import { PrismaPayoutRepository } from './adapters/prisma-payout-repository.adapter';
 import { PagarMeAdapter } from './infrastructure/gateways/pagarme.adapter';
 import { PagarMePayoutAdapter } from './infrastructure/gateways/pagarme-payout.adapter';
+import { AsaasAdapter } from './infrastructure/gateways/asaas.adapter';
+import { AsaasPayoutAdapter } from './infrastructure/gateways/asaas-payout.adapter';
+import { AsaasWebhookController } from './interface/http/asaas.webhook.controller';
 import { BullModule } from '@nestjs/bullmq';
 import { AuthorizePaymentUseCase } from './application/authorize-payment.usecase';
 import { CapturePaymentUseCase } from './application/capture-payment.usecase';
@@ -32,6 +35,8 @@ import { AdminPayoutController } from './interface/http/admin-payout.controller'
 import { StartBatchPayoutUseCase } from './application/start-batch-payout.usecase';
 import { GetBatchStatusUseCase } from './application/get-batch-status.usecase';
 import { BatchPayoutProcessor } from './infrastructure/queues/batch-payout.processor';
+import { ReconcileFinancialTransactionsUseCase } from './application/reconcile-financial-transactions.usecase';
+import { FinancialReconciliationCron } from './infrastructure/cron/financial-reconciliation.cron';
 
 import { ProcessPayoutUseCase } from './application/process-payout.use-case';
 import { PaymentsEventHandler } from './application/payments-event.handler';
@@ -66,7 +71,7 @@ const mockPaymentsRepo = {
     BullModule.registerQueue({ name: 'referral-reward' }),
     BullModule.registerQueue({ name: 'payout-batch' }),
   ],
-  controllers: [PaymentWebhookController, BankDataController, AdminPayoutController],
+  controllers: [PaymentWebhookController, AsaasWebhookController, BankDataController, AdminPayoutController],
   providers: [
     PrismaService,
     SecurityService,
@@ -88,17 +93,35 @@ const mockPaymentsRepo = {
     StartBatchPayoutUseCase,
     GetBatchStatusUseCase,
     BatchPayoutProcessor,
+    ReconcileFinancialTransactionsUseCase,
+    FinancialReconciliationCron,
     ProcessPayoutUseCase,
     PaymentsEventHandler,
     { provide: 'WalletRepositoryPort', useClass: PrismaWalletRepository },
     { provide: 'PaymentRepositoryPort', useClass: PrismaPaymentRepository },
     { provide: 'PayoutRepositoryPort', useClass: PrismaPayoutRepository },
-    { provide: 'PaymentGatewayPort', useClass: PagarMeAdapter },
-    { provide: 'PayoutPort', useClass: PagarMePayoutAdapter },
+    AsaasAdapter,
+    AsaasPayoutAdapter,
+    PagarMeAdapter,
+    PagarMePayoutAdapter,
+    {
+      provide: 'PaymentGatewayPort',
+      useFactory: () => {
+        const provider = process.env.PAYMENT_GATEWAY_PROVIDER || 'ASAAS';
+        return provider === 'PAGARME' ? new PagarMeAdapter() : new AsaasAdapter();
+      },
+    },
+    {
+      provide: 'PayoutPort',
+      useFactory: () => {
+        const provider = process.env.PAYMENT_GATEWAY_PROVIDER || 'ASAAS';
+        return provider === 'PAGARME' ? new PagarMePayoutAdapter() : new AsaasPayoutAdapter();
+      },
+    },
     // Mock for new MVP flow
     { provide: PAYMENT_GATEWAY, useClass: StripePaymentGatewayAdapter },
     { provide: PAYMENTS_REPOSITORY, useValue: mockPaymentsRepo },
   ],
-  exports: ['WalletRepositoryPort', 'PaymentRepositoryPort'],
+  exports: ['WalletRepositoryPort', 'PaymentRepositoryPort', ReconcileFinancialTransactionsUseCase, FinancialReconciliationCron],
 })
 export class PaymentsModule {}

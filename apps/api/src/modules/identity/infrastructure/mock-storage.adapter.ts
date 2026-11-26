@@ -6,10 +6,15 @@ export class MockStorageAdapter implements StoragePort {
   async generatePresignedUploadUrl(
     key: string,
     contentType: string,
-    expiresInSeconds: number,
+    expiresInSeconds: number = 900,
   ): Promise<string> {
-    // Em produção, aqui integraríamos com AWS S3, Cloudinary ou Firebase Storage
-    // Para o mock, retornamos uma URL simulada que contém as informações da requisição
     return `https://mock-storage.facilita.com.br/${key}?contentType=${contentType}&expires=${expiresInSeconds}`;
+  }
+
+  async generatePresignedDownloadUrl(
+    key: string,
+    expiresInSeconds: number = 900,
+  ): Promise<string> {
+    return `https://mock-storage.facilita.com.br/${key}?expires=${expiresInSeconds}`;
   }
 }

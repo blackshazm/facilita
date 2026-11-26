@@ -9,7 +9,7 @@ import {
   ScrollView,
   Image,
 } from 'react-native';
-import { Camera, Upload, CheckCircle2, ShieldCheck, FileText } from 'lucide-react-native';
+import { Camera, Upload, CheckCircle2, ShieldCheck, FileText, Zap } from 'lucide-react-native';
 
 interface DocumentUploadScreenProps {
   onComplete?: () => void;
@@ -24,14 +24,16 @@ export const DocumentUploadScreen: React.FC<DocumentUploadScreenProps> = ({
   const [selfieUri, setSelfieUri] = useState<string | null>(null);
   const [docFrontUri, setDocFrontUri] = useState<string | null>(null);
   const [docBackUri, setDocBackUri] = useState<string | null>(null);
+  const [nr10Uri, setNr10Uri] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handlePickImage = (type: 'selfie' | 'front' | 'back') => {
-    // Simula captura de foto via câmera ou galeria para onboarding
+  const handlePickImage = (type: 'selfie' | 'front' | 'back' | 'nr10') => {
+    // Simula captura de foto via câmera para onboarding
     const mockImage = `https://placeholder.co/600x400/064e3b/ffffff?text=${type.toUpperCase()}`;
     if (type === 'selfie') setSelfieUri(mockImage);
     if (type === 'front') setDocFrontUri(mockImage);
     if (type === 'back') setDocBackUri(mockImage);
+    if (type === 'nr10') setNr10Uri(mockImage);
   };
 
   const handleSubmit = async () => {
@@ -150,6 +152,30 @@ export const DocumentUploadScreen: React.FC<DocumentUploadScreenProps> = ({
           <TouchableOpacity style={styles.uploadArea} onPress={() => handlePickImage('back')}>
             <Upload color="#9ca3af" size={32} />
             <Text style={styles.uploadTextAlt}>Enviar Verso do Documento</Text>
+          </TouchableOpacity>
+        )}
+      </View>
+
+      {/* Seção 4: Certificado NR-10 (Opcional - Eletricistas v4.1) */}
+      <View style={styles.card}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 4 }}>
+          <Zap color="#f59e0b" size={18} style={{ marginRight: 6 }} />
+          <Text style={styles.cardTitle}>4. Certificado NR-10 (Eletricistas)</Text>
+        </View>
+        <Text style={styles.cardDesc}>
+          Opcional. Exigido pela plataforma (v4.1) para habilitar chamados de disjuntores, painéis e quadros elétricos de alta remuneração.
+        </Text>
+        {nr10Uri ? (
+          <View style={styles.previewContainer}>
+            <Image source={{ uri: nr10Uri }} style={styles.previewImage} />
+            <TouchableOpacity style={styles.reTakeBtn} onPress={() => handlePickImage('nr10')}>
+              <Text style={styles.reTakeText}>Substituir Certificado</Text>
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <TouchableOpacity style={styles.uploadArea} onPress={() => handlePickImage('nr10')}>
+            <Upload color="#f59e0b" size={32} />
+            <Text style={[styles.uploadText, { color: '#d97706' }]}>Enviar Certificado NR-10</Text>
           </TouchableOpacity>
         )}
       </View>

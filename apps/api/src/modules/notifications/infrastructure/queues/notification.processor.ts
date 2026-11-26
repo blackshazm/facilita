@@ -1,6 +1,23 @@
 import { Processor, WorkerHost } from '@nestjs/bullmq';
 import { Job } from 'bullmq';
-import { Expo, ExpoPushMessage } from 'expo-server-sdk';
+let Expo: any;
+try {
+  Expo = require('expo-server-sdk').Expo;
+} catch {
+  Expo = class DummyExpo {
+    static isExpoPushToken(token: string) {
+      return typeof token === 'string' && (token.startsWith('ExponentPushToken') || token.startsWith('ExpoPushToken'));
+    }
+    chunkPushNotifications(messages: any[]) {
+      return [messages];
+    }
+    async sendPushNotificationsAsync(messages: any[]) {
+      return [{ status: 'ok', id: 'mock-ticket-id' }];
+    }
+  };
+}
+
+type ExpoPushMessage = any;
 import { Logger } from '@nestjs/common';
 
 @Processor('notifications')

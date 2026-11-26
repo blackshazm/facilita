@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { GetBatchStatusUseCase } from './get-batch-status.usecase';
+import { PrismaService } from '../../../shared-kernel/database/prisma.service';
 
 describe('GetBatchStatusUseCase', () => {
   let provider: GetBatchStatusUseCase;
@@ -8,7 +9,10 @@ describe('GetBatchStatusUseCase', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         GetBatchStatusUseCase,
-        // TODO: Add mocked dependencies here
+        {
+          provide: PrismaService,
+          useValue: { payoutBatch: { findUnique: jest.fn(), update: jest.fn() } },
+        },
       ],
     }).compile();
 

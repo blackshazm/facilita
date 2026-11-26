@@ -12,11 +12,13 @@ export class PostgisMatchingAdapter implements MatchingEnginePort {
     radiusMeters: number,
     categoryId: string,
     tier: string,
-    limit: number = 10
+    limit: number = 10,
+    requiresNr10?: boolean,
   ): Promise<NearbyProvider[]> {
-    // PostGIS raw query to find online providers within radius, filtered by category and tier
+    // PostGIS raw query to find online providers within radius, filtered by category, tier and NR-10 qualification
     // We join ProviderLocation (matching), ActiveProvider (matching), and ProviderProfile (identity)
-    
+    const nr10Check = Boolean(requiresNr10);
+
     const result = await this.prisma.$queryRaw`
       SELECT 
         ap."providerId", 
@@ -27,6 +29,7 @@ export class PostgisMatchingAdapter implements MatchingEnginePort {
       WHERE ap."categoryId" = ${categoryId}
         AND ap."isOnline" = true
         AND pp."tier"::text = ${tier}
+        AND (NOT ${nr10Check} OR pp."nr10Verified" = true)
         AND ST_DWithin(
           pl.location, 
           ST_MakePoint(${longitude}, ${latitude})::geography, 

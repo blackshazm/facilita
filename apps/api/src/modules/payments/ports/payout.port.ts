@@ -15,4 +15,5 @@ export interface PayoutTransferResponse {
 export interface PayoutPort {
   transfer(request: PayoutTransferRequest): Promise<PayoutTransferResponse>;
   getBalance(recipientId: string): Promise<bigint>;
+  getTransfer?(externalId: string): Promise<PayoutTransferResponse>;
 }

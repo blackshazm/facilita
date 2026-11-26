@@ -3,6 +3,7 @@ import {
   Post,
   Get,
   Put,
+  Patch,
   Param,
   Body,
   Query,
@@ -42,6 +43,14 @@ export class OrderController {
       limit: limit ? Number(limit) : 10,
       status,
     });
+  }
+
+  /**
+   * GET /orders/:id — Detalhes do pedido com proteção LGPD / máscara de telefone
+   */
+  @Get(':id')
+  async getOrderById(@Param('id') id: string, @Request() req) {
+    return this.orderService.getOrderById(id, req.user.id, req.user.role);
   }
 
   /**
@@ -123,6 +132,20 @@ export class OrderController {
     @Body() body: RequestAdditionalDto,
   ) {
     return this.orderService.requestAdditional(id, req.user.id, body);
+  }
+
+  /**
+   * PATCH /orders/:id/additionals/:addId — Cliente aprova ou recusa adicional
+   */
+  @Patch(':id/additionals/:addId')
+  @HttpCode(HttpStatus.OK)
+  async respondAdditional(
+    @Param('id') orderId: string,
+    @Param('addId') addId: string,
+    @Request() req,
+    @Body() body: { status: 'APPROVED' | 'REJECTED' },
+  ) {
+    return this.orderService.respondAdditional(orderId, addId, req.user.id, body.status);
   }
 
   /**

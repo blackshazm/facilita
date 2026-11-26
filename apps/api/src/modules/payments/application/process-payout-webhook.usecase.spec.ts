@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ProcessPayoutWebhookUseCase } from './process-payout-webhook.usecase';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 
 describe('ProcessPayoutWebhookUseCase', () => {
   let provider: ProcessPayoutWebhookUseCase;
@@ -8,7 +9,14 @@ describe('ProcessPayoutWebhookUseCase', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         ProcessPayoutWebhookUseCase,
-        // TODO: Add mocked dependencies here
+        {
+          provide: 'PayoutRepositoryPort',
+          useValue: { findByExternalId: jest.fn(), save: jest.fn() },
+        },
+        {
+          provide: EventEmitter2,
+          useValue: { emit: jest.fn() },
+        },
       ],
     }).compile();
 

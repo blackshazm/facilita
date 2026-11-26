@@ -2,16 +2,16 @@
 
 import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { 
-  ShieldCheck, 
-  Sparkles, 
-  AlertCircle, 
-  ArrowLeft, 
-  MapPin, 
-  Home, 
-  Briefcase, 
-  Plus, 
-  CheckCircle2 
+import {
+  ShieldCheck,
+  Sparkles,
+  AlertCircle,
+  ArrowLeft,
+  MapPin,
+  Home,
+  Briefcase,
+  Plus,
+  CheckCircle2
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -118,33 +118,61 @@ function NewOrderContent() {
           setSelectedAddressId(defaultAddr.id);
         }
       }
-    } catch {}
+    } catch { }
   }, []);
 
-  const totalPrice = selectedService ? (urgency === 'urgent' ? selectedService.basePrice * 1.25 : selectedService.basePrice) : 0;
+  const totalPrice = selectedService ? (urgency === 'urgent' ? selectedService.basePrice + 40.0 : selectedService.basePrice) : 0;
 
   // Objeto de endereço ativo formatado
   const activeSelectedAddress = addresses.find(a => a.id === selectedAddressId);
-  const formattedAddressText = isCustomAddress 
+  const formattedAddressText = isCustomAddress
     ? (customStreet ? `${customStreet}, ${customNumber || 'S/N'} - ${customNeighborhood || 'Centro'}, ${customCity}` : 'Endereço personalizado a preencher')
-    : activeSelectedAddress 
+    : activeSelectedAddress
       ? `${activeSelectedAddress.street}, ${activeSelectedAddress.number}${activeSelectedAddress.complement ? ` (${activeSelectedAddress.complement})` : ''} - ${activeSelectedAddress.neighborhood}, ${activeSelectedAddress.city}`
       : 'Endereço não selecionado';
 
-  const handleCreateOrder = (e: React.FormEvent) => {
+  const handleCreateOrder = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedService) return;
 
-    if (isCustomAddress && (!customStreet || !customNeighborhood)) {
-      alert('Por favor, informe a rua e o bairro do atendimento.');
+    if (isCustomAddress && (!customStreet || !customNeighborhood || !customComplement?.trim())) {
+      alert('Por favor, informe a rua, o bairro e o complemento (ex: Apto, Bloco, Casa) para localização precisa do prestador.');
       return;
     }
 
     setLoading(true);
-    const mockOrderId = `ord-${Date.now()}`;
-    const idempotencyKey = typeof crypto !== 'undefined' && crypto.randomUUID 
-      ? crypto.randomUUID() 
+    let targetOrderId = `ord-${Date.now()}`;
+    const idempotencyKey = typeof crypto !== 'undefined' && crypto.randomUUID
+      ? crypto.randomUUID()
       : `idemp-${Date.now()}-${Math.random().toString(36).substring(7)}`;
+
+    try {
+      const token = typeof window !== 'undefined' ? localStorage.getItem('accessToken') : null;
+      const res = await fetch('/api/orders', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Idempotency-Key': idempotencyKey,
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+        body: JSON.stringify({
+          serviceId: selectedService.id,
+          totalAmount: totalPrice,
+          urgency: isUrgent ? 'urgent' : 'normal',
+          category: selectedService.category,
+          address: formattedAddressText,
+        }),
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        if (data?.id) {
+          targetOrderId = data.id;
+        }
+      }
+    } catch (err) {
+      console.warn('Backend indisponível ou offline. Prosseguindo com fallback controlado:', err);
+    }
 
     // Se criou endereço customizado e marcou para salvar, persiste no perfil
     if (isCustomAddress && saveCustomToProfile && customStreet) {
@@ -163,17 +191,17 @@ function NewOrderContent() {
       const updatedList = [newAddr, ...addresses];
       try {
         localStorage.setItem('facilita_user_addresses', JSON.stringify(updatedList));
-      } catch {}
+      } catch { }
     }
 
     // Salva o endereço deste pedido e chave de idempotência para consulta nas próximas etapas
     try {
       localStorage.setItem('facilita_last_order_address', formattedAddressText);
       localStorage.setItem('facilita_order_idempotency_key', idempotencyKey);
-    } catch {}
+    } catch { }
 
     setTimeout(() => {
-      router.push(`/checkout/${mockOrderId}`);
+      router.push(`/checkout/${targetOrderId}`);
     }, 400);
   };
 
@@ -214,11 +242,10 @@ function NewOrderContent() {
                     <div
                       key={srv.id}
                       onClick={() => setSelectedService(srv)}
-                      className={`p-4 rounded-xl border cursor-pointer transition-all ${
-                        isSelected
-                          ? 'border-emerald-500 bg-emerald-950/30 ring-1 ring-emerald-500'
-                          : 'border-slate-700 bg-slate-900 hover:border-slate-600'
-                      }`}
+                      className={`p-4 rounded-xl border cursor-pointer transition-all ${isSelected
+                        ? 'border-emerald-500 bg-emerald-950/30 ring-1 ring-emerald-500'
+                        : 'border-slate-700 bg-slate-900 hover:border-slate-600'
+                        }`}
                     >
                       <span className="text-xs font-semibold text-emerald-400 block uppercase tracking-wider">
                         {srv.category}
@@ -258,11 +285,10 @@ function NewOrderContent() {
                         setIsCustomAddress(false);
                         setSelectedAddressId(addr.id);
                       }}
-                      className={`p-3.5 rounded-xl border cursor-pointer transition-all flex flex-col justify-between ${
-                        isSelected
-                          ? 'border-emerald-500 bg-emerald-950/30 ring-1 ring-emerald-500'
-                          : 'border-slate-700 bg-slate-900 hover:border-slate-600'
-                      }`}
+                      className={`p-3.5 rounded-xl border cursor-pointer transition-all flex flex-col justify-between ${isSelected
+                        ? 'border-emerald-500 bg-emerald-950/30 ring-1 ring-emerald-500'
+                        : 'border-slate-700 bg-slate-900 hover:border-slate-600'
+                        }`}
                     >
                       <div className="flex items-center justify-between mb-1.5">
                         <div className="flex items-center gap-1.5">
@@ -299,11 +325,10 @@ function NewOrderContent() {
                 {/* Opção para informar outro endereço */}
                 <div
                   onClick={() => setIsCustomAddress(true)}
-                  className={`p-3.5 rounded-xl border border-dashed cursor-pointer transition-all flex items-center justify-center gap-2 ${
-                    isCustomAddress
-                      ? 'border-emerald-500 bg-emerald-950/30 ring-1 ring-emerald-500 text-emerald-400'
-                      : 'border-slate-700 bg-slate-900/60 hover:border-slate-500 text-slate-400'
-                  }`}
+                  className={`p-3.5 rounded-xl border border-dashed cursor-pointer transition-all flex items-center justify-center gap-2 ${isCustomAddress
+                    ? 'border-emerald-500 bg-emerald-950/30 ring-1 ring-emerald-500 text-emerald-400'
+                    : 'border-slate-700 bg-slate-900/60 hover:border-slate-500 text-slate-400'
+                    }`}
                   data-testid="btn-custom-address"
                 >
                   <Plus size={16} />
@@ -343,13 +368,14 @@ function NewOrderContent() {
 
                   <div className="grid grid-cols-3 gap-3">
                     <div>
-                      <label className="block text-[11px] text-slate-400 mb-1">Complemento</label>
+                      <label className="block text-[11px] text-slate-400 mb-1">Complemento *</label>
                       <input
                         type="text"
-                        placeholder="Apto 12B"
+                        placeholder="Ex: Apto 42, Bloco B"
                         value={customComplement}
                         onChange={(e) => setCustomComplement(e.target.value)}
                         className="w-full bg-slate-800 border border-slate-700 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-emerald-500"
+                        required={isCustomAddress}
                       />
                     </div>
                     <div>
@@ -442,11 +468,10 @@ function NewOrderContent() {
               <div className="grid grid-cols-2 gap-4">
                 <div
                   onClick={() => setUrgency('normal')}
-                  className={`p-4 rounded-xl border cursor-pointer ${
-                    urgency === 'normal'
-                      ? 'border-emerald-500 bg-emerald-950/30'
-                      : 'border-slate-700 bg-slate-900'
-                  }`}
+                  className={`p-4 rounded-xl border cursor-pointer ${urgency === 'normal'
+                    ? 'border-emerald-500 bg-emerald-950/30'
+                    : 'border-slate-700 bg-slate-900'
+                    }`}
                 >
                   <h4 className="font-bold text-sm text-slate-100">📅 Agendado / Normal</h4>
                   <p className="text-xs text-slate-400 mt-1">Atendimento no mesmo dia ou próximo horário disponível.</p>
@@ -454,14 +479,13 @@ function NewOrderContent() {
 
                 <div
                   onClick={() => setUrgency('urgent')}
-                  className={`p-4 rounded-xl border cursor-pointer ${
-                    urgency === 'urgent'
-                      ? 'border-emerald-500 bg-emerald-950/30'
-                      : 'border-slate-700 bg-slate-900'
-                  }`}
+                  className={`p-4 rounded-xl border cursor-pointer ${urgency === 'urgent'
+                    ? 'border-emerald-500 bg-emerald-950/30'
+                    : 'border-slate-700 bg-slate-900'
+                    }`}
                 >
                   <h4 className="font-bold text-sm text-emerald-400">⚡ URGENTE (Chamada Imediata)</h4>
-                  <p className="text-xs text-slate-400 mt-1">Prestador a caminho em até 45 minutos (+25% no valor).</p>
+                  <p className="text-xs text-slate-400 mt-1">Prestador alocado com prioridade máxima (+ R$ 40,00 taxa fixa de urgência).</p>
                 </div>
               </div>
             </div>
@@ -478,7 +502,7 @@ function NewOrderContent() {
                     <span className="text-slate-400 text-xs">Serviço:</span>
                     <span className="font-semibold text-slate-200 text-right text-xs max-w-[180px]">{selectedService.name}</span>
                   </div>
-                  
+
                   <div className="flex justify-between items-start">
                     <span className="text-slate-400 text-xs">Local:</span>
                     <span className="font-medium text-emerald-400 text-right text-xs max-w-[180px] line-clamp-2" data-testid="summary-address">

@@ -25,6 +25,7 @@ export class RedisOtpRateLimiterAdapter implements OtpRateLimiterPort, OnModuleD
       this.redisClient = new Redis({
         host,
         port,
+        password: process.env.REDIS_PASSWORD || undefined,
         maxRetriesPerRequest: 1,
         enableOfflineQueue: false,
         retryStrategy: () => null, // Não trava o processo se Redis estiver offline
@@ -130,3 +131,4 @@ export class RedisOtpRateLimiterAdapter implements OtpRateLimiterPort, OnModuleD
     }
   }
 }
+

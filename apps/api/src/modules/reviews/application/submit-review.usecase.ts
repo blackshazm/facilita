@@ -73,6 +73,29 @@ export class SubmitReviewUseCase {
 
     await this.checkAndEmitRevealedEvent(orderId, targetId, review);
 
+    // Resolução Antifraude v4.1 (#67): Se o cliente reportou oferta fora da plataforma, registrar sinal crítico
+    if (dto.offPlatformOffered === true && dto.role === ReviewRole.CUSTOMER) {
+      if ((this.prisma as any).fraudSignal) {
+        await (this.prisma as any).fraudSignal.create({
+          data: {
+            entityType: 'PROVIDER',
+            entityId: targetId,
+            signalType: 'OFF_PLATFORM_PROPOSAL',
+            severity: 'CRITICAL',
+            metadata: {
+              orderId,
+              reportedBy: authorId,
+            },
+          },
+        });
+      }
+      this.eventEmitter.emit('fraud.off_platform_reported', {
+        orderId,
+        providerId: targetId,
+        reportedBy: authorId,
+      });
+    }
+
     return review;
   }
 

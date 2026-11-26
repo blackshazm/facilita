@@ -1,11 +1,12 @@
 import { OrderService } from './order.service';
-import { NotFoundException, ForbiddenException } from '@nestjs/common';
+import { NotFoundException, ForbiddenException, BadRequestException } from '@nestjs/common';
 import { Order, OrderStatus } from '../core/order.entity';
 
 describe('OrderService', () => {
   let service: OrderService;
   let orderRepo: any;
   let mockPrisma: any;
+  let mockEventEmitter: any;
 
   beforeEach(() => {
     orderRepo = {
@@ -26,12 +27,149 @@ describe('OrderService', () => {
       },
       evidence: {
         count: jest.fn(),
-        create: jest.fn(),
+        create: jest.fn().mockImplementation((args: any) => ({
+          id: 'evid-mock-1',
+          ...args.data,
+        })),
+        findUnique: jest.fn(),
+        update: jest.fn(),
+      },
+      user: {
+        findUnique: jest.fn(),
       },
     };
-    const mockEventEmitter = { emit: jest.fn() } as any;
+    mockEventEmitter = { emit: jest.fn() };
 
     service = new OrderService(orderRepo, mockPrisma, mockEventEmitter);
+  });
+
+  describe('createOrder()', () => {
+    it('should add canonical fixed urgency fee of R$ 40.00 when urgency is urgent', async () => {
+      mockPrisma.order.create.mockImplementation((args: any) => ({
+        id: 'ord-urg-1',
+        ...args.data,
+      }));
+
+      const order = await service.createOrder({
+        userId: 'user-1',
+        totalAmount: 100.0,
+        urgency: 'urgent',
+      });
+
+      // Canônico v4.1 (#36): R$ 100 base + R$ 40 taxa fixa de urgência = R$ 140
+      expect(order.totalAmount).toBe(140.0);
+      expect(mockPrisma.order.create).toHaveBeenCalledWith(expect.objectContaining({
+        data: expect.objectContaining({
+          totalAmount: 140.0,
+        }),
+      }));
+    });
+
+    it('should keep base price when urgency is normal', async () => {
+      mockPrisma.order.create.mockImplementation((args: any) => ({
+        id: 'ord-norm-1',
+        ...args.data,
+      }));
+
+      const order = await service.createOrder({
+        userId: 'user-1',
+        totalAmount: 100.0,
+        urgency: 'normal',
+      });
+
+      expect(order.totalAmount).toBe(100.0);
+    });
+  });
+
+  describe('startOrder()', () => {
+    it('should throw BadRequestException if no BEFORE evidence exists for the order', async () => {
+      mockPrisma.order.findUnique.mockResolvedValue({
+        id: 'ord-start-1',
+        status: 'ARRIVED',
+        userId: 'user-1',
+      });
+      mockPrisma.evidence.count.mockResolvedValue(0);
+
+      await expect(
+        service.startOrder('ord-start-1', 'prov-1'),
+      ).rejects.toThrow(BadRequestException);
+    });
+
+    it('should allow startOrder when at least 1 BEFORE evidence is registered', async () => {
+      mockPrisma.order.findUnique.mockResolvedValue({
+        id: 'ord-start-1',
+        status: 'ARRIVED',
+        userId: 'user-1',
+      });
+      mockPrisma.evidence.count.mockResolvedValue(1);
+      mockPrisma.order.update.mockResolvedValue({
+        id: 'ord-start-1',
+        status: 'IN_PROGRESS',
+      });
+
+      const updated = await service.startOrder('ord-start-1', 'prov-1');
+      expect(updated.status).toBe('IN_PROGRESS');
+      expect(mockEventEmitter.emit).toHaveBeenCalledWith('order.started', {
+        orderId: 'ord-start-1',
+        providerId: 'prov-1',
+      });
+    });
+  });
+
+  describe('getOrderById()', () => {
+    const mockOrderDetails = {
+      id: 'ord-detail-1',
+      userId: 'cust-123',
+      providerId: 'prov-456',
+      status: 'MATCHED',
+      totalAmount: 150.0,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      user: {
+        id: 'cust-123',
+        name: 'Maria Oliveira',
+        phone: '11987654321',
+      },
+    };
+
+    it('should mask customer phone for PROVIDER and include call proxy flag', async () => {
+      mockPrisma.order.findUnique.mockResolvedValue(mockOrderDetails);
+      mockPrisma.user.findUnique.mockResolvedValue({
+        id: 'cust-123',
+        name: 'Maria Oliveira',
+        phone: '11987654321',
+      });
+
+      const order = await service.getOrderById('ord-detail-1', 'prov-456', 'PROVIDER');
+
+      expect(order.id).toBe('ord-detail-1');
+      expect(order.customer.phone).toBe('(11) 9****-4321');
+      expect(order.callProxyAvailable).toBe(true);
+      expect(order.chatChannelId).toBe('order-ord-detail-1');
+    });
+
+    it('should return unmasked customer phone for CUSTOMER owner or ADMIN', async () => {
+      mockPrisma.order.findUnique.mockResolvedValue(mockOrderDetails);
+      mockPrisma.user.findUnique.mockResolvedValue({
+        id: 'cust-123',
+        name: 'Maria Oliveira',
+        phone: '11987654321',
+      });
+
+      const customerView = await service.getOrderById('ord-detail-1', 'cust-123', 'CUSTOMER');
+      expect(customerView.customer.phone).toBe('11987654321');
+
+      const adminView = await service.getOrderById('ord-detail-1', 'admin-999', 'ADMIN');
+      expect(adminView.customer.phone).toBe('11987654321');
+    });
+
+    it('should throw ForbiddenException if user is not customer, provider or admin', async () => {
+      mockPrisma.order.findUnique.mockResolvedValue(mockOrderDetails);
+
+      await expect(
+        service.getOrderById('ord-detail-1', 'stranger-000', 'CUSTOMER'),
+      ).rejects.toThrow(ForbiddenException);
+    });
   });
 
   describe('checkIn()', () => {
@@ -109,7 +247,6 @@ describe('OrderService', () => {
         { id: 'ord-3', userId: 'user-1', providerId: 'prov-2', status: 'PENDING', totalAmount: 90, createdAt: new Date(), updatedAt: new Date() },
       ];
 
-      // Limit 2 with 3 items returned indicates hasMore
       mockPrisma.order.findMany.mockResolvedValue(mockOrders);
       mockPrisma.order.count.mockResolvedValue(5);
 
@@ -158,8 +295,8 @@ describe('OrderService', () => {
 
       expect(receipt.receiptNumber).toBe('REC-ORD-TEST');
       expect(receipt.breakdown.serviceGrossAmount).toBe(200);
-      expect(receipt.breakdown.platformFee).toBe(30); // 15%
-      expect(receipt.breakdown.providerNetAmount).toBe(170); // 85%
+      expect(receipt.breakdown.platformFee).toBe(40); // 20% canônico v4.1
+      expect(receipt.breakdown.providerNetAmount).toBe(160); // 80%
       expect(receipt.breakdown.taxRetention).toBe(10); // 5%
       expect(receipt.breakdown.totalPaid).toBe(200);
       expect(receipt.warranty.periodDays).toBe(90);
@@ -257,6 +394,183 @@ describe('OrderService', () => {
 
       await expect(
         service.cancelOrder('ord-cancel-3', 'user-hacker', 'Tentativa não autorizada'),
+      ).rejects.toThrow(ForbiddenException);
+    });
+  });
+
+  describe('requestAdditional()', () => {
+    const mockOrder = {
+      id: 'ord-add-1',
+      userId: 'user-cust-1',
+      providerId: 'prov-1',
+      status: 'IN_PROGRESS',
+      totalAmount: 100.0,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+
+    it('should auto-approve additionals <= R$ 30 and <= order total', async () => {
+      mockPrisma.order.findUnique.mockResolvedValue(mockOrder);
+      mockPrisma.evidence.count.mockResolvedValue(0);
+
+      const result = await service.requestAdditional('ord-add-1', 'prov-1', {
+        amount: 25.0,
+        description: 'Fita isolante e conectores',
+      });
+
+      expect(result.status).toBe('APPROVED');
+      expect(mockEventEmitter.emit).toHaveBeenCalledWith(
+        'order.additional_requested',
+        expect.objectContaining({
+          orderId: 'ord-add-1',
+          amount: 25.0,
+          autoApproved: true,
+        }),
+      );
+    });
+
+    it('should set status PENDING_CUSTOMER_APPROVAL for additionals > R$ 30 and <= order total', async () => {
+      mockPrisma.order.findUnique.mockResolvedValue(mockOrder);
+      mockPrisma.evidence.count.mockResolvedValue(0);
+
+      const result = await service.requestAdditional('ord-add-1', 'prov-1', {
+        amount: 80.0,
+        description: 'Disjuntor bipolar 40A',
+      });
+
+      expect(result.status).toBe('PENDING_CUSTOMER_APPROVAL');
+      expect(mockEventEmitter.emit).toHaveBeenCalledWith(
+        'order.additional_requested',
+        expect.objectContaining({
+          orderId: 'ord-add-1',
+          amount: 80.0,
+          autoApproved: false,
+        }),
+      );
+    });
+
+    it('should trigger PENDING_ADMIN_AUDIT when additional is > 100% of order total (v4.1 anti-extortion lock)', async () => {
+      mockPrisma.order.findUnique.mockResolvedValue(mockOrder); // totalAmount = 100.0
+      mockPrisma.evidence.count.mockResolvedValue(0);
+
+      const result = await service.requestAdditional('ord-add-1', 'prov-1', {
+        amount: 150.0, // > 100.0
+        description: 'Troca de fiação completa não orçada',
+      });
+
+      expect(result.status).toBe('PENDING_ADMIN_AUDIT');
+      expect(mockEventEmitter.emit).toHaveBeenCalledWith(
+        'order.additional_audit_required',
+        expect.objectContaining({
+          orderId: 'ord-add-1',
+          providerId: 'prov-1',
+          orderAmount: 100.0,
+          additionalAmount: 150.0,
+          description: 'Troca de fiação completa não orçada',
+        }),
+      );
+    });
+
+    it('should reject if order already reached max 3 additionals', async () => {
+      mockPrisma.order.findUnique.mockResolvedValue(mockOrder);
+      mockPrisma.evidence.count.mockResolvedValue(3);
+
+      await expect(
+        service.requestAdditional('ord-add-1', 'prov-1', {
+          amount: 20.0,
+          description: 'Quarto adicional',
+        }),
+      ).rejects.toThrow(BadRequestException);
+    });
+  });
+
+  describe('respondAdditional()', () => {
+    const mockOrder = {
+      id: 'ord-add-2',
+      userId: 'user-cust-1',
+      providerId: 'prov-1',
+      status: 'IN_PROGRESS',
+      totalAmount: 140.0,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+
+    const mockEvidence = {
+      id: 'evid-add-1',
+      orderId: 'ord-add-2',
+      providerId: 'prov-1',
+      url: 'https://exemplo.com/material.png',
+      type: 'DISPUTE',
+      metadata: {
+        amount: 60.0,
+        description: 'Válvula de descarga Hydra',
+        status: 'PENDING_CUSTOMER_APPROVAL',
+      },
+      createdAt: new Date(),
+    };
+
+    it('should approve additional, increment order totalAmount, and emit event', async () => {
+      mockPrisma.order.findUnique.mockResolvedValue(mockOrder);
+      mockPrisma.evidence.findUnique.mockResolvedValue(mockEvidence);
+      mockPrisma.evidence.update.mockResolvedValue({
+        ...mockEvidence,
+        metadata: { ...mockEvidence.metadata, status: 'APPROVED' },
+      });
+      mockPrisma.order.update.mockResolvedValue({
+        ...mockOrder,
+        totalAmount: 200.0,
+      });
+
+      const result = await service.respondAdditional('ord-add-2', 'evid-add-1', 'user-cust-1', 'APPROVED');
+
+      expect(result.status).toBe('APPROVED');
+      expect(mockPrisma.order.update).toHaveBeenCalledWith({
+        where: { id: 'ord-add-2' },
+        data: { totalAmount: 200.0 },
+      });
+      expect(mockEventEmitter.emit).toHaveBeenCalledWith(
+        'order.additional_responded',
+        expect.objectContaining({
+          orderId: 'ord-add-2',
+          additionalId: 'evid-add-1',
+          userId: 'user-cust-1',
+          decision: 'APPROVED',
+        }),
+      );
+    });
+
+    it('should reject additional without updating order totalAmount', async () => {
+      const freshEvidence = {
+        ...mockEvidence,
+        metadata: { ...mockEvidence.metadata, status: 'PENDING_CUSTOMER_APPROVAL' },
+      };
+      mockPrisma.order.findUnique.mockResolvedValue(mockOrder);
+      mockPrisma.evidence.findUnique.mockResolvedValue(freshEvidence);
+      mockPrisma.evidence.update.mockResolvedValue({
+        ...freshEvidence,
+        metadata: { ...freshEvidence.metadata, status: 'REJECTED' },
+      });
+
+      const result = await service.respondAdditional('ord-add-2', 'evid-add-1', 'user-cust-1', 'REJECTED');
+
+      expect(result.status).toBe('REJECTED');
+      expect(mockPrisma.order.update).not.toHaveBeenCalled();
+      expect(mockEventEmitter.emit).toHaveBeenCalledWith(
+        'order.additional_responded',
+        expect.objectContaining({
+          orderId: 'ord-add-2',
+          additionalId: 'evid-add-1',
+          userId: 'user-cust-1',
+          decision: 'REJECTED',
+        }),
+      );
+    });
+
+    it('should throw ForbiddenException if user is not the order customer', async () => {
+      mockPrisma.order.findUnique.mockResolvedValue(mockOrder);
+
+      await expect(
+        service.respondAdditional('ord-add-2', 'evid-add-1', 'intruder-user', 'APPROVED'),
       ).rejects.toThrow(ForbiddenException);
     });
   });

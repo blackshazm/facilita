@@ -1,11 +1,22 @@
-import { Controller, Get, Post, Delete, Body, Param, Request, UseGuards, HttpStatus, HttpCode } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Delete,
+  Body,
+  Param,
+  Request,
+  HttpStatus,
+  HttpCode,
+  BadRequestException,
+} from '@nestjs/common';
 
 export interface UserAddressDto {
   id?: string;
   label: 'CASA' | 'TRABALHO' | 'OUTRO';
   street: string;
   number: string;
-  complement?: string;
+  complement: string; // Resolução v4.1 (#74): Obrigatório para evitar falha em portarias e condomínios
   neighborhood: string;
   city: string;
   state: string;
@@ -58,6 +69,13 @@ export class AddressController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   async saveAddress(@Request() req: any, @Body() dto: UserAddressDto) {
+    // Resolução v4.1 (#74): Validação obrigatória de complemento
+    if (!dto.complement || !dto.complement.trim()) {
+      throw new BadRequestException(
+        'O complemento do endereço (ex: Apto, Bloco, Casa, Fundos) é obrigatório para localização precisa.',
+      );
+    }
+
     const userId = req.user?.id || 'default';
     const current = USER_ADDRESSES_STORE.get(userId) || [
       ...(USER_ADDRESSES_STORE.get('default') || []),
@@ -65,6 +83,7 @@ export class AddressController {
 
     const newAddress: UserAddressDto = {
       ...dto,
+      complement: dto.complement.trim(),
       id: dto.id || `addr-${Date.now()}`,
       isDefault: dto.isDefault || current.length === 0,
     };

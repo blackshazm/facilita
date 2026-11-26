@@ -79,7 +79,20 @@ export class CatalogCacheService implements OnModuleDestroy {
     });
   }
 
-  async clear(): Promise<void> {
+  async clear(category?: string): Promise<void> {
+    if (category && category !== 'all') {
+      const key = this.getKey(category);
+      if (this.redisClient && this.redisClient.status === 'ready') {
+        try {
+          await this.redisClient.del(key);
+        } catch {
+          // Fallback
+        }
+      }
+      this.memoryCache.delete(key);
+      return;
+    }
+
     if (this.redisClient && this.redisClient.status === 'ready') {
       try {
         const keys = await this.redisClient.keys('catalog:services:*');

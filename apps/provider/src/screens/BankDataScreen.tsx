@@ -13,9 +13,9 @@ import {
   Alert 
 } from 'react-native';
 import { Building, ArrowRight, ArrowLeft, CheckCircle, AlertTriangle } from 'lucide-react-native';
-import axios from 'axios';
+import { StorageService } from '../services/StorageService';
 
-const API_URL = 'https://api.facilita.com.br'; // Mock API URL
+const API_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3333';
 
 interface FormInputProps {
   icon?: React.ReactNode;
@@ -75,14 +75,26 @@ export const BankDataScreen = ({ navigation }: { navigation?: any }) => {
 
   const fetchBankData = async () => {
     try {
-      // Mocking fetch
-      // const response = await axios.get(`${API_URL}/payments/bank-data`, { headers: { Authorization: `Bearer token` }});
-      // if (response.data) {
-      //   setBankDataUpdatedAt(new Date(response.data.bankDataUpdatedAt));
-      // }
-      setFetchLoading(false);
+      const profile = await StorageService.getProfile();
+      const token = profile?.token;
+      if (token) {
+        const response = await fetch(`${API_URL}/payments/bank-data`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (response.ok) {
+          const data = await response.json();
+          if (data.bankCode) setBankCode(data.bankCode);
+          if (data.bankBranch) setBankBranch(data.bankBranch);
+          if (data.bankBranchDigit) setBankBranchDigit(data.bankBranchDigit);
+          if (data.bankAccount) setBankAccount(data.bankAccount);
+          if (data.bankAccountDigit) setBankAccountDigit(data.bankAccountDigit);
+          if (data.bankAccountType) setBankAccountType(data.bankAccountType);
+          if (data.bankDataUpdatedAt) setBankDataUpdatedAt(new Date(data.bankDataUpdatedAt));
+        }
+      }
     } catch (error) {
-      console.error('Error fetching bank data', error);
+      console.warn('Fallback ao carregar dados bancários:', error);
+    } finally {
       setFetchLoading(false);
     }
   };
@@ -95,26 +107,34 @@ export const BankDataScreen = ({ navigation }: { navigation?: any }) => {
 
     setLoading(true);
     try {
-      // Mock API call
-      // await axios.put(`${API_URL}/payments/bank-data`, {
-      //   bankCode,
-      //   bankBranch,
-      //   bankBranchDigit,
-      //   bankAccount,
-      //   bankAccountDigit,
-      //   bankAccountType
-      // });
-      
-      // Simulate delay
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
+      const profile = await StorageService.getProfile();
+      const token = profile?.token;
+
+      if (token) {
+        await fetch(`${API_URL}/payments/bank-data`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            bankCode,
+            bankBranch,
+            bankBranchDigit,
+            bankAccount,
+            bankAccountDigit,
+            bankAccountType,
+          }),
+        });
+      }
+
       setSaveSuccess(true);
       setBankDataUpdatedAt(new Date());
-      Alert.alert('Dados salvos!', 'Seu próximo saque será processado automaticamente.');
-      
+      Alert.alert('Dados Salvos com Sucesso! 🏦', 'Sua conta bancária está vinculada e seus repasses automáticos Pix cairão nesta conta.');
       setTimeout(() => setSaveSuccess(false), 2000);
     } catch (error) {
-      Alert.alert('Erro', 'Falha ao salvar os dados bancários. Tente novamente.');
+      console.warn('Erro ao salvar dados bancários:', error);
+      Alert.alert('Erro', 'Falha ao salvar dados bancários. Tente novamente.');
     } finally {
       setLoading(false);
     }

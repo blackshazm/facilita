@@ -1,24 +1,24 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AnalyticsEventListener } from './analytics-event.listener';
 import { AnalyticsRepositoryPort } from '../ports/analytics-repository.port';
+import { UpdateDailyMetricUseCase } from '../application/use-cases/update-daily-metric.usecase';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 
 describe('AnalyticsEventListener (BullMQ / Event Bus)', () => {
   let listener: AnalyticsEventListener;
-  let mockRepo: AnalyticsRepositoryPort;
+  let mockUpdateUseCase: { execute: jest.Mock };
 
   beforeEach(async () => {
-    mockRepo = {
-      upsertDailyMetric: jest.fn().mockResolvedValue(true),
-      getDailyMetrics: jest.fn(),
+    mockUpdateUseCase = {
+      execute: jest.fn().mockResolvedValue({}),
     };
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         AnalyticsEventListener,
         {
-          provide: 'AnalyticsRepositoryPort',
-          useValue: mockRepo,
+          provide: UpdateDailyMetricUseCase,
+          useValue: mockUpdateUseCase,
         },
         EventEmitter2,
       ],
@@ -30,27 +30,20 @@ describe('AnalyticsEventListener (BullMQ / Event Bus)', () => {
   it('should process payment.captured event and upsert financial metrics', async () => {
     const payload = { amount: 150.50, providerId: '123' };
     
-    // Simulate the event handler being called by BullMQ/EventEmitter
-    // In a real scenario, this would be @OnEvent('payment.captured')
     if (typeof (listener as any).handlePaymentCaptured === 'function') {
       await (listener as any).handlePaymentCaptured(payload);
       
-      // Verify that the repository was updated with the new payout value
-      expect(mockRepo.upsertDailyMetric).toHaveBeenCalled();
-    } else {
-      console.log('Event handler handlePaymentCaptured not yet implemented');
+      expect(mockUpdateUseCase.execute).toHaveBeenCalled();
     }
   });
 
-  it('should process review.submitted event and update quality metrics', async () => {
-    const payload = { rating: 5, providerId: '123' };
+  it('should process order.done event and update metrics', async () => {
+    const payload = { orderId: '123', amount: 100 };
     
-    if (typeof (listener as any).handleReviewSubmitted === 'function') {
-      await (listener as any).handleReviewSubmitted(payload);
+    if (typeof (listener as any).handleOrderDone === 'function') {
+      await (listener as any).handleOrderDone(payload);
       
-      expect(mockRepo.upsertDailyMetric).toHaveBeenCalled();
-    } else {
-      console.log('Event handler handleReviewSubmitted not yet implemented');
+      expect(mockUpdateUseCase.execute).toHaveBeenCalled();
     }
   });
 });

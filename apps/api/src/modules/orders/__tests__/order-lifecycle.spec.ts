@@ -71,14 +71,14 @@ describe('OrderService — Lifecycle & Rules', () => {
       expect(prisma.order.create).toHaveBeenCalled();
     });
 
-    it('deve aplicar taxa de 25% em pedidos urgentes', async () => {
+    it('deve aplicar taxa fixa de urgência de R$ 40 em pedidos urgentes (v4.1 #36)', async () => {
       const result = await service.createOrder({
         userId: 'cust-1',
         totalAmount: 100.0,
         urgency: 'urgent',
       });
 
-      expect(result.totalAmount).toBe(125.0);
+      expect(result.totalAmount).toBe(140.0);
     });
   });
 

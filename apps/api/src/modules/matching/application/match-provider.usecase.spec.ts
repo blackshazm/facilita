@@ -3,8 +3,8 @@ import { MATCHING_ENGINE_PORT } from '../ports/matching-engine.port';
 
 describe('MatchProviderUseCase', () => {
   let useCase: MatchProviderUseCase;
-  let matchingEngine: any;
-  let gateway: any;
+  let matchingEngine: { findProvidersInRadius: jest.Mock };
+  let gateway: { dispatchToProvider: jest.Mock };
 
   const baseRequest: DispatchRequest = {
     orderId: 'order-1',
@@ -21,7 +21,7 @@ describe('MatchProviderUseCase', () => {
       dispatchToProvider: jest.fn().mockReturnValue(true),
     };
 
-    useCase = new MatchProviderUseCase(matchingEngine, gateway);
+    useCase = new MatchProviderUseCase(matchingEngine, gateway as any);
   });
 
   it('should search OURO tier first', async () => {
@@ -102,6 +102,21 @@ describe('MatchProviderUseCase', () => {
 
     expect(matchingEngine.findProvidersInRadius).toHaveBeenCalledWith(
       expect.any(Number), expect.any(Number), 10000, expect.any(String), expect.any(String), 5,
+    );
+  });
+
+  it('should propagate requiresNr10 flag to matchingEngine for electrical safety (v4.1 #42 & #96)', async () => {
+    matchingEngine.findProvidersInRadius.mockResolvedValue([
+      { providerId: 'p-nr10-certified', distance: 600 },
+    ]);
+
+    await useCase.execute({
+      ...baseRequest,
+      requiresNr10: true,
+    });
+
+    expect(matchingEngine.findProvidersInRadius).toHaveBeenCalledWith(
+      -23.55, -46.63, 5000, 'cat-eletrica', 'OURO', 5, true,
     );
   });
 });

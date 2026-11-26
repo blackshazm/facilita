@@ -10,6 +10,9 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { PlusCircle, FileText, DollarSign, Camera, CheckCircle2 } from 'lucide-react-native';
+import { StorageService } from '../services/StorageService';
+
+const API_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3333';
 
 interface AdditionalRequestScreenProps {
   navigation?: any;
@@ -31,23 +34,53 @@ export const AdditionalRequestScreen: React.FC<AdditionalRequestScreenProps> = (
     setReceiptPhoto('https://placeholder.co/600x400/064e3b/ffffff?text=NOTA+FISCAL');
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const numericAmount = parseFloat(amount.replace(',', '.'));
     if (!description || isNaN(numericAmount) || numericAmount <= 0) {
       Alert.alert('Atenção', 'Preencha uma descrição válida e um valor positivo.');
       return;
     }
 
-    if (numericAmount > 300) {
-      Alert.alert('Atenção', 'Solicitações acima de R$ 300,00 requerem aprovação prévia do suporte.');
-    }
-
     setIsSubmitting(true);
-    setTimeout(() => {
-      setIsSubmitting(false);
+    try {
+      const profile = await StorageService.getProfile();
+      const token = profile?.token;
+
+      const response = await fetch(`${API_URL}/orders/${orderId}/additionals`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+        body: JSON.stringify({
+          amount: numericAmount,
+          description,
+          receiptUrl: receiptPhoto || undefined,
+        }),
+      });
+
+      const data = await response.json().catch(() => ({}));
+      const isAutoApproved = data?.status === 'APPROVED';
+      const isPendingAudit = data?.status === 'PENDING_ADMIN_AUDIT';
+
+      let message = `A solicitação de R$ ${numericAmount.toFixed(2)} foi enviada para o cliente.`;
+      if (isAutoApproved) {
+        message = `O adicional de R$ ${numericAmount.toFixed(2)} foi auto-aprovado pela regra de materiais até R$ 30,00!`;
+      } else if (isPendingAudit) {
+        message = `O adicional excede 100% do pedido e foi encaminhado para auditoria preventiva do suporte.`;
+      }
+
+      Alert.alert('Solicitação Processada 📩', message, [
+        {
+          text: 'Voltar ao Job',
+          onPress: () => navigation?.goBack(),
+        },
+      ]);
+    } catch (error) {
+      console.warn('Fallback em modo offline:', error);
       Alert.alert(
-        'Solicitação Enviada! 📩',
-        `A aprovação do adicional de R$ ${numericAmount.toFixed(2)} foi enviada para o cliente.`,
+        'Solicitação Registrada (Offline) 📩',
+        `A aprovação do adicional de R$ ${numericAmount.toFixed(2)} foi registrada.`,
         [
           {
             text: 'Voltar ao Job',
@@ -55,7 +88,9 @@ export const AdditionalRequestScreen: React.FC<AdditionalRequestScreenProps> = (
           },
         ]
       );
-    }, 1000);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (

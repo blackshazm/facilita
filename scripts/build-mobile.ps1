@@ -20,3 +20,4 @@ Write-Host "🚀 Disparando build na nuvem da Expo..." -ForegroundColor Green
 eas build --platform $Platform --profile $Profile
 
 Write-Host "✅ Build finalizado! Acesse o link retornado pela Expo para baixar os binarios." -ForegroundColor Green
+

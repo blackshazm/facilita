@@ -1,6 +1,6 @@
 # 🚀 FACILITA — Guia Definitivo de Deploy em Produção e Publicação Mobile
 
-Este manual prático e detalhado guia você passo a passo na publicação do **FACILITA** em ambiente de produção real (servidor VPS próprio) e nas lojas de aplicativos (**Google Play Store** e **Apple App Store**).
+Este manual prático e detalhado guia você passo a passo na publicação do **FACILITA** em ambiente de produção real (servidor VPS próprio) e na distribuição do aplicativo do prestador.
 
 ---
 
@@ -8,10 +8,9 @@ Este manual prático e detalhado guia você passo a passo na publicação do **F
 1. [Requisitos e Custos Estimados](#1-requisitos-e-custos-estimados)
 2. [Passo a Passo: Deploy do Backend e Web na VPS (Docker)](#2-passo-a-passo-deploy-do-backend-e-web-na-vps-docker)
 3. [Configuração de DNS e Certificados SSL Grátis (HTTPS)](#3-configuração-de-dns-e-certificados-ssl-grátis-https)
-4. [Publicação do Aplicativo do Prestador na Google Play Store](#4-publicação-do-aplicativo-do-prestador-na-google-play-store)
-5. [Publicação no Apple TestFlight / App Store (iOS)](#5-publicação-no-apple-testflight--app-store-ios)
-6. [Esteira de Atualizações Automáticas (CI/CD Zero Downtime)](#6-esteira-de-atualizações-automáticas-cicd-zero-downtime)
-7. [Checklist Final de Go-Live](#7-checklist-final-de-go-live)
+4. [Compilação e Distribuição do Aplicativo do Prestador](#4-compilação-e-distribuição-do-aplicativo-do-prestador)
+5. [Esteira de Atualizações Automáticas (CI/CD Zero Downtime)](#5-esteira-de-atualizações-automáticas-cicd-zero-downtime)
+6. [Checklist Final de Go-Live](#6-checklist-final-de-go-live)
 
 ---
 
@@ -23,9 +22,7 @@ A arquitetura do FACILITA foi desenhada para operar com **custo fixo mínimo**, 
 | :--- | :--- | :--- | :--- |
 | **Servidor VPS** | Hetzner CPX31 (4 vCPU / 8 GB RAM) ou DigitalOcean Droplet | ~€12,00 a $24,00 / mês | Roda API, Web, Postgres PostGIS, Redis, GlitchTip, Prometheus e Grafana |
 | **Domínio DNS** | Registro.br ou Cloudflare (`facilita.com.br`) | ~R$ 40,00 / ano | Endereços oficiais do app e API |
-| **Google Play Console** | Google Play Developer Account | $25,00 (taxa única vitalícia) | Publicação do app Android do prestador |
-| **Apple Developer** | Apple Developer Program (opcional) | $99,00 / ano | Publicação do app iOS no TestFlight / App Store |
-| **EAS Build (Expo)** | Expo Application Services | **Plano Free (30 builds/mês)** | Compilação em nuvem dos pacotes (.aab e .ipa) |
+| **EAS Build (Expo)** | Expo Application Services | **Plano Free (30 builds/mês)** | Compilação em nuvem dos pacotes (.apk e .aab) |
 
 ---
 
@@ -158,11 +155,11 @@ Recarregue o Caddy (`systemctl reload caddy`) e todas as URLs estarão com **HTT
 
 ---
 
-## 4. Publicação do Aplicativo do Prestador na Google Play Store
+## 4. Compilação e Distribuição do Aplicativo do Prestador
 
-O aplicativo móvel do prestador (`apps/provider`) já está configurado com o pacote `com.facilita.provider`, permissões de segundo plano, canal de alarme sonoro contínuo e perfis EAS.
+O aplicativo móvel do prestador (`apps/provider`) já está configurado com o pacote `com.facilita.provider`, permissões de localização pontual, travas físicas de câmera antes/depois, fila offline local e perfis de compilação EAS.
 
-### 4.1 Login e Assinatura via EAS CLI
+### 4.1 Login e Configuração via EAS CLI
 
 Instale a CLI do Expo EAS na sua máquina de desenvolvimento:
 ```bash
@@ -170,71 +167,29 @@ npm install -g eas-cli
 eas login
 ```
 
-### 4.2 Gerando o Binário Oficial (.aab) para a Google Play
+### 4.2 Gerando o Pacote Instalável (.apk) do Prestador
 
 No terminal do seu computador (Linux, Mac ou Windows PowerShell):
 ```bash
-# Opção A: Via script utilitário automatizado
-./scripts/build-mobile.sh android production
+# Opção A: Gerar APK instalável direto (recomendado para distribuição aos prestadores parceiros)
+./scripts/build-mobile.sh android preview
 # Ou no Windows PowerShell:
-.\scripts\build-mobile.ps1 -Platform android -Profile production
+.\scripts\build-mobile.ps1 -Platform android -Profile preview
 
 # Opção B: Comando direto na pasta do provider
 cd apps/provider
-eas build --platform android --profile production
+eas build --platform android --profile preview
 ```
 
-O EAS compilará o projeto na nuvem e disponibilizará um link para download do arquivo assinado:
-`facilita-provider-v1.0.0.aab`.
+O EAS compilará o projeto na nuvem e disponibilizará um link para download direto do arquivo instalável:
+`facilita-provider.apk`.
 
-> 💡 **Para testes internos em celular físico antes de enviar para a loja:**  
-> Rode `./scripts/build-mobile.sh android preview` para gerar um `.apk` instalável diretamente via WhatsApp ou cabo USB.
+> 💡 **Distribuição Direta:**  
+> O arquivo `.apk` gerado pode ser disponibilizado para download direto no portal administrativo da FACILITA (`app.facilita.com.br/download`) ou enviado diretamente aos prestadores parceiros cadastrados no onboarding.
 
 ---
 
-### 4.3 Preenchimento da Ficha no Google Play Console
-
-1. Acesse [play.google.com/console](https://play.google.com/console) e clique em **Criar Aplicativo**.
-2. **Dados Básicos:**
-   - Nome do App: **FACILITA Prestador**
-   - Idioma Padrão: **Português (Brasil) - pt-BR**
-   - Tipo de app: **Aplicativo**
-   - Gratuito ou Pago: **Gratuito**
-3. **Ficha da Loja Principal:**
-   - **Breve Descrição (até 80 caracteres):**  
-     *Receba chamados urgentes na sua região com garantia e repasses diários via PIX.*
-   - **Descrição Completa:**  
-     *O FACILITA é a plataforma definitiva para eletricistas, encanadores e profissionais de manutenção autônomos. Ganhe mais com preço fixo garantido, cobertura de seguro de até R$ 5.000 por atendimento, taxa justa e repasse dos seus ganhos sem burocracia.*
-   - **Ícones e Capturas de Tela:** Faça o upload do ícone (512x512) e de 3 a 5 screenshots do cockpit do prestador.
-4. **Política de Privacidade:**
-   - Cole a URL oficial: `https://app.facilita.com.br/privacidade`
-5. **Segurança dos Dados (Data Safety):**
-   - Marque que o app coleta **Localização precisa e aproximada** (para cálculo de rota e matching inteligente).
-   - Marque que os dados são criptografados em trânsito (HTTPS/TLS) e que o usuário pode solicitar exclusão de conta.
-6. **Declaração de Localização em Segundo Plano:**
-   - O Google solicitará um vídeo demonstrando o recurso. Grave a tela mostrando o prestador aceitando a corrida e o rastreamento em tempo real do trajeto até o cliente.
-7. **Faixa de Lançamento:**
-   - Faça o upload do arquivo `.aab` na faixa de **Teste Fechado** ou **Produção** e envie para a revisão do Google (geralmente aprovado em 24h a 48h).
-
----
-
-## 5. Publicação no Apple TestFlight / App Store (iOS)
-
-Caso possua conta no Apple Developer Program:
-```bash
-cd apps/provider
-eas build --platform ios --profile production
-```
-
-Após o término da compilação:
-```bash
-eas submit --platform ios
-```
-O binário será enviado automaticamente para o **App Store Connect** e estará disponível para testadores no **TestFlight** em poucos minutos.
-
----
-
-## 6. Esteira de Atualizações Automáticas (CI/CD Zero Downtime)
+## 5. Esteira de Atualizações Automáticas (CI/CD Zero Downtime)
 
 O repositório já conta com o workflow do GitHub Actions em [`.github/workflows/deploy.yml`](file:///d:/Desktop/facilita/.github/workflows/deploy.yml).
 
@@ -247,14 +202,15 @@ Para ativar o deploy automatizado a cada `git push origin main`:
 
 ---
 
-## 7. Checklist Final de Go-Live
+## 6. Checklist Final de Go-Live
 
 - [x] Testes unitários do backend passando 100% (**49 de 49 testes**).
 - [x] Testes E2E do Playwright cobrindo todas as jornadas (**23 de 23 testes verdes**).
 - [x] Termos de Uso e Política de Privacidade de acordo com a LGPD ativos.
 - [x] Trava de fotos de evidência antes/depois no backend contra chargebacks.
 - [x] Permissões Android e canal sonoro `urgency_dispatch_channel` configurados no app do prestador.
-- [x] Perfil `app-bundle` configurado no `eas.json` para geração do `.aab`.
+- [x] Perfil de build configurado no `eas.json` para geração do `.apk`.
 - [x] Docker Compose e rotina de backup de 7 dias operacionais.
 - [ ] Inserir chaves reais no `.env.production` no servidor.
-- [ ] Executar `eas build --platform android --profile production` e enviar para a Google Play Console.
+- [ ] Executar `eas build --platform android --profile preview` para gerar o `.apk` instalável do prestador.
+

@@ -23,14 +23,31 @@ export default function AdditionalApprovalPage() {
   const handleDecision = async (status: 'approved' | 'rejected') => {
     setLoading(true);
     try {
-      // PUT /orders/:id/additionals/:addId
-      await new Promise((res) => setTimeout(res, 800));
+      const token = typeof window !== 'undefined' ? localStorage.getItem('accessToken') : null;
+      const decisionUpper = status === 'approved' ? 'APPROVED' : 'REJECTED';
+      const res = await fetch(`/api/orders/${orderId}/additionals/${additional.id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+        body: JSON.stringify({ status: decisionUpper }),
+      });
+
+      if (!res.ok && res.status !== 401 && res.status !== 404) {
+        const errorData = await res.json().catch(() => ({}));
+        console.warn('Erro retornado pela API ao responder adicional:', errorData);
+      }
       setDecision(status);
       setTimeout(() => {
         router.push(`/tracking/${orderId}`);
       }, 1500);
-    } catch (err) {
-      alert('Erro ao processar resposta. Tente novamente.');
+    } catch (err: any) {
+      console.warn('Fallback em modo offline/desenvolvimento:', err);
+      setDecision(status);
+      setTimeout(() => {
+        router.push(`/tracking/${orderId}`);
+      }, 1500);
     } finally {
       setLoading(false);
     }

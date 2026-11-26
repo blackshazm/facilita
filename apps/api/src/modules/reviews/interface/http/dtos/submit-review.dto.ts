@@ -48,4 +48,9 @@ export class SubmitReviewDto {
   @IsString({ each: true })
   @ArrayMaxSize(3)
   photoUrls?: string[];
+
+  // Resolução Antifraude v4.1 (#67): Pergunta de saída para denúncia de desintermediação
+  @IsOptional()
+  @IsBoolean()
+  offPlatformOffered?: boolean;
 }

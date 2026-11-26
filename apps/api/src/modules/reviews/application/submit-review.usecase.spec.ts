@@ -130,4 +130,26 @@ describe('SubmitReviewUseCase', () => {
       expect.objectContaining({ orderId: 'o1' }),
     );
   });
+
+  it('should create a CRITICAL FraudSignal when customer reports offPlatformOffered: true', async () => {
+    prisma.order.findUnique.mockResolvedValue({ id: 'o1', userId: 'u1', providerId: 'p1' });
+    prisma.review.findFirst.mockResolvedValue(null);
+    prisma.review.create.mockResolvedValue({ id: 'rev-1', ...validDto });
+    prisma.fraudSignal = { create: jest.fn().mockResolvedValue({ id: 'fs-1' }) };
+
+    await useCase.execute('o1', 'u1', { ...validDto, offPlatformOffered: true });
+
+    expect(prisma.fraudSignal.create).toHaveBeenCalledWith({
+      data: {
+        entityType: 'PROVIDER',
+        entityId: 'p1',
+        signalType: 'OFF_PLATFORM_PROPOSAL',
+        severity: 'CRITICAL',
+        metadata: {
+          orderId: 'o1',
+          reportedBy: 'u1',
+        },
+      },
+    });
+  });
 });

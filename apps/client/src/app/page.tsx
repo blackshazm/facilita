@@ -3,7 +3,7 @@ import React from 'react';
 import { useRouter } from 'next/navigation';
 import { ServiceCard } from '../components/ServiceCard';
 import Link from 'next/link';
-import { ShieldCheck, Clock, MapPin, Sparkles, Wrench, FileText, Lock, HeartHandshake } from 'lucide-react';
+import { ShieldCheck, Clock, MapPin, Sparkles, Wrench, FileText, Lock, HeartHandshake, Smartphone } from 'lucide-react';
 
 const MOCK_SERVICES = [
   { id: '1', name: 'Instalação de chuveiro', description: 'Troca/instalação de chuveiro elétrico. Não inclui o chuveiro nem fiação nova.', price: 'R$ 120,00', time: '1h' },
@@ -129,6 +129,9 @@ export default function HomePage() {
           </div>
 
           <div className="flex flex-wrap items-center justify-center gap-6">
+            <Link href="/download" className="text-emerald-400 hover:text-emerald-300 font-bold transition flex items-center gap-1">
+              <Smartphone size={14} /> Baixar App do Prestador
+            </Link>
             <Link href="/termos" className="hover:text-emerald-400 transition flex items-center gap-1">
               <FileText size={14} /> Termos de Uso
             </Link>

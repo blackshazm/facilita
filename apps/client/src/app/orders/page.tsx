@@ -162,7 +162,8 @@ export default function OrdersHistoryPage() {
 
   const handleOpenReceipt = (order: OrderItem) => {
     const gross = order.price;
-    const fee = Number((gross * 0.15).toFixed(2));
+    // Regra Canônica v4.1: Comissão unificada em 20%
+    const fee = Number((gross * 0.20).toFixed(2));
     const net = Number((gross - fee).toFixed(2));
     const taxes = Number((gross * 0.05).toFixed(2));
 
@@ -492,7 +493,7 @@ export default function OrdersHistoryPage() {
               </div>
 
               <div className="flex justify-between py-1 text-slate-400 text-[11px] print:text-gray-700">
-                <span>Taxa de Intermediação e Seguro Garantia Facilita (15%)</span>
+                <span>Taxa de Intermediação da Plataforma (20%)</span>
                 <span className="font-mono">R$ {selectedReceipt.breakdown.platformFee.toFixed(2)}</span>
               </div>
 
@@ -507,15 +508,15 @@ export default function OrdersHistoryPage() {
               </div>
             </div>
 
-            {/* Selo de Garantia de 90 dias */}
+            {/* Selo de Garantia Legal de 90 dias */}
             <div className="bg-emerald-950/30 border border-emerald-500/40 p-4 rounded-2xl flex items-center gap-3 print:border-green-700 print:bg-green-50">
               <ShieldCheck size={28} className="text-emerald-400 shrink-0 print:text-green-800" />
               <div>
                 <p className="text-xs font-bold text-emerald-300 print:text-green-900">
-                  Garantia Legal & Contratual Facilita (90 Dias)
+                  Garantia Legal de Satisfação Facilita (90 Dias — CDC Art. 26)
                 </p>
                 <p className="text-[11px] text-slate-300 mt-0.5 print:text-gray-700">
-                  Válida até <strong className="text-white print:text-black">{selectedReceipt.warrantyUntil}</strong>. Cobre retrabalhos e danos com seguro de até R$ 5.000,00.
+                  Válida até <strong className="text-white print:text-black">{selectedReceipt.warrantyUntil}</strong>. Política de reexecução gratuita e conformidade técnica.
                 </p>
               </div>
             </div>
@@ -612,3 +613,4 @@ export default function OrdersHistoryPage() {
     </div>
   );
 }
+

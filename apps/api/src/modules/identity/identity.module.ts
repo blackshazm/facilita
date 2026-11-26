@@ -23,7 +23,7 @@ import { ProviderController } from './interface/provider.controller';
 import { AddressController } from './interface/address.controller';
 import { KycService } from './application/kyc.service';
 import { StoragePort } from './ports/storage.port';
-import { MockStorageAdapter } from './infrastructure/mock-storage.adapter';
+import { CloudflareR2StorageAdapter } from './infrastructure/cloudflare-r2-storage.adapter';
 import { FraudModule } from '../fraud/fraud.module';
 
 @Module({
@@ -62,7 +62,7 @@ import { FraudModule } from '../fraud/fraud.module';
     KycService,
     {
       provide: StoragePort,
-      useClass: MockStorageAdapter,
+      useClass: CloudflareR2StorageAdapter,
     },
   ],
   exports: [USER_REPOSITORY_PORT, PROVIDER_REPOSITORY_PORT, GetUserUseCase],

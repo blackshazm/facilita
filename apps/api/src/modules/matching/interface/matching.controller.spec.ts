@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { MatchingController } from './matching.controller';
+import { MatchingService } from '../application/matching.service';
 
 describe('MatchingController', () => {
   let provider: MatchingController;
@@ -8,7 +9,7 @@ describe('MatchingController', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         MatchingController,
-        // TODO: Add mocked dependencies here
+        { provide: MatchingService, useValue: { updateLocation: jest.fn(), findNearbyProviders: jest.fn() } },
       ],
     }).compile();
 

@@ -26,3 +26,4 @@ echo "🚀 Disparando build na nuvem da Expo..."
 eas build --platform "$PLATFORM" --profile "$PROFILE"
 
 echo "✅ Build finalizado com sucesso! Acesse o link retornado pela Expo para baixar os binários."
+

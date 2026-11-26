@@ -39,6 +39,7 @@ test.describe('Gerenciamento e Seleção de Endereços Salvos E2E', () => {
     // 4. Testa a opção de informar outro endereço avulso
     await page.getByTestId('btn-custom-address').click();
     await page.getByPlaceholder('Ex: Rua Oscar Freire').fill('Rua Bela Cintra');
+    await page.getByPlaceholder('Ex: Apto 42, Bloco B').fill('Apto 101');
     await page.getByPlaceholder('Pinheiros').fill('Consolação');
 
     // Verifica atualização em tempo real no resumo

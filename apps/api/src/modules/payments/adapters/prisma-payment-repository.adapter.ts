@@ -46,6 +46,24 @@ export class PrismaPaymentRepository implements PaymentRepositoryPort {
     return this.mapToDomain(raw);
   }
 
+  async findByStatus(status: 'PENDING' | 'AUTHORIZED' | 'PAID' | 'REFUNDED' | 'FAILED'): Promise<PaymentProps[]> {
+    const raws = await this.prisma.payment.findMany({
+      where: { status: status as any },
+    });
+    return raws.map(r => this.mapToDomain(r));
+  }
+
+  async findPendingForReconciliation(since?: Date): Promise<PaymentProps[]> {
+    const dateLimit = since || new Date(Date.now() - 48 * 60 * 60 * 1000); // últimas 48h por padrão
+    const raws = await this.prisma.payment.findMany({
+      where: {
+        status: { in: ['PENDING' as any, 'AUTHORIZED' as any] },
+        createdAt: { gte: dateLimit },
+      },
+    });
+    return raws.map(r => this.mapToDomain(r));
+  }
+
   private mapToDomain(raw: any): PaymentProps {
     return {
       id: raw.id,

@@ -1,11 +1,9 @@
 # PRD DEFINITIVO — FACILITA
-**Product Requirements Document | Versão 3.1 — Modulith Hexagonal Evolutivo + Security by Design**
-Última atualização: Novembro de 2026 (Auditoria Integral de Produção & Status de Implementação)
-Autor: Product Strategy & Arquitetura de Software
-Status: PRODUCTION AUDITED & READY (88% dos fluxos core implementados e testados com 100% de aprovação automatizada)
+**Product Requirements Document | Versão 4.1 — Fonte Única da Verdade (Resolução Integral das 112 Lacunas)**
+Última atualização: Novembro de 2026 (Auditoria Integral Qwen 3.1 + Harmonização Canônica Gemini 4.1)
+Autor: Product Strategy, Compliance Jurídico & Arquitetura de Software
+Status: CANONICAL SOURCE OF TRUTH (Alinhamento integral entre Código, Negócio, Jurídico e Finanças)
 Confidencialidade: Internal Only
-
-
 
 ---
 
@@ -15,13 +13,13 @@ Confidencialidade: Internal Only
 
 **O que NÃO é:** Marketplace genérico de reformas, plataforma de leads, GetNinjas vertical.
 
-**Diferencial defensável:** Catálogo padronizado + Evidência obrigatória + Pagamento protegido + Garantia real + Antifraude desde o dia 1.
+**Diferencial defensável:** Catálogo padronizado + Evidência obrigatória (câmera ao vivo) + Pagamento protegido + Garantia real de 90 dias (CDC) + Antifraude estrutural desde o dia 1.
 
 **Tese:** O mercado está educado (GetNinjas fez isso), mas frustrado com qualidade. Há espaço para quem trocar "volume de leads" por "confiança transacional".
 
-**Capital necessário:** R$ 1,5M para 12 meses (revisado — ver seção 5.3)
-**Payback esperado:** Mês 18-24
-**Break-even:** Mês 24-30 (se executado com disciplina)
+**Capital necessário & Modelo de Lançamento:**
+- **Modelo Enxuto de Lançamento (Bootstrapping / Web PWA):** Custo fixo ~R$ 800 a R$ 1.000/mês. **Break-even em 46 pedidos/mês**.
+- **Modelo Estruturado c/ Equipe (Série Seed R$ 1,5M):** Folha de R$ 128K/mês, exigindo 7.318 pedidos/mês para break-even operacional (Mês 24-30), com payback ocorrendo após atingir o break-even acumulado.
 
 ---
 
@@ -86,34 +84,31 @@ Confidencialidade: Internal Only
 - ✅ "Chuveiro queimou? Resolvemos hoje com preço certo e garantia"
 - ✅ "Problema elétrico em casa? Profissional verificado em até 2h"
 
-### 2.2 Princípios de Produto (Inegociáveis)
+### 2.2 Princípios de Produto (Inegociáveis — Versão 4.1 Canônica)
 
-1. **Tudo no app:** Contratação, comunicação, aprovação, pagamento, disputa — TUDO.
-2. **Catálogo fechado:** 13 serviços no lançamento. Nada fora disso.
-3. **Evidência obrigatória:** Sem foto antes/depois com qualidade mínima, não libera pagamento.
-4. **Score > Estrelas:** Reputação baseada em dados (pontualidade, reabertura, evidência), não só avaliação.
-5. **Antifraude é core:** Não é "feature do financeiro", é produto — ativo antes de qualquer usuário externo.
-6. **Bons prestadores > Volume:** Preferir 20 excelentes a 200 medianos.
-7. **Estética é Confiança:** Design premium, fluido e com autoridade técnica. Não é cosmético, é conversão.
-8. **Comissão justa:** 18-25% é o máximo viável sem destruir oferta.
-9. **Manual antes de automático:** Matching, KYC e validação de evidência são manuais nos primeiros 100 jobs, automatizados depois.
+1. **Tudo no app:** Contratação, comunicação, aprovação, pagamento, disputa — TUDO. Telefone real do cliente nunca é exposto (Call Proxy / Chat WebSocket).
+2. **Catálogo fechado & Segurança Elétrica:** 5 serviços de Elétrica desenergizada no Beta (Semanas 1–4) e 13 serviços completos no Soft Launch. Serviços em quadros/disjuntores exigem NR-10 verificada; alta tensão, padrão e trifásico são terminantemente excluídos.
+3. **Evidência obrigatória ao vivo:** 1 foto ANTES (libera início) + 1 foto DEPOIS (libera conclusão) para 100% dos serviços (inclusive ≤ R$ 80). Upload da galeria é estritamente bloqueado (câmera ao vivo com geolocalização e timestamp).
+4. **Score & Autonomia (Blindagem CLT):** Prestador autônomo sem subordinação. Recusa de chamado tem impacto ZERO no score (sem coerção). Sem limites diários forçados (`daily_job_limit: null`). Sem vigilância contínua por GPS em segundo plano.
+5. **Antifraude calibrado:** Regras comportamentais adaptadas para serviços residenciais de baixa frequência anual (1–2 jobs/ano), eliminando falsos positivos. Detecção focada em conluio, troca de contatos e pesquisa de saída "Ofereceu por fora?".
+6. **Comissão justa e transparente:** 20% padrão (Tiers Bronze e Prata) e 18% (Tier Ouro). Refletida identicamente em contrato, recibo e split Pagar.me.
+7. **Repasse Ágil via Pix:** Bronze D+3, Prata D+2, Ouro D+1 via Pix diretamente na subconta MEI (eliminando necessidade de antecipação com spread).
+8. **Garantia Legal de 90 Dias:** 90 dias corridos conforme Art. 26, II do CDC, estruturada como Política de Reexecução e Satisfação da plataforma (sem cobrança de prêmio/seguro SUSEP).
 
 ### 2.3 Escopo do Lançamento
 
 **Dentro**
-- ✅ 13 serviços padronizados (ver seção 4.1) — apenas Elétrica nas primeiras 4 semanas de beta
+- ✅ 13 serviços padronizados (ver seção 4.1) — apenas Elétrica desenergizada nas primeiras 4 semanas de beta
 - ✅ 5 bairros de classe A/B em São Paulo (Brooklin, Moema, Vila Mariana, Itaim Bibi, Campo Belo)
-- ✅ Pagamento apenas cartão e Pix
-- ✅ Garantia de 30 dias (escopo restrito, ver seção 10)
-- ✅ Suporte humano forte (chat + telefone)
+- ✅ Pagamento apenas cartão tokenizado e Pix dinâmico (com pré-autorização / retenção confirmada em escrow)
+- ✅ Garantia de 90 dias corridos (Art. 26 CDC — ver seção 10)
+- ✅ Suporte humano forte com chamadas gravadas via Twilio Voice
 
 **Fora**
-- ❌ Reformas completas
-- ❌ Serviços comerciais/industriais
-- ❌ Parcelamento (MVP é à vista)
-- ❌ B2B/síndicos (futuro, não MVP)
-- ❌ Outras cidades que não SP
-- ❌ Serviços fora do catálogo (nem como "consulta")
+- ❌ Reformas completas e alvenaria pesada
+- ❌ Serviços comerciais/industriais, redes trifásicas, padrão de entrada e alta tensão
+- ❌ Parcelamento no MVP (pagamento à vista no Pix ou Cartão 1x)
+- ❌ Serviços fora do catálogo (nem sob consulta)
 
 ### 2.4 Usuários e Personas
 
@@ -176,7 +171,7 @@ Profissional que aceita qualquer job, tenta cobrar adicional fora de fluxo, busc
 | Instalação de chuveiro | Troca/instalação de chuveiro elétrico | R$ 120 | 1h | Mão de obra, teste | Chuveiro, fiação nova, disjuntor |
 | Troca de torneira elétrica | Substituição de torneira elétrica | R$ 100 | 45min | Mão de obra, vedação básica | Torneira, fiação |
 | Instalação de ventilador de teto | Montagem e instalação de ventilador | R$ 150 | 1h30 | Mão de obra, fixação | Ventilador, suporte reforçado |
-| Troca de disjuntor | Substituição de disjuntor no quadro | R$ 90 | 30min | Mão de obra, teste | Disjuntor |
+| Troca de disjuntor (Exige NR-10) | Substituição de disjuntor no quadro | R$ 90 | 30min | Mão de obra, teste | Disjuntor (requer NR-10 verificada) |
 | Instalação de lustre/luminária | Até 3 pontos de luz | R$ 80 | 45min | Mão de obra | Lustre, lâmpadas |
 | Tomada/interruptor (até 3 pontos) | Instalação ou troca | R$ 110 | 1h | Mão de obra, teste | Tomadas, interruptores, caixa de passagem |
 
@@ -197,11 +192,11 @@ Profissional que aceita qualquer job, tenta cobrar adicional fora de fluxo, busc
 | Instalação de suporte de TV | Até 55", parede comum | R$ 130 | 1h | Mão de obra, buchas/parafusos básicos | Suporte, parede de gesso sem reforço |
 | Fixação de prateleira/quadro (até 3 peças) | Furação e fixação | R$ 70 | 30min | Mão de obra, buchas/parafusos | Prateleira, parede estrutural |
 
-**Total lançamento:** 6 serviços (Beta) → 13 serviços (Soft Launch, Mês 6)
-**Ticket médio estimado:** R$ 105 | **Adicionais médios:** +R$ 45 (30% dos jobs têm adicional de material)
+**Total lançamento:** 5 serviços de Elétrica desenergizada no Beta (Semanas 1–4) + Troca de disjuntor apenas para prestadores com NR-10 verificada ➔ 13 serviços no Soft Launch (Mês 6).  
+**Ticket médio base:** R$ 160 | **Urgência média ponderada (+R$ 10):** R$ 170.
 
-**Material Básico Incluso (regra para Adicionais Menores):**
-O prestador pode usar até R$ 30 em materiais básicos de consumo (fita isolante, vedação, buchas) sem aprovação explícita do cliente, com foto obrigatória da nota fiscal. Valores acima desse limite seguem o fluxo normal de adicional. Isso evita fricção em cobranças menores e reduz artificialmente a taxa de adicionais.
+**Gestão de Materiais e Consumíveis:**
+R$ 20,00 em materiais básicos de consumo (fita isolante, veda-rosca, buchas simples) já estão inclusos no preço base tabelado. Qualquer peça de reposição extra exige fotografia da nota fiscal via câmera ao vivo e aprovação prévia obrigatória do cliente antes da compra/instalação.
 
 ### 4.2 Arquitetura de Informação
 
@@ -209,11 +204,11 @@ O prestador pode usar até R$ 30 em materiais básicos de consumo (fita isolante
 
 ```
 ├── Onboarding & Autenticação (✅ Implementado com Rate Limiting Anti-Bot)
-│   ├── Cadastro (telefone + nome + email)
+│   ├── Cadastro simplificado (telefone + nome + email)
 │   ├── Normalização E.164 (+5511999999999)
 │   ├── Verificação OTP (Twilio SMS / Z-API WhatsApp)
 │   ├── Rate Limiting anti-abuso (máx 3 envios por telefone / 10 min — HTTP 429)
-│   └── Endereço principal e múltiplos endereços
+│   └── Endereço principal e múltiplos endereços (com complemento obrigatório)
 │
 ├── Home
 │   ├── Busca de serviço com debounce e catálogo padronizado
@@ -223,173 +218,166 @@ O prestador pode usar até R$ 30 em materiais básicos de consumo (fita isolante
 ├── Novo Pedido
 │   ├── Seleção de serviço (catálogo fechado com preços fixos)
 │   ├── Seletor de Endereço Rápido (1-clique entre Casa, Trabalho ou Outro)
-│   ├── Triagem guiada (perguntas dinâmicas e restrições técnicas)
-│   ├── Upload de fotos (mínimo 2, câmera ou galeria)
-│   ├── Urgência (Normal: 24h | Urgente: 4h +R$ 25 com taxa de deslocamento R$ 35)
+│   ├── Triagem guiada (perguntas dinâmicas e restrições técnicas de escopo)
+│   ├── Upload de fotos da situação (câmera ao vivo obrigatória, upload de galeria desativado)
+│   ├── Urgência (Normal: até 24h | Urgente: até 4h com taxa fixa de R$ 40,00)
 │   ├── Disponibilidade imediata ou agendamento
-│   └── Confirmação de preço discriminado (serviço + deslocamento + taxa)
+│   └── Confirmação de preço discriminado (serviço + taxa de urgência)
 │
 ├── Match
 │   ├── Radar geográfico em tempo real com Leaflet LiveMap
-│   ├── Motor de matching em ondas (Ouro ➔ Prata ➔ Bronze por raio de cobertura)
+│   ├── Motor de matching em ondas de 180s (Ouro ➔ Prata ➔ Bronze por raio de cobertura)
 │   ├── Profissional recomendado (1 opção principal com foto, nota, jobs)
 │   └── [Aceitar] ou [Ver outro profissional] (max 3 opções)
 │
 ├── Acompanhamento & Cancelamento
 │   ├── Timeline em tempo real via WebSockets (PENDING, ACCEPTED, EN_ROUTE, ARRIVED, IN_PROGRESS, COMPLETED)
 │   ├── Chat antifraude com filtro regex (bloqueio de telefones e links externos)
-│   ├── Botão de emergência (suporte direto)
-│   └── Cancelamento Assistido (✅ Regra Estrita Hexagonal):
-│       ├── Até 5 min do aceite: Cancelamento gratuito com estorno integral 100%
-│       └── Após 5 min ou com prestador no local: Retenção da taxa de deslocamento (R$ 35,00) revertida ao profissional
+│   ├── Call Proxy (Twilio Voice): ligação mascarada sem expor telefone real de nenhuma das partes
+│   ├── Botão de emergência (discagem 192/193 e alerta crítico ao suporte)
+│   └── Cancelamento Assistido (Regra Canônica v4.1):
+│       ├── Até 5 min do aceite (urgente) OU até 2h antes do agendado: Cancelamento grátis com estorno integral 100%
+│       └── Fora dessa janela: Retenção da taxa de R$ 35,00 (R$ 28,00 repassados ao prestador e R$ 7,00 taxa operacional)
 │
 ├── Aprovação de Adicional
-│   ├── Descrição do profissional com foto de nota/recibo fiscal
-│   ├── Valor adicional validado contra teto percentual
+│   ├── Descrição do profissional com foto ao vivo de nota/recibo fiscal
+│   ├── Valor adicional validado (qualquer valor > 100% do serviço base trava para moderação humana)
 │   └── [Aprovar] [Recusar] [Falar com Suporte]
 │
 ├── Conclusão & Evidências
-│   ├── Fotos antes/depois obrigatórias com metadados EXIF e geolocalização
+│   ├── Fotos obrigatórias: 1 ANTES (para liberar início) + 1 DEPOIS (para liberar conclusão) em 100% dos serviços
+│   ├── Metadados EXIF e geolocalização colhidos exclusivamente via câmera ao vivo
 │   ├── Checklist de itens executados
 │   ├── Valor final discriminado
 │   └── [Aprovar serviço] [Contestar / Abrir Disputa]
 │
 ├── Pagamento
 │   ├── Resumo (serviço base + adicionais + tributos IBS/CBS)
-│   ├── Método (Cartão com tokenização | Pix com QR Code dinâmico — via Pagar.me)
+│   ├── Método (Cartão com pré-autorização/retenção | Pix com QR Code dinâmico de 15 min e PAID_ESCROW)
 │   └── Comprovante com assinatura digital SHA-256
 │
 ├── Histórico de Pedidos, Comprovante Fiscal & Garantia 90d (✅ Implementado)
 │   ├── Listagem paginada por cursor com filtros por status e busca
 │   ├── Visualização de comprovante detalhado com download/impressão de PDF (window.print)
-│   ├── Discriminação da taxa de intermediação (15%) e retenções fiscais municipais
-│   └── Acionamento de Garantia de 90 dias (Art. 26 CDC) com fluxo de contestação
+│   ├── Discriminação da comissão de intermediação da plataforma (20% Bronze/Prata ou 18% Ouro)
+│   └── Acionamento de Garantia de 90 dias (Art. 26 CDC) a qualquer tempo dentro do prazo
 │
 ├── Avaliação
 │   ├── Nota geral (1-5 estrelas)
 │   ├── Critérios objetivos (Pontualidade, Qualidade, Limpeza, Cordialidade)
+│   ├── Pesquisa de conformidade ("O profissional propôs pagamento por fora?")
 │   └── Comentário (opcional)
 │
 └── Perfil (/profile — ✅ Implementado)
     ├── Dados pessoais e chave de acesso
-    ├── Gestão de múltiplos endereços (CRUD completo com badges Casa, Trabalho, Outro)
+    ├── Gestão de múltiplos endereços (CRUD completo com badges Casa, Trabalho, Outro e complemento)
     ├── Histórico completo de pedidos e recibos fiscais
     └── Termos de Uso (/termos) e Política de Privacidade LGPD (/privacidade)
 ```
 
 #### 4.2.2 App do Prestador (React Native + Expo — iOS e Android nativos)
 
-> **Decisão técnica:** O app do prestador é React Native/Expo (não PWA) por razões operacionais críticas: push notifications confiáveis no iOS para aceite em 15 minutos, geolocalização em background para a timeline, câmera nativa de alta qualidade para evidências e funcionamento offline parcial. O app do cliente pode ser PWA, mas o do prestador não pode.
+> **Decisão técnica:** O app do prestador é React Native/Expo (ou PWA com suporte offline) por razões operacionais: push notifications confiáveis, câmera nativa de alta qualidade para evidências e funcionamento offline parcial com fila de sincronização. A geolocalização é coletada **exclusivamente sob ação explícita** (Saí, Cheguei, Evidência), eliminando rastreamento contínuo em segundo plano para afastar qualquer indício de subordinação e vigilância (CLT Art. 9º).
 
 ```
 ├── Onboarding
-│   ├── Cadastro básico (CPF/CNPJ, telefone, email)
-│   ├── Verificação de MEI (obrigatório — orientação de abertura se necessário)
+│   ├── Cadastro básico (CPF/CNPJ MEI ou Autônomo, telefone, email)
+│   ├── Verificação de MEI ou Autônomo regularizado (Termo de Parceria e Mandato de Intermediação)
 │   ├── Documentos (RG/CNH frente e verso, selfie biométrica, comprovante residência)
+│   ├── Certificação NR-10 (obrigatória para habilitação em quadros/disjuntores elétricos)
 │   ├── Categorias de atuação (Elétrica, Hidráulica, Reparos)
 │   ├── Região de atendimento (raio configurável em km)
-│   ├── Conta bancária (validada via Pagar.me Split)
-│   └── Background check (aguardar aprovação 3-7 dias com central KYC no admin)
+│   ├── Conta bancária para repasses Pix (validada via Pagar.me Split)
+│   └── Background check com base legal estrita (aprovação em até 3-5 dias na central KYC)
 │
-├── Hardware & Alarme em Segundo Plano (🔴 P0 Pendente de Hardware)
-│   ├── Canal de Alarme Dedicado (urgency_dispatch_channel):
-│   │   ├── AndroidImportance.MAX e som contínuo tipo sirene (alert_siren.wav 30s)
-│   │   ├── Bypass do modo "Não Perturbe" e toque contínuo com tela bloqueada
-│   │   └── Overlay nativo estilo Uber/iFood para aceite imediato em 60 segundos
+├── Notificações & Ofertas (Blindagem Trabalhista CLT)
+│   ├── Canal de Notificação Padrão (urgency_dispatch_channel):
+│   │   ├── Notificação push sonora respeitando configurações e autonomia do prestador
+│   │   └── Card de oportunidade com contagem regressiva de 180 segundos (3 minutos) por onda
 │   └── Botão de Rota Externa 1-Clique:
 │       └── Deep-linking nativo para Waze (waze://) e Google Maps (geo:)
 │
-├── Execução com Trava Obrigatória de Fotos (🔴 P0 Pendente de Câmera)
-│   ├── Check-in geolocalizado obrigatório no raio de 100m do endereço
+├── Execução com Trava Obrigatória de Fotos (Câmera ao Vivo)
+│   ├── Check-in com validação de proximidade pontual no momento da chegada
+│   ├── Termo de Escopo Digital: Aceite de 1-clique do cliente e prestador no escopo antes do início
 │   ├── Trava de Início: Bloqueia transição para IN_PROGRESS sem foto do "Antes"
 │   ├── Trava de Término: Bloqueia transição para COMPLETED sem foto do "Depois"
-│   └── Extração de metadados EXIF (data/hora, latitude, longitude) anti-fraude
+│   └── Extração de metadados EXIF e GPS pontual para auditoria
 │
-├── Sincronização & Modo Offline (🟡 P1 Operacional)
+├── Sincronização & Modo Offline (✅ Implementado)
 │   ├── Armazenamento em fila local (AsyncStorage)
 │   └── Retentativa com backoff exponencial via NetInfo ao restabelecer sinal 4G
 │
 ├── Home
-│   ├── Status (Disponível | Indisponível | Em atendimento)
-│   ├── Nível de Parceiro (Bronze | Prata | Ouro | Diamante)
-│   ├── Progresso para Próximo Tier (Jobs restantes e score ponderado)
-│   ├── Saldo disponível e previsão de repasses
+│   ├── Status (Disponível | Indisponível | Em atendimento — autonomia total de horários)
+│   ├── Nível de Parceiro (Bronze | Prata | Ouro)
+│   ├── Progresso para Próximo Tier (Jobs concluídos e score ponderado)
+│   ├── Saldo disponível e previsão de repasses via Pix (D+3 Bronze, D+2 Prata, D+1 Ouro)
 │   ├── Próximos agendamentos
-│   └── Notificações (push nativo com Expo SDK)
+│   └── Notificações push
 │
 ├── Fila de Oportunidades
 │   ├── Card de job
-│   │   ├── Categoria
+│   │   ├── Categoria e descrição técnica
 │   │   ├── Distância e estimativa de deslocamento
-│   │   ├── Valor líquido a receber (split deduzido)
-│   │   ├── Urgência (+25%)
-│   │   ├── Fotos do problema
-│   │   ├── Descrição do cliente
-│   │   └── Janela de disponibilidade
-│   └── Aceite em até 60 segundos (ou repasse para próxima onda)
-│   ├── [Aceitar] (15 min para responder)
-│   └── [Recusar] → campo obrigatório de motivo (dropdown)
-│       ├── Agenda cheia
-│       ├── Problema de saúde
-│       ├── Fora do meu raio
-│       ├── Equipamento indisponível
-│       └── Outro (campo aberto)
+│   │   ├── Valor líquido a receber (split deduzido com comissão de 20% ou 18%)
+│   │   ├── Adicional de Urgência (R$ 40,00 fixo quando aplicável)
+│   │   ├── Fotos do problema enviadas pelo cliente
+│   │   └── Janela de atendimento
+│   └── Resposta em até 180 segundos (3 minutos) por onda de oferta:
+│       ├── [Aceitar] ➔ Lock atômico condicional no backend
+│       └── [Recusar] ➔ Recusa livre SEM impacto no score de reputação
 │
 ├── Job Ativo
 │   ├── Timeline operacional (com suporte offline — sincroniza quando conectar)
 │   │   ├── [Saí para atendimento]
 │   │   ├── [Cheguei no local]
-│   │   ├── [Iniciei execução]
+│   │   ├── [Iniciei execução] (após foto ANTES e aceite do escopo)
 │   │   ├── [Pausar] (com justificativa)
-│   │   └── [Concluir]
-│   ├── Informações do cliente (nome, endereço, telefone)
-│   ├── Chat (Stream.io)
-│   ├── Navegação integrada (abre Waze/Google Maps)
-│   └── Botão de emergência
+│   │   └── [Concluir] (após foto DEPOIS)
+│   ├── Dados do atendimento (nome do cliente e endereço com complemento obrigatório)
+│   ├── Comunicação protegida: Telefone real ocultado; chat interno ou Call Proxy Twilio Voice
+│   ├── Navegação integrada (Waze/Google Maps)
+│   └── Botão de emergência (discagem rápida 192/193 e alerta crítico ao backoffice)
 │
 ├── Solicitar Adicional
-│   ├── Motivo (dropdown)
-│   │   ├── Material extra necessário
-│   │   ├── Escopo maior que previsto
-│   │   ├── Problema adicional identificado
-│   │   └── Outro
+│   ├── Motivo (dropdown: Material extra, Escopo maior, Problema adicional imprevisto)
 │   ├── Descrição detalhada
-│   ├── Fotos obrigatórias (min 2 — câmera nativa, sem galeria)
-│   ├── Valor solicitado
-│   └── [Enviar para aprovação]
+│   ├── Fotos obrigatórias (câmera ao vivo — sem galeria)
+│   ├── Valor solicitado (qualquer adicional > 100% do serviço base trava para revisão manual)
+│   └── [Enviar para aprovação do cliente]
 │
 ├── Conclusão
-│   ├── Foto ANTES (obrigatória — câmera nativa)
-│   ├── Foto DEPOIS (obrigatória — câmera nativa)
+│   ├── Foto ANTES (obrigatória — câmera ao vivo)
+│   ├── Foto DEPOIS (obrigatória — câmera ao vivo)
 │   ├── Checklist de itens executados
-│   ├── Observações
+│   ├── Observações de campo
 │   └── [Finalizar serviço]
 │
-├── Carteira (Pagar.me)
+├── Carteira (Repasses Pix via Pagar.me Split)
 │   ├── Saldo disponível
-│   ├── Próximos repasses (com data)
+│   ├── Próximos repasses Pix automáticos (Bronze D+3, Prata D+2, Ouro D+1)
 │   ├── Histórico de recebimentos
-│   ├── [Solicitar antecipação] (se Tier 2 ou 3)
 │   └── Extrato detalhado
 │
-├── Desempenho
-│   ├── Score geral (0-100)
-│   ├── Breakdown com janela rolante de 90 dias:
-│   │   ├── Taxa de aceitação (meta: >70%)
-│   │   ├── Pontualidade (meta: >90%)
-│   │   ├── Taxa de conclusão (meta: >95%)
-│   │   ├── Qualidade de evidência (meta: >8/10)
-│   │   ├── Avaliação do cliente (meta: >4.5)
-│   │   └── Taxa de reabertura (meta: <3%)
-│   ├── Tier atual (Bronze, Prata, Ouro)
-│   └── Benefícios do próximo tier
+├── Desempenho & Score (Janela Rolante de 90 Dias)
+│   ├── Score geral (0-100) — Prestador aprovado no KYC inicia com score = 65
+│   ├── Breakdown de reputação:
+│   │   ├── Taxa de aceitação: 0% de peso (recusa não penaliza o autônomo)
+│   │   ├── Pontualidade: 25% de peso (chegadas no horário)
+│   │   ├── Taxa de conclusão: 30% de peso (jobs concluídos / aceitos)
+│   │   ├── Qualidade de evidência: 20% de peso (fotos nítidas e enquadradas)
+│   │   ├── Avaliação do cliente: 15% de peso (avaliação objetiva)
+│   │   └── Taxa de reabertura: 10% de peso (disputas procedentes)
+│   ├── Tier atual (1=Bronze, 2=Prata, 3=Ouro)
+│   └── Critérios para subir de nível (Prata: score ≥ 70; Ouro: score ≥ 80)
 │
 └── Perfil
-    ├── Dados pessoais
-    ├── Documentos e situação MEI
+    ├── Dados cadastrais e MEI/RPA
+    ├── Certificados técnicos (NR-10 verificado)
     ├── Categorias habilitadas
-    ├── Disponibilidade (agenda semanal)
-    ├── Região de atendimento
+    ├── Disponibilidade de agenda autônoma
+    ├── Raio de atendimento configurável
     └── Preferências de notificação
 ```
 
@@ -494,26 +482,25 @@ CLIENTE                          SISTEMA                         PRESTADOR
    - Tipo de chuveiro: Elétrico
    - Tem o chuveiro novo: Sim
    - Urgência: Normal
-4. Upload 2 fotos (câmera ou galeria)
+4. Upload 2 fotos da situação (câmera ao vivo)
 5. Disponibilidade: Amanhã manhã
-                                 6. Valida endereço
+                                 6. Valida endereço com complemento obrigatório
                                  7. Calcula preço: R$ 120
                                  8. Match com prestador
-                                    (manual nas semanas 1-8;
-                                     automático a partir do job 100)
-                                    - Score >60
-                                    - Raio <5km
+                                    - Score ≥60 (prestadores novos nascem com 65)
+                                    - Raio inicial <5km
                                     - Disponibilidade compatível
-                                 9. Oferece job (push nativo iOS/Android)
+                                 9. Oferece job (notificação push)
                                                                   10. Recebe notificação
-                                                                  11. Visualiza job
-                                                                  12. [Aceita] (8 min depois)
+                                                                  11. Visualiza job e escopo
+                                                                  12. [Aceita] (em até 180s / 3 min)
+                                                                      ➔ Lock atômico condicional no backend
                                  13. Cria agendamento
                                  14. Notifica cliente
 15. Recebe confirmação
     "João vai amanhã às 9h"
 16. Autoriza pagamento (R$ 120)
-                                 17. Pré-autoriza cartão (Pagar.me)
+                                 17. Pré-autoriza cartão ou gera Pix (15 min) em PAID_ESCROW
                                  18. D-Day: Notifica ambos
 
 [DIA DO SERVIÇO]
@@ -521,79 +508,65 @@ CLIENTE                          SISTEMA                         PRESTADOR
 20. Recebe: "João saiu"
                                                                   21. [Cheguei] 9:05
 22. Recebe: "João chegou"
-                                                                  23. [Iniciei execução] 9:10
+                                                                  23. Assinatura mútua do escopo contratado
+                                                                  24. Tira foto ANTES (câmera ao vivo)
+                                                                  25. [Iniciei execução] 9:10
                                                                   (registros offline se sem sinal,
                                                                    sincroniza ao recuperar conexão)
-                                                                  24. Executa serviço
-                                                                  25. Tira foto ANTES (câmera nativa)
-                                                                  26. Tira foto DEPOIS (câmera nativa)
-                                                                  27. Preenche checklist:
+                                                                  26. Executa serviço
+                                                                  27. Tira foto DEPOIS (câmera ao vivo)
+                                                                  28. Preenche checklist:
                                                                       ✓ Chuveiro instalado
                                                                       ✓ Testado funcionamento
                                                                       ✓ Vedação conferida
-                                                                  28. [Concluir serviço] 10:15
-                                 29. Valida evidências automaticamente
-                                     (nos primeiros 200 jobs: backoffice
-                                      revisa 100% em até 30 min)
-                                 30. Notifica cliente
-31. Vê fotos antes/depois
-32. Vê checklist
-33. [Aprovar serviço]
-                                 34. Captura pagamento (Pagar.me)
-                                 35. Agenda repasse (D+3 Tier 2)
-36. Recebe comprovante
-37. Avalia prestador (5 estrelas)
-                                 38. Atualiza score do prestador
-                                                                  39. Recebe avaliação
-                                                                  40. Saldo atualizado (+R$ 96)
-                                                                      (R$ 120 - 20% comissão Tier 2)
+                                                                  29. [Concluir serviço] 10:15
+                                 30. Valida evidências
+                                 31. Notifica cliente
+32. Vê fotos antes/depois
+33. Vê checklist
+34. [Aprovar serviço]
+                                 35. Captura pagamento ou liquida Escrow
+                                 36. Agenda repasse Pix (D+3 Bronze, D+2 Prata, D+1 Ouro)
+37. Recebe comprovante fiscal (comissão 20% ou 18%)
+38. Avalia prestador (5 estrelas) + Pesquisa antifraude
+                                 39. Atualiza score do prestador
+                                                                  40. Recebe avaliação
+                                                                  41. Saldo atualizado (+R$ 96 líquido no Tier 2)
 
 Tempo total: 1h 5min de execução | 26h do pedido à conclusão
-Intervenção humana: Zero (após job 100; manual antes disso)
-```
+Intervenção humana: Zero no happy path automatizado
 
 #### 4.3.2 Fluxo: Cold-Start do Matching (Nenhum Prestador Disponível)
 
-Este fluxo é crítico e frequente nos primeiros meses. Precisa de tratamento explícito.
+Este fluxo é crítico e frequente nos primeiros meses. Tratamento canônico v4.1:
 
 ```
 SISTEMA VERIFICA DISPONIBILIDADE
 
 Cenário A — Sem prestador disponível no raio imediato
-→ Sistema expande raio automaticamente: 5km → 8km → 12km
+→ Sistema expande raio automaticamente: 5km → 8km → 12km (com taxa adicional transparente de R$ 3,00/km extra repassada 100% ao prestador)
 → Se ainda sem prestador:
-  - Para pedidos URGENTES: operador recebe alerta imediato,
-    liga para top 3 prestadores off-duty
-  - Para pedidos NORMAIS: entra em fila de espera
-    com SLA de 2h para confirmação
+  - Para pedidos URGENTES: alerta na central, operador contacta prestadores ativos na região
+  - Para pedidos NORMAIS: entra em fila de espera com estimativa dinâmica calculada
 
-Cenário B — Todos os prestadores no limite diário de jobs
-(Tier 1: 3 jobs; Tier 2: 10 jobs)
-→ Sistema busca prestadores próximos do limite
-   mas que aceitariam job extra se incentivado
-→ Backoffice contata manualmente (nos primeiros 6 meses)
-→ Fallback: cliente recebe opção de reagendar para próxima disponibilidade
+Cenário B — Autonomia de Oferta (Sem Controle de Produção CLT)
+→ daily_job_limit mantido como null no banco (sem travas coercitivas de produção)
+→ Sistema prioriza prestadores livres na região por ondas de matching
 
 Cenário C — Prestador aceita mas não aparece (no-show)
-→ Após 30 min além do horário previsto sem atualização:
-  - Sistema manda push para prestador: "Você chegou?"
+→ Após 30 min além do horário previsto sem atualização de chegada:
+  - Push de confirmação para o prestador
 → Após 45 min sem resposta:
-  - Alerta automático para backoffice
-  - Operador tenta contato direto com prestador
-  - Sistema busca substituto imediato
-→ Após 1h:
-  - Prestador marcado como no-show (flag crítico no score)
-  - Suspensão automática de 7 dias
-  - Cliente recebe R$ 30 de crédito + opção de novo agendamento sem custo
-  - Reatribuição ou cancelamento conforme preferência do cliente
+  - Alerta automático para backoffice e busca imediata de substituto
+→ Após 1h sem justificativa:
+  - Prestador marcado como no-show (despriorização algorítmica temporária de ofertas)
+  - Cliente recebe estorno integral ou reagendamento sem custo + R$ 30 de crédito de cortesia
 
 Cenário D — Prestador cancela com <4h de antecedência
 → Sistema tenta reatribuição automática (mesmo raio + disponibilidade)
 → Se encontrar substituto em <30min: notifica cliente com desculpas + R$ 20 crédito
-→ Se não encontrar em 30min: operador liga para cliente
-   - Opção 1: Reagendamento para próxima disponibilidade + R$ 30 crédito
-   - Opção 2: Cancelamento sem taxa + R$ 30 crédito
-→ Prestador que cancelou: suspensão 7 dias + flag de score
+→ Se não encontrar em 30min: operador liga para cliente (opção de reagendamento ou cancelamento sem taxa)
+→ Prestador que cancelou: despriorização algorítmica na fila de ofertas
 ```
 
 #### 4.3.3 Fluxo: Pedido com Adicional (Critical Path)
@@ -603,61 +576,54 @@ Cenário D — Prestador cancela com <4h de antecedência
 
 PRESTADOR                        SISTEMA                         CLIENTE
 
-1. Identifica problema:
-   "Disjuntor também queimado"
-2. Tira foto do disjuntor
-   (câmera nativa — sem galeria)
+1. Identifica problema imprevisto:
+   "Disjuntor adicional queimado"
+2. Tira foto ao vivo do disjuntor
+   (câmera ao vivo — sem galeria)
 3. [Solicitar adicional]
-   - Motivo: Material extra
-   - Descrição: "Disjuntor 30A queimado"
-   - Foto: [anexa — obrigatória]
+   - Motivo: Material extra / Escopo imprevisto
+   - Descrição detalhada
+   - Foto ao vivo: [obrigatória]
    - Valor: R$ 60
 4. [Enviar]
-                                 5. Valida foto (não é duplicata —
-                                    Google Vision API)
-                                 6. Checa histórico prestador:
-                                    - Taxa de adicional: 22% (OK)
-                                    - Nenhuma flag de abuso
-                                 7. Notifica cliente (push + in-app)
-                                                                  8. Recebe notificação
-                                                                  9. Vê foto + descrição
-                                                                  10. Opções:
+                                 5. Valida se adicional <= 100% do valor base
+                                 6. Notifica cliente (push + in-app)
+                                                                  7. Recebe notificação
+                                                                  8. Vê foto ao vivo + descrição
+                                                                  9. Opções:
                                                                       [Aprovar R$ 60]
                                                                       [Recusar]
                                                                       [Falar com Suporte]
-                                                                  11. [Aprovar]
-                                 12. Atualiza valor total: R$ 180
-                                 13. Pré-autoriza adicional (Pagar.me)
-                                 14. Notifica prestador
-15. Recebe aprovação
-16. Executa adicional
-17. [Concluir serviço]
-                                 18. Captura R$ 180 (Pagar.me)
-                                 19. Split: R$ 144 para prestador
-                                     (Tier 2: 20% comissão)
+                                                                  10. [Aprovar]
+                                 11. Atualiza valor total: R$ 180
+                                 12. Pré-autoriza adicional no Cartão ou gera Pix adicional
+                                 13. Notifica prestador
+14. Recebe aprovação
+15. Executa adicional
+16. [Concluir serviço com fotos DEPOIS]
+                                 17. Captura R$ 180 (Pagar.me)
+                                 18. Split: R$ 144 para prestador (20% comissão)
 ```
 
 **Edge Case — Adicional Recusado:**
 ```
 Cliente [Recusar adicional]
 → Sistema oferece:
-  - Continuar serviço original (só o escopo contratado)
-  - Cancelar tudo e pagar taxa de visita (R$ 40)
+  - Continuar serviço original (só o escopo contratado inicialmente)
+  - Cancelar atendimento e pagar taxa de visita única de R$ 35,00
 → Se continuar: Prestador conclui escopo original
-→ Se cancelar: Cliente paga R$ 40 | Prestador recebe R$ 30 (75%)
+→ Se cancelar: Cliente paga R$ 35,00 | Prestador recebe R$ 28,00 | Plataforma retém R$ 7,00
 ```
 
 **Edge Case — Adicional Abusivo (>100% do valor base):**
 ```
-Prestador solicita R$ 300 adicional em job de R$ 120
-→ Sistema detecta: Adicional >100% do valor base
+Prestador solicita R$ 300 adicional em job de R$ 120 (Adicional > 100% do valor base)
 → Ação automática:
-  - Congela solicitação
-  - Notifica operação (backoffice)
-  - Operador liga para cliente E prestador dentro de 30min
-  - Decisão manual documentada
-  - Se abuso confirmado: flag no prestador → pode resultar em suspensão
-  - Se legítimo: operador aprova manualmente com justificativa registrada
+  - Congela solicitação para análise da moderação
+  - Alerta sonoro no backoffice
+  - Operador liga para as partes para validar verossimilhança técnica
+  - Se aprovado pelo operador: segue para confirmação do cliente
+  - Se improcedente: orienta execução apenas do escopo base
 ```
 
 #### 4.3.4 Fluxo: Disputa
@@ -665,28 +631,26 @@ Prestador solicita R$ 300 adicional em job de R$ 120
 ```
 CLIENTE                          SISTEMA                         PRESTADOR
 
-[3 HORAS APÓS CONCLUSÃO]
+[DENTRO DOS 90 DIAS DA GARANTIA LEGAL - ART. 26 CDC]
 
-1. Aciona [Contestar serviço]
-2. Motivo: "Chuveiro vazando"
-3. Upload foto do vazamento
-4. Descrição: "Pingando na ligação"
-                                 5. Congela repasse do prestador
-                                 6. Cria ticket de disputa (SLA: 48h)
-                                 7. Notifica prestador
+1. Aciona [Acionar Garantia / Contestar]
+2. Motivo: "Instalação apresentou vazamento"
+3. Captura foto ao vivo do defeito
+4. Descrição detalhada
+                                 5. Congela repasse pendente (se houver)
+                                 6. Cria ticket de garantia (SLA: 24h para contato)
+                                 7. Notifica prestador para reexecução
                                                                   8. Recebe notificação
-                                                                  9. Responde e aciona retorno
-                                 10. Agenda retorno sem custo ao cliente
-                                                                  11. Retorna e corrige
-                                                                  12. Foto corrigida
-                                                                  13. [Concluir correção]
-14. Recebe: "Correção concluída"
-15. Valida: Vazamento parou
-16. [Aprovar correção]
-                                 17. Libera repasse integral
-                                 18. NÃO penaliza prestador
-                                     (correção rápida = boa fé)
-                                 19. Fecha disputa
+                                                                  9. Agenda reexecução sem custo
+                                 10. Confirma agendamento de retorno
+                                                                  11. Retorna ao imóvel
+                                                                  12. Foto corrigida ao vivo
+                                                                  13. [Concluir reexecução]
+14. Recebe: "Garantia concluída"
+15. Valida funcionamento
+16. [Aprovar solução]
+                                 17. Libera pendências e encerra ticket
+```
 ```
 
 **Edge Case — Prestador Recusa Retornar:**
@@ -717,149 +681,114 @@ Prestador: "Parede já estava danificada"
 
 ### 4.4 Regras de Negócio (Não Negociáveis)
 
-#### 4.4.1 Pagamento (via Pagar.me)
+#### 4.4.1 Pagamento e Split (via Pagar.me)
 
 | Regra | Detalhamento |
 |---|---|
-| Pagamento obrigatório no app | Pagamento externo invalida garantia + pode suspender conta |
-| Pré-autorização | Cartão pré-autorizado no agendamento, captura na aprovação |
-| Bloqueio em disputa | Repasse congelado até resolução (max 7 dias úteis) |
-| Nenhum dinheiro fora da plataforma | Detectado via chat, padrões de comportamento |
-| Split automático | Pagar.me processa split diretamente para subconta do prestador (MEI) |
+| Pagamento 100% no app | Cartão ou Pix gerenciados pela plataforma. Pagamento externo invalida a garantia e desativa o perfil |
+| Fluxo Cartão de Crédito | Pré-autorização no checkout com tokenização; captura efetuada no momento do aceite ou da liberação da foto ANTES |
+| Fluxo Pix Dinâmico (Canônico) | Cobrança dinâmica com QR Code e Copia-e-Cola (expiração de 15 min); status `AWAITING_PAYMENT` ➔ Webhook confirma e move para `PAID_ESCROW` antes do matching. Se cancelado dentro da tolerância, estorno automático via gateway |
+| Bloqueio em disputa | Repasse congelado até a resolução do ticket |
+| Split automático transparente | Pagar.me processa split diretamente para subconta do prestador MEI ou Autônomo com comissão de 20% (Bronze/Prata) ou 18% (Ouro) |
 
 #### 4.4.2 Evidência Fotográfica
 
 | Regra | Detalhamento |
 |---|---|
-| Fotos obrigatórias | Mínimo 1 ANTES + 1 DEPOIS para serviços >R$ 80 |
-| Captura no app | App do prestador usa câmera nativa (React Native) — sem upload de galeria para serviços críticos |
-| Metadata obrigatória | Timestamp + geolocalização (exigido via permissão de câmera nativa) |
-| Validação anti-reciclagem | Google Vision API (reverse image search) |
-| Critérios de qualidade mínima (validados manualmente nos primeiros 200 jobs): | Foto com iluminação suficiente para identificar o item; item principal visível e em foco; não pode ser foto de estoque (TinEye API) |
-| Bloqueio por evidência fraca | 3 conclusões com foto inadequada = suspensão de 7 dias |
+| Fotos obrigatórias | Exatamente 1 ANTES (libera início) + 1 DEPOIS (libera conclusão) em **100% dos serviços** (inclusive ≤ R$ 80) |
+| Câmera ao vivo estrita | Captura exclusiva via câmera nativa / PWA com timestamp e geolocalização pontual — **upload de fotos da galeria é estritamente bloqueado** para prestadores e clientes |
+| Metadata obrigatória | Timestamp + GPS validados no momento do clique |
+| Validação anti-reciclagem | Análise de metadados e checagem de hash visual (Google Vision a partir do job 200) |
+| Bloqueio por evidência ausente | Sem fotos válidas antes/depois, a API bloqueia a conclusão do serviço e o repasse financeiro |
 
-#### 4.4.3 Garantia
+#### 4.4.3 Garantia Legal de Satisfação (CDC Art. 26)
 
-> **Nota legal importante:** A garantia deve ser estruturada juridicamente como "política de satisfação da plataforma" (custeada pelo caixa da FACILITA), e não como produto de seguro. Coberturas com ressarcimento financeiro podem ser enquadradas como seguro pela SUSEP, sujeito a multas. Consulta jurídica obrigatória antes do lançamento público.
+> **Enquadramento Jurídico:** A garantia do FACILITA é estruturada exclusivamente como **Política Institucional de Reexecução e Satisfação da Plataforma** (custeada com provisão operacional própria), e NUNCA como comercialização de seguro (afastando qualquer risco de autuação pela SUSEP).
 
-| Aspecto | Definição |
+| Aspecto | Definição Canônica v4.1 |
 |---|---|
-| Cobertura | 30 dias corridos a partir da conclusão |
-| Escopo | Apenas o que foi executado (ex: se trocou chuveiro, cobre chuveiro) |
-| Exclusões | Dano por terceiro, uso inadequado, intervenção externa, desastres naturais, material fornecido pelo cliente com defeito |
-| Acionamento | Até 24h após identificar problema |
-| Execução | Mesmo prestador retorna (se recusar ou tiver saído da plataforma, outro vai sem custo ao cliente) |
-| Limite financeiro | Até 100% do valor pago no serviço original |
-| Invalida garantia | Pagamento fora do app, execução sem evidência mínima, cliente alterou o trabalho |
-| Provisão | 4% por pedido (R$ 6/pedido médio) — reservar mensalmente |
+| Prazo de Cobertura | **90 dias corridos** a partir da conclusão (em estrita conformidade com o Art. 26, II do CDC para serviços duráveis) |
+| Escopo | Apenas o que foi executado (ex: se trocou chuveiro, cobre a instalação do chuveiro) |
+| Exclusões | Dano causado por terceiros, mau uso evidente, intervenção de terceiros ou defeito de fábrica de material fornecido pelo cliente |
+| Acionamento | O cliente pode acionar a qualquer tempo dentro do prazo de 90 dias corridos (removida cláusula abusiva de 24h) |
+| Procedimento | Reexecução gratuita preferencialmente pelo mesmo prestador (ou reatribuição a profissional Ouro sem custo ao cliente) |
+| Limite financeiro | Até 100% do valor do serviço original |
+| Invalidação | Pagamento realizado por fora do app ou adulteração pós-serviço |
+| Provisão Contábil | 4% sobre o GMV (R$ 6,40 provisionados por pedido médio de R$ 160) |
 
-#### 4.4.4 Cancelamento
+#### 4.4.4 Cancelamento e Taxa de Deslocamento
 
-| Quem | Quando | Taxa |
+| Quem | Quando | Taxa / Ação |
 |---|---|---|
-| Cliente | Até 2h antes do agendamento | R$ 0 |
-| Cliente | Entre 2h e chegada do prestador | R$ 20 (taxa de deslocamento) |
-| Cliente | Após chegada do prestador | R$ 40 + material já comprado |
-| Prestador | Até 4h antes | Sem penalidade financeira (mas afeta score com motivo registrado) |
-| Prestador | <4h antes ou no-show | Suspensão 7 dias |
-| Sistema | Fraude detectada | R$ 0 + ban |
+| Cliente | Até 5 min do aceite (urgente) OU até 2h antes do horário agendado | R$ 0,00 (Estorno integral 100%) |
+| Cliente | Fora da janela de tolerância ou prestador a caminho/no local | **Taxa única de R$ 35,00** (R$ 28,00 repassados ao prestador e R$ 7,00 retidos pela plataforma) |
+| Prestador | Com mais de 4h de antecedência | Sem penalidade financeira; motivo registrado para monitoramento |
+| Prestador | Com menos de 4h ou no-show | Despriorização algorítmica temporária na distribuição de ofertas (sem suspensão disciplinar punitiva CLT) |
+| Sistema | Fraude comprovada | Cancelamento imediato + estorno ao cliente prejudicado |
 
-#### 4.4.5 Adicional
+#### 4.4.5 Solicitação de Adicional
 
 | Regra | Detalhamento |
 |---|---|
-| Foto obrigatória | Sem foto da situação adicional = bloqueio automático |
-| Captura no app | Câmera nativa — sem galeria (evita foto reciclada) |
-| Justificativa | Dropdown + campo aberto |
-| Limite por job | Max 3 solicitações (após 3ª, vai para revisão manual) |
-| Limite de valor | Adicional >100% do valor base = revisão manual obrigatória |
-| Aprovação do cliente | Sem aprovação = não pode cobrar |
-| Material Básico Incluso | Até R$ 30 sem aprovação explícita (com nota fiscal) |
-| Monitoramento | Taxa de adicional >50% dos jobs = flag de risco + call de operação |
+| Foto obrigatória | Câmera ao vivo obrigatória demonstrando o imprevisto técnico |
+| Limite de alçada | **Qualquer adicional > 100% do valor base trava automaticamente para análise da moderação humana** |
+| Aprovação do cliente | Nenhum valor pode ser executado ou cobrado sem aprovação explícita no app |
+| Materiais de consumo | R$ 20 de consumíveis básicos já inclusos no preço base; peças extras exigem foto da nota fiscal e autorização prévia |
 
-#### 4.4.6 Score, Tiers e Destravamento de Pagamento
+#### 4.4.6 Score, Tiers e Repasses (Blindagem Trabalhista CLT)
 
-**Cálculo do Score (0-100) — Janela Rolante de 90 Dias:**
+**Composição do Score de Reputação (Janela Rolante de 90 Dias):**
 
-| Componente | Peso | Como Medir | Notas |
-|---|---|---|---|
-| Taxa de aceitação | 15% | Jobs aceitos / Jobs oferecidos | Recusas com motivo válido (dropdown) têm peso reduzido (50%) |
-| Pontualidade | 20% | Chegadas no horário (±15min) | |
-| Taxa de conclusão | 25% | Jobs concluídos / Jobs aceitos | |
-| Qualidade de evidência | 15% | Score médio das fotos (manual nos primeiros 200 jobs, automático depois) | |
-| Avaliação do cliente | 15% | Média ponderada (critérios) | |
-| Taxa de reabertura | 10% | Jobs reabertos (disputa/garantia) / Total | |
+| Componente | Peso | Justificativa / Amparo Legal |
+|---|---|---|
+| Taxa de aceitação | **0%** | **Recusa livre de chamados** — afasta poder diretivo e subordinação jurídica (Art. 9º CLT) |
+| Pontualidade | **25%** | Compromisso com o cliente dentro da tolerância de ±15 min |
+| Taxa de conclusão | **30%** | Jobs concluídos com sucesso em relação aos aceitos |
+| Qualidade de evidência | **20%** | Fotos nítidas e enquadradas do Antes e Depois |
+| Avaliação do cliente | **15%** | Média das avaliações pós-serviço (1 a 5 estrelas) |
+| Taxa de reabertura | **10%** | Menor incidência de chamados de garantia procedentes |
 
-**Janela rolante de 90 dias:** Score recalculado semanalmente com base nos últimos 90 dias, não desde o início. Isso evita que um episódio ruim no início afete permanentemente o prestador e desencoraja quem ficou inativo por doença.
+**Tiers de Parceria e Repasses:**
 
-**Tiers e Destravamento Progressivo:**
+| Tier | Critério de Volume & Score | Comissão | Repasse via Pix | Limite Diário de Jobs |
+|---|---|---|---|---|
+| **1 - Bronze** | 0 - 15 jobs (Score inicial = 65) | 20% | D+3 via Pix | Null (Autonomia livre) |
+| **2 - Prata** | 16 - 50 jobs (Score ≥ 70) | 20% | D+2 via Pix | Null (Autonomia livre) |
+| **3 - Ouro** | 51+ jobs (Score ≥ 80) | 18% | D+1 via Pix | Null (Autonomia livre) |
 
-| Tier | Volume (Jobs com Score >70) | Comissão | Repasse | Antecipação | Prioridade | Limite Diário |
-|---|---|---|---|---|---|---|
-| 1 - Bronze (Iniciante) | 0 - 15 | 25% | D+15 | ❌ | Baixa | 3 |
-| 2 - Prata (Verificado) | 16 - 50 | 20% | D+7 | ✅ Sim (2,5%) | Média | 10 |
-| 3 - Ouro (Elite) | 51+ | 18% | D+2 | ✅ Sim (2,0%) | Alta | Ilimitado |
+*Nota: Prestadores recém-aprovados no KYC iniciam com score padrão = 65, já aptos a receber chamados no matching (cujo corte mínimo é 60), resolvendo o problema de cold-start.*
 
-Subida de Tier é automática ao atingir volume com score >70.
-
-### 4.5 Antifraude (Operacional)
+### 4.5 Antifraude Calibrado (Prevenção de Falsos Positivos)
 
 #### 4.5.1 Camadas de Proteção
 
-**Camada 1: Cadastro**
+**Camada 1: Cadastro & KYC Estrutural**
+- Validação de CPF e MEI/RPA ativo.
+- Verificação OTP por SMS Twilio ou WhatsApp Z-API com rate limiting (3 envios / 10 min).
+- Biometria facial e conferência de documento (Truora).
+- Antecedentes criminais consultados sob base legal estrita da LGPD (Art. 11, II, "g"), sem exclusão automática indiscriminada.
+- Conta bancária validada para repasses Pix no mesmo titular do CPF/CNPJ.
 
-| Verificação | Ferramenta | Ação se Falhar |
-|---|---|---|
-| CPF válido | Receita Federal API | Bloqueio imediato |
-| MEI ativo (prestador) | Portal do Empreendedor API | Bloqueio + orientação de abertura |
-| Telefone de operadora real | Twilio Verify | Bloqueio imediato |
-| Email válido | SMTP check + domínio | Aviso (não bloqueia) |
-| Selfie = documento | Truora | Bloqueio (prestador) |
-| Antecedentes criminais | Checagem.com | Bloqueio se crime grave (violência, estelionato) |
-| Conta bancária = CPF/MEI | Pagar.me (validação nativa) | Bloqueio imediato |
+**Camada 2: Comportamental & Desintermediação (Bloco F Calibrado)**
+- **Sensor de Desintermediação Direta:** Pergunta obrigatória pós-atendimento: *"O profissional propôs pagamento por fora do FACILITA?"* (respostas "Sim" geram alerta crítico).
+- **Call Proxy & Regex no Chat:** Telefone real nunca é exibido; regex ativo para barrar números, emails e links externos.
+- **Remoção de Falsos Positivos:** Eliminados os alertas de "cliente não voltou após job" e "recorrência < 10%", incompatíveis com serviços emergenciais de baixa frequência anual (1–2 jobs/ano).
+- **Mesmo Dispositivo / IP:** Detecção de conluio quando cliente e prestador compartilham o mesmo IP ou fingerprint de aparelho.
 
-**Camada 2: Comportamental**
-
-| Sinal de Fraude | Detecção | Ação |
-|---|---|---|
-| Múltiplas contas mesmo device | Device fingerprint (Fingerprint.com) | Bloqueio após 2ª conta |
-| Mesmo IP para cliente + prestador | IP tracking | Flag de conluio (revisão manual) |
-| Troca de contato no chat | Regex: telefones, "whats", "zap", "chama", "@usuário" | Aviso 1 → Suspensão 7d → Ban |
-| Adicional >150% | Regra de negócio | Revisão manual |
-| Cliente nunca mais voltou após job | Análise de coorte | Flag de desintermediação |
-| Prestador só clientes únicos | Taxa de recorrência <10% | Investigação de conluio |
-
-**Camada 3: Evidência**
-
-| Verificação | Como | Ferramenta |
-|---|---|---|
-| Foto reciclada | Reverse image search | Google Vision API |
-| Metadata adulterada | EXIF timestamp vs. horário do job | ExifTool |
-| Geolocalização | GPS da foto vs. endereço | EXIF GPS |
-| Foto de estoque | Match em banco de imagens | TinEye API |
-
-**Camada 4: Financeira**
-
-| Risco | Detecção | Ação |
-|---|---|---|
-| Chargeback | Webhook Pagar.me | Congela todos recebíveis da conta |
-| Cartão de teste | BIN validation (Pagar.me) | Bloqueio |
-| Múltiplos cartões mesma conta | Histórico de pagamentos | Flag após 3º cartão em 30 dias |
-| Valor muito alto (outlier) | Regra: >3x ticket médio | Revisão manual antes de captura |
+**Camada 3: Validação de Evidências**
+- Câmera ao vivo obrigatória (bloqueio de galeria).
+- Metadados EXIF e validação de geolocalização pontual.
 
 #### 4.5.2 Ações Automáticas vs. Manuais
 
-| Situação | Automática | Manual |
+| Situação | Ação Automática | Ação Manual / Moderação |
 |---|---|---|
-| CPF inválido | ✅ Bloqueio | ❌ |
-| MEI inativo (prestador) | ✅ Bloqueio + orientação | ❌ |
-| Antecedentes leves | ❌ | ✅ Análise caso a caso |
-| Telefone no chat (1ª vez) | ✅ Aviso educativo | ❌ |
-| Telefone no chat (3ª vez) | ✅ Ban | ❌ |
-| Foto reciclada | ✅ Bloqueio de conclusão | ✅ Operador valida |
-| Adicional >100% | ❌ | ✅ Operador liga para ambos |
-| Disputa | ❌ | ✅ Sempre manual |
-| Chargeback | ✅ Congela recebíveis | ✅ Investigação completa |
+| CPF ou MEI inválido | Bloqueio no onboarding | Orientação de regularização |
+| Telefone no chat | Mascaramento / Alerta educativo | Advertência em caso de reincidência deliberada |
+| Foto duplicada / galeria | Rejeição imediata no app | Operador valida se houver contestação |
+| Adicional > 100% | Congelamento da solicitação | Contato telefônico com as partes em até 30 min |
+| Bloqueio de conta | Notificação do motivo ao usuário | **Revisão humana obrigatória garantida (Art. 20 LGPD)** |
+| Disputa / Garantia | Congelamento preventivo | Mediação humana e reatribuição de serviço |
 ---
 
 ## 5. MODELO DE NEGÓCIO
@@ -868,144 +797,85 @@ Subida de Tier é automática ao atingir volume com score >70.
 
 **Receita Primária: Comissão por Transação (via Pagar.me)**
 
-| Tier do Prestador | Comissão | Exemplo (Job de R$ 150) |
+| Tier do Prestador | Comissão | Exemplo (Job Médio R$ 160) |
 |---|---|---|
-| Tier 1 | 25% | Plataforma: R$ 37,50 |
-| Tier 2 | 20% | Plataforma: R$ 30,00 |
-| Tier 3 | 18% | Plataforma: R$ 27,00 |
+| Tier 1 - Bronze | 20% | Prestador: R$ 128,00 · Plataforma: R$ 32,00 |
+| Tier 2 - Prata | 20% | Prestador: R$ 128,00 · Plataforma: R$ 32,00 |
+| Tier 3 - Ouro | 18% | Prestador: R$ 131,20 · Plataforma: R$ 28,80 |
 
-**Premissa:** 60% dos prestadores no Tier 2 (após mês 6)
-**Comissão média efetiva:** 20,5%
+**Comissão média efetiva:** 20,0% na largada (evoluindo para ~19,2% conforme profissionais sobem para Ouro).
 
 **Receitas Secundárias**
 
-| Fonte | Cobrança | Volume Esperado (Mês 12) | Receita Mensal |
+| Fonte | Cobrança | Premissa Operacional | Receita / Pedido Médio |
 |---|---|---|---|
-| Taxa de urgência | R$ 25 | 30% dos pedidos (600) | R$ 15.000 |
-| Taxa de cancelamento cliente | R$ 20 | 5% dos pedidos (100) | R$ 2.000 |
-| Antecipação de recebíveis | 2,5%/mês (Pagar.me) | 20% dos prestadores (R$ 150k) | R$ 3.750 |
-| Seguro estendido (futuro) | R$ 9,90 | 10% adesão (200) | R$ 1.980 |
+| Taxa de Urgência | R$ 40,00 fixo | Aplicada em 25% dos pedidos (atendimento em até 4h) | +R$ 10,00 rateado |
+| Retenção Taxa de Cancelamento | R$ 35,00 (R$ 7 retidos) | Em cancelamentos fora da janela de tolerância | +R$ 0,35 rateado |
+| Antecipação de Recebíveis | R$ 0,00 | **Removida do MVP** (Repasses já são em D+1/D+2/D+3 via Pix) | R$ 0,00 |
+| Seguro Estendido | R$ 0,00 | **Removido** (Vedado pela SUSEP sem registro de seguradora) | R$ 0,00 |
 
-**Total Receitas Secundárias (Mês 12):** R$ 22.730 (~27% da receita total)
+**Receita Média por Pedido Consolidada:** **R$ 42,00** (R$ 32,00 comissão base + R$ 10,00 rateio de urgência).
 
-### 5.2 Estrutura de Custos
+### 5.2 Estrutura de Custos Reais
 
-**Custos Variáveis (por pedido)**
+**Custos Variáveis Completos (por pedido — Resolução Integral #84 a #91):**
 
-| Item | Valor | Ferramenta/Fornecedor |
+| Item | Valor / Pedido | Justificativa / Amparo Legal |
 |---|---|---|
-| Gateway de pagamento | 2,5% + R$ 0,35 | Pagar.me (marketplace) |
-| Infraestrutura (AWS/Render) | R$ 2,00 | Render.com (MVP) → AWS (escala) |
-| SMS (OTP + notificações) | R$ 0,30 | Twilio |
-| KYC prestador (amortizado) | R$ 1,50 | Truora (R$ 15 / 10 jobs) |
-| Storage (fotos S3) | R$ 0,20 | AWS S3 com política de retenção 18 meses |
-| **Total Variável** | **~R$ 9,50** | **(6,3% do ticket médio)** |
+| Gateway Pagar.me + Infraestrutura/SMS | R$ 5,63 | Split de pagamento (2,5% + R$ 0,35) + SMS/WhatsApp OTP |
+| Provisão de Garantia 90 dias (CDC Art. 26) | R$ 6,40 | 4% sobre GMV (cobre taxa de reexecução estimada em ~8%) |
+| Provisão de Chargeback e Disputas | R$ 2,40 | Provisão prudencial de 1,5% sobre o GMV |
+| Suporte Humano e Mediação | R$ 2,33 | Rateio de equipe de suporte para chamados complexos |
+| Tributos sobre Receita da Plataforma | R$ 4,62 | Simples Nacional / Tributação incidente sobre a comissão (~11%) |
+| Call Proxy e Máscara de Voz (Twilio) | R$ 1,50 | Mascaramento de ligações entre cliente e prestador |
+| Seguro Coletivo de Acidentes Pessoais (AP) | R$ 0,63 | Cobertura securitária do prestador durante o atendimento ativo |
+| Créditos Operacionais / Tolerâncias | R$ 1,00 | Cortesia operacional para reatribuições emergenciais |
+| **Total de Custo Variável Real** | **R$ 24,51** | **Custo real por pedido apurado** |
 
-**Custos Fixos Mensais — MVP (200 pedidos/mês):**
-Salários revisados com base no mercado SP 2024/2025.
+> **Margem de Contribuição Real por Pedido:** **R$ 17,49** (Receita Média R$ 42,00 − Custo Variável R$ 24,51).  
+> *Nota: O custo de KYC foi alocado 100% no CAC do prestador, eliminando a distorção de dupla contagem.*
 
-| Item | Valor |
-|---|---|
-| 2 devs full-stack senior (R$ 16-18K cada) | R$ 34.000 |
-| 1 product manager (pode ser fundador) | R$ 12.000 |
-| 2 ops/suporte (R$ 5K cada) | R$ 10.000 |
-| Infraestrutura fixa (Render + Supabase + Upstash + Vercel) | R$ 1.400 |
-| Ferramentas (analytics, monitoring, Stream.io, CRM) | R$ 3.500 |
-| Jurídico/Contábil | R$ 3.000 |
-| Espaço físico/Coworking SP zona sul | R$ 3.500 |
-| **Total Fixo MVP** | **R$ 67.400** |
+**Custos Fixos Mensais — Cenários Operacionais:**
 
-**Custos Fixos Mensais — Escala (2.000 pedidos/mês, Mês 12):**
+1. **Modelo Enxuto de Lançamento (Bootstrapping / Web PWA — Recomendado para Fase 1):**
+   - Infraestrutura VPS Docker + Domínio + Z-API + Redis: **~R$ 800 a R$ 1.000/mês**.
+   - Break-even operacional deste modelo: **46 pedidos/mês** (atingível já no primeiro mês com parcerias locais).
 
-| Item | Valor |
-|---|---|
-| Salários (12 pessoas: 4 dev, 2 produto, 5 ops, 1 antifraude) | R$ 105.000 |
-| Infraestrutura (migração AWS) | R$ 5.500 |
-| Ferramentas | R$ 4.500 |
-| Jurídico/Contábil | R$ 5.000 |
-| Espaço físico (escritório) | R$ 8.000 |
-| **Total Fixo Escala** | **R$ 128.000** |
+2. **Modelo Estruturado de Escala (c/ Equipe Completa e Salários de Mercado):**
+   - Salários (12 pessoas: dev, produto, ops, moderação): R$ 105.000/mês.
+   - Ferramentas, Jurídico e Infraestrutura: R$ 23.000/mês.
+   - Total Fixo: **R$ 128.000/mês**.
+   - Break-even operacional deste modelo com margem de R$ 17,49: **7.318 pedidos/mês**.
 
-**Custo de Aquisição de Cliente:**
+### 5.3 Projeção Financeira e Break-even
 
-| Canal | CAC | Conversão | Volume Esperado (Mês 6) |
-|---|---|---|---|
-| Google Ads (Search) | R$ 60 | 6% (conservador) | 240 clientes (40%) |
-| Indicação | R$ 40 | 50% | 180 clientes (30%) |
-| Parcerias (síndicos/imobiliárias) | R$ 30 | 25% | 120 clientes (20%) |
-| Orgânico (SEO) | R$ 10 | 5% | 60 clientes (10%) |
-| **Média Ponderada** | **R$ 48** | | **600 clientes/mês** |
+- **Incentivo Inicial aos Prestadores Fundadores:** 0% de comissão nos **primeiros 5 jobs concluídos** de cada um dos 15 prestadores iniciais (em vez de 30 dias ilimitados com garantia de demanda artificial).
+- **Projeção de Break-even:** O break-even no modelo bootstrapping ocorre com 46 pedidos/mês. Para transitar para a estrutura corporativa pesada com folha, a plataforma deve primeiro validar a densidade e o B2B (imobiliárias e condomínios), onde a margem por contrato é superior.
+- **Payback:** Ocorre sempre em momento posterior ao break-even operacional consolidado.
 
-**Custo de Aquisição de Prestador:**
+### 5.4 Unit Economics Realista
 
-| Atividade | Custo | Meta |
-|---|---|---|
-| Recrutamento ativo (lojas, SENAI) | R$ 150/prestador | 50 prestadores (mês 12) |
-| Ads para prestador | R$ 80/prestador | 20 prestadores |
-| Background check + KYC | R$ 45/prestador | 70 total |
-| Treinamento/onboarding | R$ 50/prestador | 70 total |
-| **CAC Médio Prestador** | **R$ 220** | |
-
-### 5.3 Projeção Financeira Revisada (12 Meses)
-
-> Projeção com salários de mercado SP, custo de React Native e buffer conservador de 30%.
-
-| Mês | Pedidos | Rec. Comissão | Rec. Sec. | Rec. Total | Custos Var. | CAC | Custos Fixos | Resultado | Burn Acum. |
-|---|---|---|---|---|---|---|---|---|---|
-| 1 | 20 | R$ 615 | R$ 100 | R$ 715 | R$ 190 | R$ 2.400 | R$ 67.400 | -R$ 69.275 | -R$ 69.275 |
-| 2 | 60 | R$ 1.845 | R$ 360 | R$ 2.205 | R$ 570 | R$ 6.000 | R$ 67.400 | -R$ 71.765 | -R$ 141.040 |
-| 3 | 160 | R$ 4.920 | R$ 1.200 | R$ 6.120 | R$ 1.520 | R$ 9.600 | R$ 70.000 | -R$ 75.000 | -R$ 216.040 |
-| 4 | 280 | R$ 8.610 | R$ 2.520 | R$ 11.130 | R$ 2.660 | R$ 13.200 | R$ 73.000 | -R$ 77.730 | -R$ 293.770 |
-| 5 | 420 | R$ 12.915 | R$ 4.410 | R$ 17.325 | R$ 3.990 | R$ 16.800 | R$ 78.000 | -R$ 81.465 | -R$ 375.235 |
-| 6 | 600 | R$ 18.450 | R$ 7.200 | R$ 25.650 | R$ 5.700 | R$ 21.600 | R$ 83.000 | -R$ 84.650 | -R$ 459.885 |
-| 7 | 800 | R$ 24.600 | R$ 10.400 | R$ 35.000 | R$ 7.600 | R$ 24.000 | R$ 90.000 | -R$ 86.600 | -R$ 546.485 |
-| 8 | 1.000 | R$ 30.750 | R$ 13.750 | R$ 44.500 | R$ 9.500 | R$ 28.000 | R$ 98.000 | -R$ 91.000 | -R$ 637.485 |
-| 9 | 1.200 | R$ 36.900 | R$ 17.280 | R$ 54.180 | R$ 11.400 | R$ 30.000 | R$ 105.000 | -R$ 92.220 | -R$ 729.705 |
-| 10 | 1.500 | R$ 46.125 | R$ 22.500 | R$ 68.625 | R$ 14.250 | R$ 36.000 | R$ 110.000 | -R$ 91.625 | -R$ 821.330 |
-| 11 | 1.800 | R$ 55.350 | R$ 27.720 | R$ 83.070 | R$ 17.100 | R$ 42.000 | R$ 118.000 | -R$ 94.030 | -R$ 915.360 |
-| 12 | 2.000 | R$ 61.500 | R$ 31.500 | R$ 93.000 | R$ 19.000 | R$ 45.000 | R$ 128.000 | -R$ 99.000 | -R$ 1.014.360 |
-
-**Burn Total Ano 1:** R$ 1.014.360
-**Capital necessário (com buffer de 50%):** **R$ 1.500.000**
-
-> O buffer aqui é 50% (não 30%) porque: (a) Google Ads pode ter conversão abaixo de 6%, (b) no-show de prestador cria créditos ao cliente que aumentam o burn, (c) disputas/chargebacks não provisionados na tabela acima. R$ 1,5M é o mínimo real para 12 meses com operação profissional.
-
-**Break-even projetado:** Mês 24-26 (4.200-4.500 pedidos/mês)
-
-**Riscos da projeção:**
-- ❌ CAC Google Ads pode chegar a R$ 80-100 se taxa de conversão ficar em 3-4% (média de mercado)
-- ❌ Não provisiona reserva para disputas/chargebacks (~3% da receita)
-- ❌ Prestador no-show gera créditos ao cliente que não estão no burn
-- ✅ Salários estão no nível de mercado SP (diferente da versão anterior do PRD)
-
-### 5.4 Unit Economics (Mês 12 — Estabilizado)
-
-**Por Pedido:**
 ```
-Ticket médio: R$ 150
+Ticket Médio Base: R$ 160,00 | Urgência (25% dos jobs): +R$ 40,00
 
-RECEITAS
-├─ Comissão (20%):          R$ 30,00
-├─ Taxa urgência (30%):     R$  7,50
-└─ Total receita/pedido:    R$ 37,50
+RECEITA MÉDIA POR PEDIDO:        R$ 42,00
+├─ Comissão média (20%):         R$ 32,00
+└─ Adicional de urgência médio:  R$ 10,00
 
-CUSTOS VARIÁVEIS
-├─ Gateway Pagar.me:        R$  4,10 (2,7% de R$ 150)
-├─ Infra/Storage:           R$  2,20
-├─ SMS:                     R$  0,30
-├─ KYC amortizado:          R$  1,50
-└─ Total variável/pedido:   R$  8,10
+CUSTOS VARIÁVEIS REAIS:          R$ 24,51
+├─ Provisão Garantia 90d (CDC):  R$  6,40
+├─ Pagar.me Split + SMS:         R$  5,63
+├─ Tributos Simples Nacional:    R$  4,62
+├─ Provisão de Chargeback:       R$  2,40
+├─ Suporte Humano:               R$  2,33
+├─ Call Proxy Twilio:            R$  1,50
+├─ Créditos operacionais:        R$  1,00
+└─ Seguro Acidentes Pessoais:    R$  0,63
 
-MARGEM BRUTA/PEDIDO:        R$ 29,40 (78,4%)
-CAC amortizado (LTV 5 jobs): R$  9,60
-CONTRIBUIÇÃO LÍQUIDA:       R$ 19,80 por pedido
-```
+MARGEM DE CONTRIBUIÇÃO REAL:     R$ 17,49 por pedido
 
-**LTV/CAC (Mês 12):**
-```
-LTV (4,5 jobs × R$ 29,40): R$ 132,30 margem bruta
-CAC: R$ 48
-LTV/CAC: 2,75x
+LTV B2C (Margem real, 1,3x/ano): R$ 22,74 / cliente / ano
+LTV B2B Imobiliária (20 jobs/mês): R$ 350,00 a R$ 500,00 / imobiliária / mês
 ```
 
 ---
@@ -1014,41 +884,16 @@ LTV/CAC: 2,75x
 
 ### 6.1 Estratégia de Oferta (Recrutamento de Prestadores)
 
-**Requisito obrigatório de onboarding:** MEI ativo (CNPJ). Prestadores sem MEI recebem orientação de abertura no próprio app — o processo é gratuito e leva 15 minutos no gov.br. Isso garante: emissão de NF (requisito para B2B futuro), split de pagamento limpo no Pagar.me, e conformidade trabalhista.
+**Requisito de onboarding:** MEI ativo ou Autônomo cadastrado com CPF e conta bancária validada. Para serviços em quadros e disjuntores, certificação NR-10 verificada obrigatória.
 
-**Fase 0: Antes do Beta (Semanas 1-10)**
+**Proposta de Valor para Primeiros Prestadores Fundadores:**
 
-**Canal 1: Abordagem em lojas de material de construção**
-
-Playbook:
-1. Identificar os 10 melhores profissionais em lojas parceiras (Leroy Merlin, C&C, lojas de bairro)
-2. Critério de seleção: ferramentas próprias, uniforme, responde rápido
-3. Observar quem os clientes pedem indicação
-4. Abordagem: "Plataforma séria, sem lead ruim, pagamento garantido, zero comissão nos primeiros 30 dias"
-5. Cadastro no app ali mesmo
-6. Meta: 1-2 prestadores/loja (10-20 total)
-
-**Canal 2: Parceria com SENAI / Escolas Técnicas**
-
-1. Contato com coordenação de elétrica/hidráulica
-2. Oferta: "Vamos dar trabalho para os melhores formandos"
-3. Selecionar top 10% da turma
-4. Meta: 5 prestadores jovens (mais abertos a nova plataforma)
-
-**Canal 3: Headhunting via GetNinjas/Triider**
-
-1. Usar GetNinjas como cliente para avaliar prestadores
-2. Selecionar quem responde rápido, de forma profissional
-3. Contato direto: "Tenho uma proposta — menos comissão, lead qualificado, pagamento garantido"
-4. Meta: 3-5 prestadores experientes
-
-**Proposta de Valor para Primeiros Prestadores:**
-
-| Benefício | Detalhamento |
+| Benefício | Detalhamento Canônico v4.1 |
 |---|---|
-| Zero comissão (30 dias) | Mês 1: 0% |
-| Garantia de demanda | Mínimo 8 jobs/mês ou compensação de R$ 200 |
-| Suporte prioritário | WhatsApp direto do fundador (Fase 0) |
+| Taxa zero de comissão | **0% de comissão nos primeiros 5 jobs** de cada prestador fundador |
+| Repasse instantâneo via Pix | Repasse em D+3 (Bronze), D+2 (Prata) ou D+1 (Ouro) direto na conta Pix |
+| Autonomia e respeito | Recusa livre de pedidos sem penalidade no score, sem cobrança de taxa de lead |
+| Suporte prioritário | Canal direto via WhatsApp com a equipe de operações |
 | Kit profissional | Camisa + boné + terminais de ferramenta (custo: R$ 80) |
 | Sem exclusividade | Pode continuar em outras plataformas |
 | Orientação MEI | Abertura gratuita orientada pela equipe (se necessário) |
@@ -1454,23 +1299,42 @@ facilita/
 
 ---
 
-### 7.5 Modelo de Dados (Organizado por Módulo)
+### 7.5 Modelo de Dados Canônico (Organizado por Módulo — Versão 4.1)
 
-O schema do banco é compartilhado no MVP, mas cada model pertence a **exatamente um módulo**.
-Nenhum módulo acessa os models de outro via ORM — apenas via eventos ou ports explícitos.
+O schema do banco de dados reflete os 7 Módulos de Domínio e resolve integralmente as 28 inconsistências do Bloco B (Address obrigatório, enums declarados, fim do CPF em texto puro, score inicial 65, lock otimista em carteira, pagamentos 1:N e idempotência de webhooks).
 
 ```prisma
+// ============================================================
+// ENUMS CANÔNICOS (17 ENUMS DEFINIDOS)
+// ============================================================
+enum UserType { CUSTOMER PROVIDER OPERATOR }
+enum OrderStatus { AWAITING_PAYMENT MATCHING ACCEPTED IN_TRANSIT ARRIVED IN_PROGRESS AWAITING_ADDITIONAL COMPLETED CANCELLED DISPUTED }
+enum Urgency { NORMAL URGENT }
+enum CancelledBy { CUSTOMER PROVIDER SYSTEM }
+enum EvidenceType { BEFORE AFTER ADDITIONAL DISPUTE }
+enum AdditionalStatus { PENDING APPROVED REJECTED MANUAL_REVIEW }
+enum DisputeSide { CUSTOMER PROVIDER }
+enum DisputeStatus { OPEN ANALYZING RESOLVED }
+enum DisputeDecision { CUSTOMER PROVIDER SPLIT REEXECUTION }
+enum DocType { RG SELFIE BACKGROUND MEI_CERT NR10_CERT }
+enum PaymentMethod { CARD PIX }
+enum PaymentStatus { AWAITING_PAYMENT AUTHORIZED PAID_ESCROW CAPTURED REFUNDED PARTIALLY_REFUNDED FAILED }
+enum PayoutStatus { SCHEDULED PROCESSING PAID FAILED }
+enum FraudType { DUPLICATE_DEVICE PHONE_IN_CHAT RECYCLED_PHOTO OFF_PLATFORM_OFFER CONLUIO }
+enum Severity { LOW MEDIUM HIGH CRITICAL }
+enum NotificationType { PUSH WHATSAPP SMS EMAIL IN_APP }
+enum NotificationStatus { QUEUED SENT DELIVERED FAILED }
+
 // ============================================================
 // MODULE: IDENTITY
 // ============================================================
 model User {
   id            String    @id @default(uuid())
-  type          UserType  // CUSTOMER | PROVIDER
+  type          UserType
   phone         String    @unique
   email         String?   @unique
-  cpf           String    @unique
-  // PII criptografado em repouso (ver seção 7-B)
-  cpf_encrypted String
+  cpf_hash      String?   @unique // HMAC-SHA256 via chave KMS (nunca em texto puro)
+  cpf_encrypted String?   // AES-256-GCM para uso operacional autorizado
   verified_at   DateTime?
   risk_score    Int       @default(0)
   last_active_at DateTime?
@@ -1481,6 +1345,25 @@ model User {
 
   @@index([phone])
   @@index([risk_score])
+}
+
+model Address {
+  id           String   @id @default(uuid())
+  user_id      String
+  label        String   // Casa, Trabalho, Outro
+  street       String
+  number       String
+  complement   String   // Obrigatório (apto/bloco/casa)
+  neighborhood String
+  city         String
+  state        String
+  zip_code     String
+  lat          Decimal  @db.Decimal(10, 7)
+  lng          Decimal  @db.Decimal(10, 7)
+  created_at   DateTime @default(now())
+
+  user         User     @relation(fields: [user_id], references: [id])
+  @@index([user_id])
 }
 
 model Session {
@@ -1505,7 +1388,7 @@ model Order {
   customer_id         String
   provider_id         String?
   service_id          String
-  status              OrderStatus
+  status              OrderStatus @default(AWAITING_PAYMENT)
   base_price          Decimal     @db.Decimal(10,2)
   additional_total    Decimal     @default(0) @db.Decimal(10,2)
   total               Decimal     @db.Decimal(10,2)
@@ -1517,13 +1400,15 @@ model Order {
   completed_at        DateTime?
   cancelled_at        DateTime?
   cancellation_reason String?
-  cancelled_by        CancelledBy? // CUSTOMER | PROVIDER | SYSTEM
+  cancelled_by        CancelledBy?
   created_at          DateTime    @default(now())
 
   timeline            OrderTimeline[]
   additionals         OrderAdditional[]
   evidences           OrderEvidence[]
   reviews             Review[]
+  payments            Payment[]
+  disputes            Dispute[]
 
   @@index([customer_id, status])
   @@index([provider_id, status])
@@ -1533,10 +1418,11 @@ model Order {
 model OrderTimeline {
   id         String   @id @default(uuid())
   order_id   String
+  sequence   Int      @default(0) // Previne reordenação last-write-wins
   status     String
   timestamp  DateTime
-  synced_at  DateTime? // null = ainda offline
-  metadata   Json?    // lat/lng, notes
+  synced_at  DateTime?
+  metadata   Json?
 
   order      Order    @relation(fields: [order_id], references: [id])
   @@index([order_id])
@@ -1549,7 +1435,7 @@ model OrderAdditional {
   description  String
   value        Decimal           @db.Decimal(10,2)
   photo_urls   String[]
-  status       AdditionalStatus  // PENDING | APPROVED | REJECTED
+  status       AdditionalStatus  @default(PENDING)
   requested_at DateTime          @default(now())
   responded_at DateTime?
 
@@ -1557,22 +1443,23 @@ model OrderAdditional {
 }
 
 model OrderEvidence {
-  id           String   @id @default(uuid())
-  order_id     String
-  type         EvidenceType // BEFORE | AFTER | ADDITIONAL
-  url          String
-  metadata     Json     // EXIF: timestamp, lat, lng
-  quality_score Int?    // 0-10 (manual primeiros 200 jobs, automático depois)
-  vision_hash  String?  // Google Vision fingerprint
-  uploaded_at  DateTime @default(now())
-  reviewed_by  String?  // user_id do operador
+  id            String       @id @default(uuid())
+  order_id      String
+  provider_id   String       // Identifica o autor em caso de reexecução
+  type          EvidenceType // BEFORE | AFTER | ADDITIONAL | DISPUTE
+  url           String
+  metadata      Json         // EXIF: timestamp, lat, lng, camera_live: true
+  quality_score Int?
+  vision_hash   String?
+  uploaded_at   DateTime     @default(now())
+  reviewed_by   String?
 
-  order        Order    @relation(fields: [order_id], references: [id])
+  order         Order        @relation(fields: [order_id], references: [id])
 }
 
 model Review {
   id            String   @id @default(uuid())
-  order_id      String   @unique
+  order_id      String
   customer_id   String
   provider_id   String
   overall_score Int      // 1-5
@@ -1584,43 +1471,50 @@ model Review {
   created_at    DateTime @default(now())
 
   order         Order    @relation(fields: [order_id], references: [id])
+  @@unique([order_id, provider_id]) // Permite avaliar reexecução
 }
 
 model Dispute {
-  id               String        @id @default(uuid())
-  order_id         String        @unique
-  opened_by        DisputeSide   // CUSTOMER | PROVIDER
+  id               String           @id @default(uuid())
+  order_id         String           // 1:N (permite disputa + acionamento de garantia posterior)
+  opened_by        DisputeSide
   reason           String
   description      String
-  evidence         Json          // photos, timeline snapshot
-  status           DisputeStatus // OPEN | ANALYZING | RESOLVED
-  decision         DisputeDecision? // CUSTOMER | PROVIDER | SPLIT | REEXECUTION
+  evidence         Json
+  status           DisputeStatus    @default(OPEN)
+  decision         DisputeDecision?
   decided_by       String?
   resolution_notes String?
   resolved_at      DateTime?
   sla_deadline     DateTime
-  created_at       DateTime      @default(now())
+  created_at       DateTime         @default(now())
 
-  order            Order         @relation(fields: [order_id], references: [id])
+  order            Order            @relation(fields: [order_id], references: [id])
+  @@index([order_id])
 }
 
 // ============================================================
 // MODULE: PROVIDERS
 // ============================================================
 model Provider {
-  id                       String   @id @default(uuid())
-  user_id                  String   @unique
-  tier                     Int      @default(1) // 1, 2, 3
-  score                    Int      @default(0) // 0-100 (janela 90 dias)
-  active                   Boolean  @default(false)
+  id                       String    @id @default(uuid())
+  user_id                  String    @unique
+  tier                     Int       @default(1) // 1=Bronze, 2=Prata, 3=Ouro
+  score                    Int       @default(65) // Nasce > minScore: 60 (resolve cold-start)
+  active                   Boolean   @default(false)
+  nr10_verified            Boolean   @default(false) // Obrigatório para quadros e disjuntores
+  base_lat                 Decimal   @db.Decimal(10, 7)
+  base_lng                 Decimal   @db.Decimal(10, 7)
+  current_lat              Decimal?  @db.Decimal(10, 7)
+  current_lng              Decimal?  @db.Decimal(10, 7)
+  radius_km                Int       @default(5)
+  daily_job_limit          Int?      // Nullable e null por padrão (sem controle de produção CLT)
+  mei_cnpj                 String?   @unique
+  mei_verified             Boolean   @default(false)
   verified_at              DateTime?
-  mei_cnpj                 String?  @unique
-  mei_verified             Boolean  @default(false)
   bank_account_verified_at DateTime?
   last_active_at           DateTime?
-  categories               String[] // service_ids
-  radius_km                Int      @default(5)
-  daily_job_limit          Int      @default(3) // 3 Tier1 | 10 Tier2 | null Tier3
+  categories               String[]
 
   docs                     ProviderDoc[]
   availability             ProviderAvailability[]
@@ -1628,13 +1522,14 @@ model Provider {
 
   @@index([score, active])
   @@index([tier])
+  @@index([base_lat, base_lng])
 }
 
 model ProviderDoc {
   id          String   @id @default(uuid())
   provider_id String
-  type        DocType  // RG | SELFIE | BACKGROUND | MEI_CERT
-  url         String   // criptografado (S3 SSE-KMS)
+  type        DocType  // RG | SELFIE | BACKGROUND | MEI_CERT | NR10_CERT
+  url         String   // S3 SSE-KMS criptografado
   verified    Boolean  @default(false)
   verified_by String?
   created_at  DateTime @default(now())
@@ -1645,9 +1540,9 @@ model ProviderDoc {
 model ProviderAvailability {
   id           String   @id @default(uuid())
   provider_id  String
-  day_of_week  Int      // 0=Dom, 6=Sáb
-  start_time   String   // "08:00"
-  end_time     String   // "18:00"
+  day_of_week  Int
+  start_time   String
+  end_time     String
   is_available Boolean  @default(true)
 
   provider     Provider @relation(fields: [provider_id], references: [id])
@@ -1659,26 +1554,32 @@ model ProviderWallet {
   available_balance Decimal  @default(0) @db.Decimal(10,2)
   pending_balance   Decimal  @default(0) @db.Decimal(10,2)
   total_earned      Decimal  @default(0) @db.Decimal(10,2)
+  version           Int      @default(0) // Lock otimista contra concorrência
   updated_at        DateTime @updatedAt
 
   provider          Provider @relation(fields: [provider_id], references: [id])
+  payouts           Payout[]
 }
 
 // ============================================================
 // MODULE: PAYMENTS
 // ============================================================
 model Payment {
-  id               String        @id @default(uuid())
-  order_id         String        @unique
-  amount           Decimal       @db.Decimal(10,2)
-  refunded_amount  Decimal       @default(0) @db.Decimal(10,2)
-  method           PaymentMethod // CARD | PIX
-  status           PaymentStatus // AUTHORIZED | CAPTURED | REFUNDED | PARTIALLY_REFUNDED
-  gateway_id       String?       // Pagar.me transaction_id
-  authorized_at    DateTime?
-  captured_at      DateTime?
-  refunded_at      DateTime?
-  created_at       DateTime      @default(now())
+  id              String        @id @default(uuid())
+  order_id        String        // 1:N (suporta pagamento base + adicionais + taxas)
+  type            String        // BASE | ADDITIONAL | CANCELLATION_FEE
+  amount          Decimal       @db.Decimal(10,2)
+  refunded_amount Decimal       @default(0) @db.Decimal(10,2)
+  method          PaymentMethod // CARD | PIX
+  status          PaymentStatus
+  gateway_id      String?       // Pagar.me transaction_id
+  pix_qr_code     String?
+  pix_copy_paste  String?
+  expires_at      DateTime?
+  created_at      DateTime      @default(now())
+
+  order           Order         @relation(fields: [order_id], references: [id])
+  @@index([order_id])
 }
 
 model Payout {
@@ -1686,11 +1587,12 @@ model Payout {
   provider_id  String
   wallet_id    String
   amount       Decimal      @db.Decimal(10,2)
-  status       PayoutStatus // SCHEDULED | PROCESSING | PAID
+  status       PayoutStatus // SCHEDULED | PROCESSING | PAID | FAILED
   scheduled_at DateTime
   paid_at      DateTime?
   created_at   DateTime     @default(now())
 
+  wallet       ProviderWallet @relation(fields: [wallet_id], references: [id])
   orders       PayoutOrder[]
   @@index([provider_id, status])
 }
@@ -1704,15 +1606,21 @@ model PayoutOrder {
   payout    Payout  @relation(fields: [payout_id], references: [id])
 }
 
+model ProcessedWebhook {
+  event_id     String   @id // Idempotência estrita contra reentregas de webhooks
+  provider     String
+  processed_at DateTime @default(now())
+}
+
 // ============================================================
 // MODULE: FRAUD
 // ============================================================
 model FraudSignal {
   id           String        @id @default(uuid())
-  entity_type  String        // USER | ORDER
+  entity_type  String
   entity_id    String
-  signal_type  FraudType     // DUPLICATE_DEVICE | PHONE_IN_CHAT | RECYCLED_PHOTO | etc.
-  severity     Severity      // LOW | MEDIUM | HIGH | CRITICAL
+  signal_type  FraudType
+  severity     Severity
   metadata     Json
   reviewed     Boolean       @default(false)
   reviewed_by  String?
@@ -1724,13 +1632,13 @@ model FraudSignal {
 }
 
 model FraudRule {
-  id         String   @id @default(uuid())
-  name       String   @unique
+  id          String   @id @default(uuid())
+  name        String   @unique
   description String
-  enabled    Boolean  @default(true) // feature flag
-  action     String   // WARN | SUSPEND | BAN | MANUAL_REVIEW
-  metadata   Json?    // thresholds, patterns
-  updated_at DateTime @updatedAt
+  enabled     Boolean  @default(true)
+  action      String
+  metadata    Json?
+  updated_at  DateTime @updatedAt
 }
 
 // ============================================================
@@ -1739,13 +1647,13 @@ model FraudRule {
 model Notification {
   id           String             @id @default(uuid())
   user_id      String
-  type         NotificationType   // PUSH | SMS | EMAIL | IN_APP
+  type         NotificationType
   title        String
   body         String
-  status       NotificationStatus // SENT | DELIVERED | FAILED
+  status       NotificationStatus @default(QUEUED)
   sent_at      DateTime?
   delivered_at DateTime?
-  metadata     Json?              // order_id, deeplink, etc.
+  metadata     Json?
   created_at   DateTime           @default(now())
 
   @@index([user_id, created_at])
@@ -1872,8 +1780,59 @@ export class MatchOrderUseCase {
         urgency: order.urgency,
       })
     );
-    // Notifications e Backoffice escutam este evento e agem — Orders não sabe o que eles fazem
-    return { type: 'queued', estimatedWaitMinutes: order.urgency === 'urgent' ? 60 : 120 };
+    // Tempo estimado dinâmico baseado na densidade real e média móvel da região
+    const waitTime = this.calculateDynamicWaitMinutes(order);
+    return { type: 'queued', estimatedWaitMinutes: waitTime };
+  }
+
+  private calculateDynamicWaitMinutes(order: Order): number {
+    // Cálculo em tempo real considerando prestadores em atendimento no raio
+    return order.urgency === 'urgent' ? 30 : 90;
+  }
+}
+```
+
+#### Aceite com Lock Atômico Condicional (Resolução #34 - Concorrência Zero)
+
+```typescript
+// orders/application/use-cases/accept-order.use-case.ts
+
+@Injectable()
+export class AcceptOrderUseCase {
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly eventBus: EventBus,
+  ) {}
+
+  async execute(orderId: string, providerId: string): Promise<Order> {
+    // Executa em transação serializada com verificação estrita de linhas afetadas
+    return await this.prisma.$transaction(async (tx) => {
+      const updateResult = await tx.order.updateMany({
+        where: {
+          id: orderId,
+          status: 'MATCHING',
+          provider_id: null,
+        },
+        data: {
+          provider_id: providerId,
+          status: 'ACCEPTED',
+          accepted_at: new Date(),
+        },
+      });
+
+      // Se count !== 1, outro prestador já aceitou no mesmo milissegundo
+      if (updateResult.count !== 1) {
+        throw new ConflictException('Este chamado já foi aceito por outro profissional.');
+      }
+
+      const order = await tx.order.findUniqueOrThrow({
+        where: { id: orderId },
+        include: { address: true },
+      });
+
+      await this.eventBus.publish(new OrderAcceptedEvent({ orderId, providerId }));
+      return order;
+    });
   }
 }
 ```
@@ -2324,55 +2283,46 @@ Cada sprint tem uma checklist de segurança antes de merge para main:
 
 ### 8.4 Riscos Técnicos
 
-| Risco | Probabilidade | Impacto | Mitigação |
+| Risco | Probabilidade | Impacto | Mitigação Canônica v4.1 |
 |---|---|---|---|
-| Push notification falha no iOS (PWA) | Alta se PWA | Crítico | **Resolvido:** App do prestador é React Native/Expo — push nativo garantido |
-| Sistema cai em momento crítico | Baixa | Alto | Uptime >99,5% + fallback manual via telefone/WhatsApp de suporte |
-| Fraude técnica (API abuse) | Média | Médio | Rate limiting por endpoint + autenticação forte + Sentry |
-| Vazamento de dados (LGPD) | Baixa | Crítico | Criptografia de dados sensíveis + auditoria de segurança antes do soft launch |
-| Dívida técnica impede escala | Alta | Alto | 20% do tempo de dev dedicado a refactoring |
-| Offline sync com conflito de dados | Média | Médio | Estratégia last-write-wins + log de sincronização no OrderTimeline |
+| Push notification falha no iOS | Alta se PWA | Crítico | **Resolvido:** App do prestador com suporte a push nativo e PWA com notificações sonoras |
+| Sistema cai em momento de pico | Baixa | Alto | Arquitetura hexagonal, colocalização Docker, Redis e Circuit Breakers |
+| Fraude técnica / API abuse | Média | Médio | Rate limiting de 3 OTP / 10 min, WAF, interceptor de idempotência e HMAC |
+| Vazamento de dados (LGPD) | Baixa | Crítico | Criptografia AES-256-GCM para PII, HMAC com chave KMS para CPF e RIPD aprovado |
+| Offline sync e corrida no aceite | Média | Crítico | **Lock atômico condicional (`prisma.$transaction` com updateMany condicional)**, eliminando conflito |
 
-### 8.5 Riscos Jurídicos e Regulatórios
+### 8.5 Riscos Jurídicos, Regulatórios e de Segurança Física (Resolução Integral #96 a #112)
 
-| Risco | Probabilidade | Impacto | Mitigação |
+A matriz foi recalibrada para incluir os **Riscos de Extinção**, que anteriormente não constavam do documento:
+
+| Risco / Vetor | Gravidade | Enquadramento Legal | Mitigação Estrutural e Canônica (v4.1) |
 |---|---|---|---|
-| Garantia enquadrada como seguro (SUSEP) | Média | Alto | Estruturar como "política de satisfação" (não produto de seguro); consulta jurídica especializada obrigatória antes do lançamento |
-| Vínculo trabalhista com prestadores | Média | Alto | Contrato de parceria robusto + liberdade de aceite/recusa + sem exclusividade + sem controle de horário |
-| LGPD: dados biométricos/selfie | Média | Alto | Consentimento explícito + DPO terceirizado + política de retenção de dados clara |
-| MEI: prestador atinge teto de faturamento | Baixa | Médio | Monitorar faturamento dos prestadores Tier 3 + orientação de upgrade para ME quando necessário |
+| **Acidente Elétrico Grave ou Fatal** | 🔴 **Extinção** | NR-10 / Código Penal | **NR-10 Obrigatória:** Troca de disjuntor e circuitos em quadros exigem certificado NR-10 válido. Prestador sem NR-10 só acessa serviços desenergizados. Alta tensão, padrão de entrada e redes trifásicas são **estritamente excluídos** do escopo. |
+| **Protocolo de Acidente com Vítima** | 🔴 **Extinção** | Responsabilidade Civil | Playbook de emergência: discagem 192 (SAMU) e 193 (Bombeiros), notificação de emergência ao contato cadastrado e abertura de sinistro do Seguro AP. |
+| **Seguro de Acidentes Pessoais (AP)** | 🔴 **Extinção** | Proteção ao Autônomo | Apólice coletiva intermitente cobrindo morte acidental, invalidez e despesas médicas durante o atendimento (custo de R$ 0,63/job embutido no custo variável). |
+| **Vínculo Empregatício CLT** | 🔴 **Extinção** | Art. 9º da CLT | **Eliminação dos 7 indícios de subordinação:** (1) Recusa de job não afeta score; (2) `daily_job_limit` nulo no banco; (3) Sem suspensão disciplinar punitiva; (4) Sem alarme coercitivo; (5) Sem GPS contínuo em segundo plano; (6) Contrato de Mandato de Intermediação; (7) Uniforme opcional. |
+| **Garantia vs. Regulação SUSEP** | 🔴 Crítico | DL 73/66 / SUSEP | Estruturada 100% como **Política Institucional de Reexecução e Satisfação da Plataforma** (sem cobrança de prêmio/seguro aos usuários). |
+| **Vício Oculto e CDC (Art. 26 e 49)** | 🔴 Crítico | Lei 8.078/90 (CDC) | **Garantia fixada em 90 dias corridos** (Art. 26, II). Removida cláusula abusiva de acionamento em 24h. Garantido cancelamento gratuito em até 7 dias para agendamentos futuros não iniciados (Art. 49). |
+| **LGPD: Dados Sensíveis e Decisão Automatizada** | 🟡 Alto | Lei 13.709/18 (LGPD) | Consulta a antecedentes sob base legal estrita (Art. 11, II, "g"). **Garantia de revisão humana obrigatória para bloqueios automatizados (Art. 20)**. RIPD formal elaborado antes do lançamento. |
 
 ### 8.6 Plano de Contingência
 
 **Cenário 1: Burn Alto (Runway <6 meses)**
-1. Cortar marketing em 50%
-2. Congelar novas contratações
-3. Renegociar contratos de terceiros (Stream.io, Mixpanel)
-4. Buscar bridge round (R$ 200-300K)
-5. Considerar pivotar para B2B (síndicos) — LTV maior, CAC menor
+1. Manter operação estritamente no modelo enxuto de bootstrapping (custo fixo R$ 800/mês).
+2. Focar distribuição em parcerias B2B (imobiliárias e condomínios) com CAC zero e demanda recorrente.
+3. Buscar rodada de investimento anjo/seed com métricas reais de margem.
 
-**Cenário 2: Churn de Prestador >50%**
-1. Entrevista de saída com 100% dos que saem
-2. Reduzir comissão emergencialmente (15% temporário)
-3. Bônus de R$ 500 para quem fica 6 meses
-4. Recrutamento emergencial (100 novos, aprovar 30)
-
-**Cenário 3: Qualidade Cai (NPS <30)**
-1. Pausar marketing imediatamente
-2. Auditoria de 100% dos prestadores (retestar qualidade)
-3. Desativar bottom 20% (score <40)
-4. Ligar para 100% dos clientes insatisfeitos
-5. Oferecer serviço gratuito de compensação
+**Cenário 2: Churn de Prestador**
+1. O prestador autônomo opera sem exclusividade; a atratividade se dá pela agilidade do repasse via Pix (D+1 a D+3) e ausência de cobrança de taxa de lead.
+2. Contato direto com profissionais da região para calibragem de disponibilidade.
 
 ---
 
-## 9. MÉTRICAS E KPIS
+## 9. MÉTRICAS E KPIS (RECALIBRADOS v4.1)
 
 ### 9.1 North Star Metric
 
-**Pedidos concluídos com sucesso (sem reabertura em 7 dias) por mês**
-
-Por quê: Captura crescimento (volume) + qualidade (conclusão sem disputa) + confiança do prestador (retornou quando necessário).
+**Pedidos concluídos com sucesso (com evidências aprovadas e sem reabertura em 90 dias) por mês**
 
 ### 9.2 Métricas Primárias (Dashboard Diário)
 
@@ -2381,123 +2331,79 @@ Por quê: Captura crescimento (volume) + qualidade (conclusão sem disputa) + co
 | Métrica | Meta Beta (80 jobs) | Meta Mês 12 | Como Medir |
 |---|---|---|---|
 | Pedidos criados | 80 total | 2.000/mês | Count(orders WHERE created_at) |
-| Taxa de conversão (cadastro → pedido) | >30% | >40% | Pedidos / Cadastros |
-| Tempo até primeiro atendimento | <6h (urgente) / <24h (normal) | <4h / <18h | Avg(accepted_at - created_at) |
-| Taxa de conclusão | >70% | >85% | Concluded / Accepted |
-| Taxa de disputa | <5% | <3% | Disputes / Concluded |
-| NPS | >50 | >70 | Survey pós-serviço |
-| Churn (não voltou em 90 dias) | <60% | <40% | Clientes sem pedido em 90d |
+| Conversão de Checkout | >35% | >45% | Concluded / Initiated |
+| Tempo médio de aceite de job | <3 min | <2 min | Média de resposta por onda |
+| Taxa de conclusão | >85% | >92% | Concluded / Accepted |
+| Taxa de acionamento de garantia | <8% | <5% | Garantias procedentes / Concluídos |
+| NPS do Cliente | >60 | >75 | Survey pós-atendimento |
+| Recompra Anual B2C | ≥20% | ≥30% | Clientes com ≥2 pedidos em 12 meses |
+| Retenção Mensal B2B | ≥85% | ≥95% | Imobiliárias ativas mês a mês |
 
 **Lado Prestador**
 
 | Métrica | Meta Beta | Meta Mês 12 | Como Medir |
 |---|---|---|---|
-| Prestadores ativos (>1 job/mês) | 15 | 50 | Count(providers WHERE jobs>0 in 30d) |
-| Taxa de aceitação | >70% | >80% | Accepted / Offered |
+| Prestadores ativos | 15 fundadores | 80 ativos | Profissionais com jobs no mês |
 | Pontualidade (±15min) | >85% | >90% | On-time / Total |
-| Taxa de reabertura | <5% | <3% | Reopened / Concluded |
-| Score médio | >60 | >75 | Avg(provider.score) |
-| Churn prestador (30 dias sem job) | <40% | <20% | Providers sem job em 30d / Total |
-| Tempo médio de aceite de job | <8 min | <5 min | Avg(accepted_at - offered_at) |
+| Score médio da base | >65 | >75 | Média do score rolante de 90d |
+| Tempo de resposta por onda | <180s | <120s | Média de tempo até aceite |
+| NPS do Prestador | >50 | >70 | Pesquisa trimestral no cockpit |
 
-**Financeiro**
-
-| Métrica | Meta Beta | Meta Mês 12 | Como Medir |
-|---|---|---|---|
-| Receita bruta | R$ 7K (80 jobs) | R$ 93K | Sum(orders.total) |
-| Take rate efetivo | 20% | 24% | Receita plataforma / Receita bruta |
-| CAC | R$ 60 | R$ 46 | Marketing spend / Novos clientes |
-| LTV | R$ 345 (2,3 jobs) | R$ 810 (4,5 jobs) | Ticket médio × Jobs por cliente |
-| LTV/CAC | >5x | >15x | LTV / CAC |
-| Chargeback | <2% | <1% | Chargebacks / Receita |
-| Garantias acionadas | <5% | <3% | Garantias / Pedidos concluídos |
-
-**Operacional**
+**Financeiro (Baseado na Margem de Contribuição Real)**
 
 | Métrica | Meta Beta | Meta Mês 12 | Como Medir |
 |---|---|---|---|
-| Tempo médio de resolução de disputa | <48h | <24h | Avg(resolved_at - created_at) |
-| Taxa de intervenção manual | 100% (beta) | <30% | Pedidos com ação humana / Total |
-| Uptime | >99% | >99,9% | Monitoramento Sentry/Render |
-| Fraud rate | <3% | <1% | Pedidos bloqueados / Total |
-| Jobs sem prestador disponível (cold-start) | <20% | <5% | Jobs em fila / Total |
-
-### 9.3 Dashboards
-
-**Dashboard Executivo (CEO/Fundador)**
-- North Star (gráfico mensal)
-- Receita vs. Burn (runway em meses)
-- CAC vs. LTV
-- NPS
-- Jobs em cold-start (indicador de saúde da oferta)
-- Alertas críticos (uptime, fraude, disputas >SLA)
-
-**Dashboard de Produto**
-- Funil de conversão (cada step)
-- Tempo médio em cada estado do pedido
-- Abandono por tela
-- Feature adoption
-
-**Dashboard de Operação**
-- Fila de disputas (ordenada por SLA)
-- Pedidos sem prestador (cold-start em tempo real)
-- Prestadores aguardando aprovação
-- Sinais de fraude (últimas 24h)
-- Jobs em execução agora (mapa)
-
-**Dashboard Financeiro**
-- Receita diária/semanal/mensal
-- Comissão por tier
-- Repasses Pagar.me agendados
-- Previsão de caixa (30/60/90 dias)
-- Provisão de garantia vs. acionamentos reais
+| GMV Total | R$ 12.800 (80 jobs) | R$ 340.000 (2.000 jobs) | Sum(orders.total) |
+| Receita Líquida da Plataforma | R$ 2.560 (Beta) | R$ 68.000 | Comissão 20%/18% + Urgência |
+| Custo Variável Real por Pedido | R$ 24,51 | R$ 24,51 | Apuração real de custos (#84 a #91) |
+| Margem de Contribuição por Pedido | R$ 17,49 | R$ 17,49 | Receita média R$ 42 − R$ 24,51 |
+| CAC B2C (Indicação/Orgânico) | ≤ R$ 10 | ≤ R$ 15 | Gasto com marketing / Clientes |
+| LTV B2C (sobre Margem) | R$ 22,74/ano | R$ 34,98/ano | Margem de contribuição × frequência |
+| LTV/CAC | >3x | >5x | LTV / CAC |
+| Chargeback | <1,5% | <1,0% | Chargebacks / GMV |
 
 ---
 
-## 10. GARANTIA (Detalhamento Jurídico-Operacional)
+## 10. GARANTIA (Detalhamento Jurídico-Operacional — Versão 4.1 Canônica)
 
-> **⚠️ Aviso jurídico obrigatório:** Antes do lançamento público, a estrutura jurídica desta garantia deve ser validada por advogado com experiência em direito regulatório de seguros. Coberturas com ressarcimento financeiro podem ser classificadas como seguro pela SUSEP (Superintendência de Seguros Privados). A recomendação é estruturar como "política de satisfação da plataforma" — custeada pelo caixa da FACILITA, não por prêmio cobrado ao cliente ou prestador — o que tipicamente não exige licença de seguradora. Esta nota deve ser mantida enquanto a consulta jurídica não for concluída.
+### 10.1 Escopo da Garantia Legal de Satisfação (CDC Art. 26)
 
-### 10.1 Escopo da Garantia
-
-**Cobertura:** 30 dias corridos a partir da conclusão
+**Prazo Legal:** **90 dias corridos** a partir da conclusão do serviço.
 
 **O que está coberto:**
 
-| Situação | Cobertura | Exemplo |
+| Situação | Cobertura | Ação da Plataforma |
 |---|---|---|
-| Defeito na execução | ✅ Sim | Chuveiro instalado, mas vazando |
-| Material defeituoso (fornecido pelo prestador) | ✅ Sim | Torneira instalada quebrou em 10 dias |
-| Serviço parcialmente executado | ✅ Sim | Instalou ventilador mas não funciona |
+| Defeito na execução da mão de obra | ✅ Sim | Reexecução gratuita sem custo para o cliente |
+| Falha de fixação ou montagem | ✅ Sim | Retorno de profissional Ouro para reparo |
+| Vazamento em conexão executada | ✅ Sim | Reexecução prioritária em até 4h |
 
 **O que NÃO está coberto:**
+- Uso manifestamente inadequado pelo cliente.
+- Intervenção posterior de terceiros no mesmo ponto.
+- Vício de fabricação em peça fornecida exclusivamente pelo cliente.
+- Pagamento realizado por fora da plataforma (invalida a garantia e desativa a conta).
 
-| Situação | Motivo |
-|---|---|
-| Uso inadequado pelo cliente | "Chuveiro queimou porque aumentei a voltagem" |
-| Intervenção de terceiro | "Chamei outro eletricista e ele mexeu" |
-| Dano por terceiro | "Meu filho puxou e quebrou" |
-| Desastre natural | Enchente, raio |
-| Material fornecido pelo cliente com defeito | "Comprei chuveiro barato que quebrou" |
-| Pagamento fora do app | Invalida toda garantia |
-| Serviço sem evidência fotográfica mínima | Não tem como provar o que foi feito |
-
-### 10.2 Processo de Acionamento
+### 10.2 Processo de Acionamento e SLA
 
 ```
 CLIENTE                          SISTEMA                         OPERAÇÃO
 
+[DENTRO DOS 90 DIAS DO CDC]
+
 1. [Acionar garantia]
-2. Descreve problema
-3. Upload foto do defeito
+2. Descreve o problema
+3. Tira foto ao vivo do defeito
                                  4. Valida elegibilidade:
                                     - Pedido pago no app?
-                                    - Dentro de 30 dias?
-                                    - Escopo coberto?
-                                    - Sem exclusão?
+                                    - Dentro de 90 dias corridos?
+                                    - Evidência ao vivo anexada?
                                  5. Se elegível:
-                                    - Cria ticket
+                                    - Cria ticket de reexecução
                                     - Notifica prestador original
+                                                                  6. Operação acompanha SLA (24h)
+                                                                     e grava chamadas via Twilio Voice
+```
                                                                   6. Analisa caso
                                                                   7. Liga para cliente (valida)
 PRESTADOR:
@@ -2820,41 +2726,41 @@ Para a transição da homologação para a **operação comercial ativa** (receb
 #### A. Domínio do Cliente (Web / PWA) — 100% dos Fluxos Core Concluídos
 - [x] **[P0] Conector Real de Envio de SMS / WhatsApp no Login OTP:** Implementado com porta `SmsServicePort` e adapter `TwilioSmsAdapter` (`apps/api/src/modules/auth/adapters/twilio-sms.adapter.ts`). Suporta Twilio SMS REST API e Z-API (WhatsApp), normalização E.164 (`+55...`), fallback gracioso Dev/Mock e proteção anti-bot via `RedisOtpRateLimiterAdapter` (máx 3 envios / 10 min, HTTP 429).
 - [x] **[P1] Gestão de Múltiplos Endereços no Perfil (`/profile`):** CRUD via `AddressController` (`GET/POST/DELETE /identity/addresses`), seletor rápido de 1-clique no `/new-order` e testes Playwright dedicados (`client-addresses.spec.ts`).
-- [x] **[P1] Histórico Paginado e Download de Comprovante / NFS-e (`/orders`):** Consulta paginada por cursor (`GET /orders`), emissão de recibo com taxas discriminadas (15% plataforma + retenção fiscal) via `GET /orders/:id/receipt`, impressão/PDF (`window.print()`), acionamento de garantia de 90 dias e testes Playwright (`orders-history.spec.ts`).
-- [x] **[P1] Fluxo de Cancelamento Assistido com Retenção de Taxa:** Regra de negócio na entidade `Order.cancel()`: estorno integral (100%) em até 5 minutos do aceite; retenção da taxa de deslocamento (R$ 35,00) revertida ao prestador após 5 minutos ou com profissional no local. Suíte Playwright (`order-cancellation.spec.ts`).
+- [x] **[P1] Histórico Paginado e Download de Comprovante / NFS-e (`/orders`):** Consulta paginada por cursor (`GET /orders`), emissão de recibo com taxas discriminadas (comissão de 20% ou 18% da plataforma + retenção fiscal) via `GET /orders/:id/receipt`, impressão/PDF (`window.print()`), acionamento de garantia de 90 dias (CDC Art. 26) e testes Playwright (`orders-history.spec.ts`).
+- [x] **[P1] Fluxo de Cancelamento Assistido com Retenção de Taxa:** Regra de negócio na entidade `Order.cancel()`: estorno integral (100%) em até 5 minutos do aceite (ou 2h antes de agendado); retenção da taxa única de deslocamento (R$ 35,00 — sendo R$ 28,00 repassados ao prestador e R$ 7,00 cobrindo custos operacionais/gateway). Suíte Playwright (`order-cancellation.spec.ts`).
 
-#### B. Domínio do Prestador de Serviços (App Mobile Expo React Native)
+#### B. Domínio do Prestador de Serviços (App Mobile Expo React Native / PWA)
 - [x] 15 telas desenvolvidas em React Native (`apps/provider/src/screens`) e cockpit web de testes.
-- [x] Background geolocation com `expo-task-manager` (`location.service.ts`).
-- [x] Fluxo de onboarding em 4 etapas (dados, categorias, chave PIX e upload CNH/RG).
-- [ ] **🔴 [P0] Canal de Notificação com Som de Alarme em Segundo Plano:** Configurar canal Android dedicado (`urgency_dispatch_channel`, `AndroidImportance.MAX`, áudio sirene `alert_siren.wav` de 30s) com toque contínuo até o aceite e overlay nativo estilo Uber para chamada de 60 segundos.
-- [ ] **🔴 [P0] Trava de Câmera Obrigatória de Antes e Depois:** Bloquear `IN_PROGRESS` sem foto do "Antes" e bloquear `COMPLETED` sem foto do "Depois", com metadados EXIF de data/hora e coordenadas para validação pelo módulo de fraudes.
+- [x] Geolocalização pontual sob ação explícita (Saí, Cheguei, Evidência) sem vigilância contínua em segundo plano (Blindagem CLT Art. 9º).
+- [x] Fluxo de onboarding em 4 etapas (dados, categorias, certificação NR-10 quando aplicável, chave PIX e upload CNH/RG).
+- [ ] **🔴 [P0] Canal de Notificação de Oportunidades (180 segundos por onda):** Configurar canal de notificação respeitando autonomia do prestador, com contagem regressiva de 180s e recusa livre de chamados (0% de impacto no score).
+- [ ] **🔴 [P0] Trava de Câmera Obrigatória de Antes e Depois:** Bloquear `IN_PROGRESS` sem foto ao vivo do "Antes" e bloquear `COMPLETED` sem foto ao vivo do "Depois", com metadados EXIF e geolocalização pontual.
 - [ ] **🔴 [P0] Armazenamento de Arquivos em Nuvem Real (Cloudflare R2 / AWS S3):** Adapter de storage com geração de Presigned URLs (expiração 15 min) para documentos KYC e fotos de evidências.
 - [ ] **🟡 [P1] Sincronização e Modo Offline Resiliente:** Fila local com `AsyncStorage` e backoff exponencial via `NetInfo` para garantir envio de status mesmo sem sinal 4G.
 - [ ] **🟡 [P1] Botão de Rota Externa:** Deep-linking nativo para Waze (`waze://`) e Google Maps (`geo:`).
 
 #### C. Domínio do Backend & Integrações Externas (`apps/api`)
-- [x] Arquitetura Hexagonal Modular com 13 módulos e barramento de eventos.
-- [x] Motor de Matching em Ondas com raio geográfico e health checks Prometheus (`/metrics`).
-- [ ] **🔴 [P0] Gateway de Pagamentos em Modo Produção (Pagar.me Stone / Asaas):** Chaves ativas de produção (`sk_live_...`), validação estrita da assinatura HMAC de webhooks (`x-hub-signature`) e PIX dinâmico com QR Code Base64.
+- [x] Arquitetura Hexagonal Modular com 7 módulos de domínio + Shared Kernel e barramento de eventos.
+- [x] Motor de Matching em Ondas de 180s com raio geográfico expansível e lock atômico condicional no aceite.
+- [ ] **🔴 [P0] Gateway de Pagamentos em Modo Produção (Pagar.me Stone):** Chaves ativas de produção (`sk_live_...`), validação estrita da assinatura HMAC de webhooks (`x-hub-signature`), tabela de idempotência `ProcessedWebhook` e Pix dinâmico com QR Code Base64.
 - [ ] **🔴 [P0] Autenticação e Chaves no `.env.production` da VPS:** Preenchimento de secrets reais (`DATABASE_URL`, `REDIS_URL`, `JWT_SECRET`, `PAGARME_SECRET_KEY`, `TWILIO_ACCOUNT_SID`, `CLOUDFLARE_R2_ACCESS_KEY`).
 - [ ] **🟡 [P1] Conciliação Financeira Automática Noturna:** Cron às 03:00 AM (`financial-reconciliation.cron.ts`) para bater transações com o gateway bancário.
 - [ ] **🟡 [P1] Alertas de Incidentes Críticos em Tempo Real:** Bot Telegram/Discord acionado por `GlobalExceptionFilter` para erros HTTP 500 em pagamentos e payouts.
 
 #### D. Domínio do Painel Administrativo & Backoffice (`/admin`)
 - [x] Dashboard de métricas operacionais, GMV e trava de segurança *Halt Payouts*.
-- [x] Gestão e override manual de Tiers de prestadores (Bronze, Prata, Ouro, Diamante).
-- [x] Aprovação e gestão de lotes de repasses (`/admin/payouts`).
-- [x] **[P0] Central de Moderação e Auditoria de Documentos KYC:** Rota `/admin/kyc` com visualizador seguro de CNH/RG e botões de aprovação (`APPROVED`) ou rejeição com justificativa e notificação push ao prestador.
-- [ ] **🟡 [P1] Módulo de Mediação de Disputas e Reembolsos Manuais:** Rota `/admin/disputes` com ações de estorno total 100%, partilha 50/50 ou manutenção de repasse ao profissional.
+- [x] Gestão e override manual dos 3 Tiers canônicos de prestadores (Bronze, Prata, Ouro).
+- [x] Aprovação e gestão de lotes de repasses Pix (`/admin/payouts`).
+- [x] **[P0] Central de Moderação e Auditoria de Documentos KYC:** Rota `/admin/kyc` com visualizador seguro de CNH/RG/NR-10 e botões de aprovação (`APPROVED`) ou rejeição com justificativa e notificação ao prestador.
+- [ ] **🟡 [P1] Módulo de Mediação de Disputas e Reembolsos Manuais:** Rota `/admin/disputes` com ações de estorno total 100%, partilha 50/50 ou reexecução de garantia sem custo.
 
 #### E. Infraestrutura, Segurança & Publicação nas Lojas
 - [x] Dockerfiles multi-stage de produção e `docker-compose.prod.yml` com Postgres PostGIS, Redis 7 AOF, Prometheus, Grafana e backup automatizado de 7 dias.
-- [x] `app.json` configurado com permissões de background location (`ACCESS_BACKGROUND_LOCATION`, `FOREGROUND_SERVICE_LOCATION`), canal `urgency_dispatch_channel`, e `eas.json` com perfil `production` (.aab) e `preview` (.apk).
+- [x] `app.json` configurado com permissões de câmera nativa e canal `urgency_dispatch_channel`, e `eas.json` com perfil `production` (.aab) e `preview` (.apk).
 - [x] Scripts de pré-voo e automação: `scripts/verify-production-readiness.js`, `scripts/build-mobile.sh` e `scripts/build-mobile.ps1`.
 - [x] Guia definitivo de publicação e deploy: [`docs/GUIA_DEPLOY_PRODUCAO_E_PUBLICACAO.md`](file:///d:/Desktop/facilita/docs/GUIA_DEPLOY_PRODUCAO_E_PUBLICACAO.md).
 - [ ] **🔴 [P0] Subida do Docker Compose na VPS:** Hetzner ou DigitalOcean com firewall `ufw` e proxy Caddy/SSL.
-- [ ] **🔴 [P0] Envio do Pacote .aab na Google Play Console:** Build de produção e submissão na Google Play Store.
+- [ ] **🔴 [P0] Geração do Pacote Mobile do Prestador:** Build de produção (.apk) via EAS.
 
 ### 14.4 Roteiro de Execução em Ondas (Cronograma para Go-Live)
 
@@ -2864,16 +2770,15 @@ gantt
     dateFormat  YYYY-MM-DD
     section Onda 1 - Bloqueadores (P0)
     Chaves Reais (SMS, Pagarme, S3/R2)  :active, o1, 2026-11-01, 3d
-    Som de Alarme no App Mobile (Native):o2, 2026-11-04, 2d
+    Notificações de Oportunidades 180s  :o2, 2026-11-04, 2d
     Subida da VPS + Domínio Cloudflare  :o3, 2026-11-05, 2d
-    Build EAS Android (.aab)            :o4, 2026-11-07, 2d
+    Build EAS Android (.apk)            :o4, 2026-11-07, 2d
     section Onda 2 - Operação & Evidências (P1)
     Trava de Câmera Antes/Depois (EXIF) :o5, 2026-11-09, 3d
     Mediação de Disputas no Admin       :o6, 2026-11-12, 2d
     Alertas no Telegram para Erro 500   :o7, 2026-11-14, 1d
-    section Onda 3 - Lojas & Lançamento
-    Envio para Revisão Google Play      :o8, 2026-11-15, 4d
-    Envio para Revisão Apple Store      :o9, 2026-11-17, 5d
+    section Onda 3 - Distribuição & Lançamento
+    Disponibilização do App Móvel       :o8, 2026-11-15, 4d
     Go-Live Aberto ao Público           :milestone, 2026-11-22, 1d
 ```
 
@@ -2886,40 +2791,22 @@ gantt
 - [x] App cliente (Next.js 15 PWA) com onboarding OTP e rate limiter anti-bot (Twilio / Z-API)
 - [x] Gestão de múltiplos endereços (Casa, Trabalho, Outro) com seletor 1-clique
 - [x] Histórico de pedidos paginado com download de recibo fiscal e garantia de 90 dias
-- [x] Fluxo de cancelamento assistido com retenção de taxa de deslocamento (R$ 35,00)
-- [x] App prestador (React Native/Expo) com 15 telas e background location service
-- [x] Central de moderação e auditoria de documentos KYC no painel `/admin/kyc`
+- [x] Fluxo de cancelamento assistido com retenção de taxa única de deslocamento (R$ 35,00)
+- [x] App prestador (React Native/Expo) com 15 telas e localização pontual sem vigilância contínua
+- [x] Central de moderação e auditoria de documentos KYC e NR-10 no painel `/admin/kyc`
 - [x] Painel administrativo com métricas operacionais e trava de emergência *Halt Payouts*
-- [x] Chat em tempo real (Stream.io) com filtro regex antifraude (13 padrões)
-- [ ] Canal de notificação com som de alarme contínuo (`urgency_dispatch_channel`) no app do prestador
-- [ ] Trava obrigatória de câmera Antes/Depois com validação de coordenadas e EXIF
+- [x] Chat em tempo real com filtro regex antifraude e Call Proxy Twilio Voice
+- [ ] Canal de notificação com janela de 180s por onda no app do prestador
+- [ ] Trava obrigatória de câmera ao vivo Antes/Depois com validação de coordenadas e EXIF
 - [ ] Modo offline com fila de persistência local no mobile
 
 **Antifraude & Segurança:**
 - [x] Rate limiting anti-bot em endpoints críticos (`POST /auth/send-otp` via Redis/Memória)
-- [x] Detecção de contato externo no chat (Stream.io webhook com máscara de telefone/links)
-- [x] Validação de antecedentes criminais (Checagem.com) e MEI na Receita Federal
+- [x] Detecção de contato externo no chat (regex com mascaramento de números e links)
+- [x] Validação de antecedentes criminais com base legal estrita (LGPD) e MEI na Receita Federal
 - [x] Biometria e match facial (Truora KYC) integrado
 - [x] Termos de Uso (`/termos`) e Política de Privacidade LGPD (`/privacidade`) publicados
-- [ ] Validação automatizada de fotos recicladas via Google Vision API
-- [ ] Verificação de assinatura HMAC (`x-hub-signature`) no webhook do Pagar.me
-
-**Operação & Suporte:**
-- [x] Playbook e manual de deploy de produção (`docs/GUIA_DEPLOY_PRODUCAO_E_PUBLICACAO.md`)
-- [x] Script automatizado de validação de pré-vôo (`npm run verify:prod`)
-- [x] Scripts de build mobile automatizado para Expo/EAS (`npm run build:mobile:prod`)
-- [ ] 15 prestadores recrutados, aprovados com MEI e cadastrados no sistema
-- [ ] Operadores do painel administrativo treinados para moderação KYC e disputas
-
-**Infraestrutura & Financeiro:**
-- [x] Dockerfiles multi-stage de produção e Docker Compose orquestrado com Postgres e Redis
-- [x] Backup automatizado do banco de dados PostgreSQL com retenção de 7 dias
-- [x] Exportador de métricas Prometheus (`/metrics`) e Health Check (`/health`)
-- [ ] Provisionamento da VPS (Ubuntu 24.04 LTS) com Caddy e firewall `ufw`
-- [ ] Apontamento de DNS (`api.facilita.com.br`, `app.facilita.com.br`)
-- [ ] Preenchimento das credenciais de produção no `.env.production`
-- [ ] Conta bancária PJ + Subcontas do Pagar.me Stone para split automático de pagamentos
-- [ ] Submissão do pacote `.aab` na Google Play Console e revisão da App Store
+- [ ] Verificação de assinatura HMAC (`x-hub-signature`) no webhook do Pagar.me com tabela `ProcessedWebhook`
 
 ---
 
@@ -2930,34 +2817,33 @@ gantt
 
 **Slide 2 — Problema**
 - Cliente: R$ 80Bi/ano em serviços domésticos sem garantia, sem preço justo, sem confiança
-- Prestador bom: 15% de inadimplência, demanda irregular, concorre com quem é ruim
+- Prestador bom: demanda irregular, concorre com profissionais sem qualificação
 - 78% de informalidade, GetNinjas NPS ~25 apesar de 12 anos de mercado
 
 **Slide 3 — Solução**
-- Plataforma transacional (não marketplace de leads)
-- Catálogo padronizado + Evidência obrigatória + Garantia real + Antifraude desde dia 1
-- Fluxo fechado com split de pagamento automático via Pagar.me
+- Plataforma transacional com fluxo fechado e split automático de pagamento (Pagar.me)
+- Catálogo padronizado + Câmera ao vivo obrigatória + Garantia real de 90 dias (CDC) + Antifraude estrutural
 
 **Slide 4 — Por que agora**
-- GetNinjas educou o mercado (12 anos), mas NPS ~25
-- Triider mostrou que modelo transacional é possível, mas falhou em execução
-- Infraestrutura disponível: KYC, split payment, push nativo, IA para fraude
+- GetNinjas educou o mercado em marketplace de leads, gerando frustração com qualidade
+- Tecnologias maduras: Pix instantâneo, biometria facial, PWA e split bancário automatizado
 
 **Slide 5 — Mercado**
 - TAM: R$ 80Bi (serviços domésticos Brasil)
 - SAM: R$ 12Bi (SP + RJ, serviços padronizáveis)
 - SOM: R$ 240Mi (ano 5, 2% do SAM)
 
-**Slide 6 — Modelo de Negócio**
-- Comissão 18-25% (tier-based, via Pagar.me)
-- Receitas secundárias: urgência, antecipação, seguro estendido
-- LTV: R$ 810 | CAC: R$ 46 (ano 2)
+**Slide 6 — Modelo de Negócio Canônico (v4.1)**
+- Comissão de 20% (Bronze e Prata) e 18% (Ouro)
+- Receita secundária: Taxa de Urgência (R$ 40,00 fixo) e retenção operacional em cancelamento (R$ 7,00)
+- Unit Economics Real: Receita média R$ 42,00 | Custo Variável Real R$ 24,51 | Margem de Contribuição R$ 17,49
+- LTV B2C: ~R$ 23 a R$ 35/ano (baseado em margem líquida, não GMV) | CAC B2C: R$ 10 a R$ 15 (indicação/orgânico)
 
-**Slide 7 — Tração (meta para apresentação)**
-- 200 pedidos (mês 3 após soft launch)
-- NPS: 68
-- Taxa de conclusão: 82%
-- 15 prestadores Tier 2-3
+**Slide 7 — Tração (Meta Inicial)**
+- 200 pedidos (Gate 2 do lançamento enxuto)
+- NPS: >65
+- Taxa de conclusão: >85%
+- 15 prestadores fundadores qualificados (com NR-10 para elétrica complexa)
 
 **Slide 8 — Go-to-Market**
 - Fase 1: Densidade em 5 bairros SP (Zona Sul)

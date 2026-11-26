@@ -191,3 +191,4 @@ LATEST_BACKUP=$(ls -t /var/facilita/backups/facilita_db_*.sql.gz | head -1)
 # Descompactar e restaurar
 gunzip -c "$LATEST_BACKUP" | docker exec -i facilita-postgres psql -U postgres -d facilita
 ```
+

@@ -11,7 +11,9 @@ import {
   ArrowRight, 
   Upload, 
   Sparkles,
-  MapPin
+  MapPin,
+  Download,
+  Smartphone
 } from 'lucide-react';
 
 const CATEGORIES = [
@@ -462,11 +464,33 @@ export default function ProviderRegisterPage() {
               </div>
             </div>
 
+            {/* Card de Ação Obrigatória: Instalar App */}
+            <div className="bg-emerald-950/40 border border-emerald-500/30 rounded-2xl p-5 text-left space-y-3">
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0">
+                  <Smartphone size={20} />
+                </div>
+                <div>
+                  <h3 className="font-bold text-white text-sm">Passo Obrigatório: Baixe o App do Prestador</h3>
+                  <p className="text-[11px] text-slate-300">É pelo aplicativo instalado no celular que você receberá os chamados com alarme sonoro e GPS.</p>
+                </div>
+              </div>
+
+              <button
+                data-testid="btn-go-to-download"
+                onClick={() => router.push('/download')}
+                className="w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold py-3.5 px-4 rounded-xl transition shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-2 text-sm"
+              >
+                <Download size={18} className="stroke-[2.5]" />
+                <span>Baixar Aplicativo Android (.APK)</span>
+              </button>
+            </div>
+
             <button
               onClick={() => router.push('/provider/dashboard')}
-              className="w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold py-4 rounded-xl transition shadow-lg shadow-emerald-500/20"
+              className="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold py-3 rounded-xl transition border border-slate-700 text-sm"
             >
-              Ir para o Painel do Prestador
+              Acessar Painel Web do Prestador
             </button>
           </div>
         )}

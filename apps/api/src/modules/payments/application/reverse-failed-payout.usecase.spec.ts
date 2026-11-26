@@ -8,7 +8,14 @@ describe('ReverseFailedPayoutUseCase', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         ReverseFailedPayoutUseCase,
-        // TODO: Add mocked dependencies here
+        {
+          provide: 'WalletRepositoryPort',
+          useValue: { findByProviderId: jest.fn(), save: jest.fn() },
+        },
+        {
+          provide: 'PayoutRepositoryPort',
+          useValue: { findById: jest.fn(), save: jest.fn() },
+        },
       ],
     }).compile();
 

@@ -2,13 +2,13 @@ import { PaymentsEventHandler } from './payments-event.handler';
 
 describe('PaymentsEventHandler', () => {
   let handler: PaymentsEventHandler;
-  let processPayoutUseCase: any;
+  let processPayoutUseCase: { execute: jest.Mock };
 
   beforeEach(() => {
     processPayoutUseCase = {
       execute: jest.fn().mockResolvedValue({ status: 'PROCESSED' }),
     };
-    handler = new PaymentsEventHandler(processPayoutUseCase);
+    handler = new PaymentsEventHandler(processPayoutUseCase as any);
   });
 
   it('should call ProcessPayoutUseCase when job.completed event is received', async () => {

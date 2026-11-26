@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { OrderDoneListener } from './order-done.listener';
+import { CapturePaymentUseCase } from '../../application/capture-payment.usecase';
 
 describe('OrderDoneListener', () => {
   let provider: OrderDoneListener;
@@ -8,7 +9,7 @@ describe('OrderDoneListener', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         OrderDoneListener,
-        // TODO: Add mocked dependencies here
+        { provide: CapturePaymentUseCase, useValue: { execute: jest.fn() } },
       ],
     }).compile();
 

@@ -66,7 +66,30 @@ model User {
   invitedBy      User?            @relation("UserReferrals", fields: [invitedById], references: [id])
   referrals      User[]           @relation("UserReferrals")
   devices        UserDevice[]
+  addresses      Address[]
 
+  @@schema("identity")
+}
+
+model Address {
+  id           String   @id @default(uuid())
+  userId       String
+  label        String   // CASA | TRABALHO | OUTRO
+  street       String
+  number       String
+  complement   String   // Obrigatório (apto/bloco/casa) - Resolução #74
+  neighborhood String
+  city         String
+  state        String
+  zipCode      String
+  latitude     Float?
+  longitude    Float?
+  isDefault    Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  user         User     @relation(fields: [userId], references: [id])
+
+  @@index([userId])
   @@schema("identity")
 }
 
@@ -75,6 +98,7 @@ model ProviderProfile {
   userId             String         @unique
   /// @encrypted
   cpfCnpj            String         @unique
+  score              Int            @default(65) // Resolução #33: nasce > minScore: 60
   rating             Float          @default(5.0)
   isOnline           Boolean        @default(false)
   availableDays      Int[]
@@ -86,6 +110,10 @@ model ProviderProfile {
   tier               ProviderTier   @default(BRONZE)
   fraudReason        String?
   isFlagged          Boolean        @default(false)
+  nr10Verified       Boolean        @default(false) // Resolução #96: Obrigatório para elétrica complexa
+  dailyJobLimit      Int?           // Resolução #39 e #104: Nullable e sem trava coercitiva CLT
+  baseLat            Float?         // Resolução #42: Posição geográfica base
+  baseLng            Float?
   /// @encrypted
   bankAccount        String?
   /// @encrypted
@@ -141,6 +169,7 @@ model Order {
   userId      String
   providerId  String?
   status      OrderStatus @default(PENDING)
+  version     Int         @default(1)
   totalAmount Decimal     @default(0.0)
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
@@ -228,10 +257,19 @@ model Wallet {
   providerId     String              @unique
   balance        BigInt              @default(0)
   pendingBalance BigInt              @default(0)
+  version        Int                 @default(0) // Resolução #48: Lock otimista contra concorrência
   createdAt      DateTime            @default(now())
   updatedAt      DateTime            @updatedAt
   promoBalance   BigInt              @default(0)
   transactions   WalletTransaction[]
+
+  @@schema("payments")
+}
+
+model ProcessedWebhook {
+  eventId     String   @id // Resolução #53: Idempotência estrita contra reentregas de webhooks
+  provider    String
+  processedAt DateTime @default(now())
 
   @@schema("payments")
 }
@@ -284,13 +322,14 @@ model Payout {
 }
 
 model Evidence {
-  id        String       @id @default(uuid())
-  orderId   String
-  url       String
-  type      EvidenceType
-  metadata  Json?
-  createdAt DateTime     @default(now())
-  order     Order        @relation(fields: [orderId], references: [id])
+  id         String       @id @default(uuid())
+  orderId    String
+  providerId String?      // Resolução #46: Identifica autoria em caso de reexecução
+  url        String
+  type       EvidenceType
+  metadata   Json?
+  createdAt  DateTime     @default(now())
+  order      Order        @relation(fields: [orderId], references: [id])
 
   @@schema("evidence")
 }
